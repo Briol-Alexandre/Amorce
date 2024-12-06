@@ -25,7 +25,6 @@ class FondController extends Controller
     }
 
 
-
     public function show(Fund $fund)
     {
         $funds = Fund::all();
@@ -34,4 +33,11 @@ class FondController extends Controller
             'funds' => $funds
         ]);
     }
+
+    public function destroy(Fund $fund)
+    {
+        $fund->delete();
+        return redirect()->route('fond.index')->with('success', 'Fond supprimé avec succès');
+    }
+
 }

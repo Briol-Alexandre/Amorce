@@ -13,10 +13,6 @@ Route::middleware('auth')->group(function () {
 
     Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
 
-    Route::get('/fonds', [FondController::class, 'index'])->name('fond.index');
-
-    Route::get('/fonds/{fund}', [FondController::class, 'show'])->name('fond.show');
-
     Route::inertia('/detente', 'Detente')->name('detente.index');
 
     Route::inertia('/evenement', 'Evenement')->name('meetup.index');
@@ -52,3 +48,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+require __DIR__ . '/fund.php';

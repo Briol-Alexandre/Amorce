@@ -1,12 +1,14 @@
 import React from "react";
 import SecondaryButton from "@/Components/SecondaryButton.jsx";
 import ActionButton from "@/Components/ActionButton.jsx";
-
+import { Inertia } from '@inertiajs/inertia';
 export default function FondAction({fund}) {
 
-    function handleDelete (e) {
+    function handleDelete(e) {
         e.preventDefault();
+        Inertia.delete(route('fond.destroy', fund.id));
     }
+
 
     function handleAdd (e) {
         e.preventDefault();
