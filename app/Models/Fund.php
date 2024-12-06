@@ -17,4 +17,5 @@ class Fund extends Model
         'amount',
         'raise',
     ];
+
 }

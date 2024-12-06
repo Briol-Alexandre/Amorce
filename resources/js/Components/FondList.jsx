@@ -4,7 +4,7 @@ import React, {useState} from "react";
 import Modal from "@/Components/Modal.jsx";
 import NewFund from "@/Components/NewFund.jsx";
 
-export function FondList({fonds, errors}) {
+export function FondList({fonds, errors, displayFund}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = () => setIsModalOpen(true);
@@ -20,7 +20,8 @@ export function FondList({fonds, errors}) {
                         foundName={fond.name}
                         foundAmount={fond.amount}
                         foundRaise={fond.raise}
-                        fonds={fonds}
+                        fond={fond}
+                        displayFund={displayFund}
                     />
                 ))}
                 <div

@@ -15,6 +15,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/fonds', [FondController::class, 'index'])->name('fond.index');
 
+    Route::get('/fonds/{fund}', [FondController::class, 'show'])->name('fond.show');
+
     Route::inertia('/detente', 'Detente')->name('detente.index');
 
     Route::inertia('/evenement', 'Evenement')->name('meetup.index');

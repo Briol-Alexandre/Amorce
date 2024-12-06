@@ -4,9 +4,10 @@ import MainStructure from "@/Components/MainStructure.jsx";
 import TitleAndSpan from "@/Components/TitleAndSpan.jsx";
 import {FondList} from "@/Components/FondList.jsx";
 import FondAction from "@/Components/FondAction.jsx";
+import {FundInfo} from "@/Components/FundInfo.jsx";
 
-export default function Fonds() {
-    const {fonds} = usePage().props;
+export default function Funds() {
+    const {funds} = usePage().props;
 
     const [form, setForm] = useState();
     const {errors} = usePage().props.errors;
@@ -15,9 +16,8 @@ export default function Fonds() {
             <div className='flex flex-col w-full'>
                 <div className="p-3 ">
                     <TitleAndSpan title="Fonds"/>
-                    <FondList fonds={fonds} errors={errors}/>
+                    <FondList fonds={funds} errors={errors}/>
                 </div>
-                <FondAction/>
             </div>
         </MainStructure>
     );
