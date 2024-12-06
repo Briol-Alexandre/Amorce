@@ -17,22 +17,21 @@ class FondController extends Controller
             'funds' => $fonds,
         ]);
     }
-    #[NoReturn]
+
     public function store(FundStoreRequest $request)
     {
-        $fund = new Fund();
-        $fund->name = $request->input('name');
-        $fund->amount = $request->input('amount', 0);
-        $fund->raise = $request->input('raise', 0);
-        $fund->save();
-
-        return Inertia::render('Funds');
+        $fund = Fund::create($request->validated());
+        return Inertia::location(route('fond.show', ['fund' => $fund->id]));
     }
+
+
 
     public function show(Fund $fund)
     {
+        $funds = Fund::all();
         return Inertia::render('Fund', [
             'fund' => $fund,
+            'funds' => $funds
         ]);
     }
 }

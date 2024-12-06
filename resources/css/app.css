@@ -6,6 +6,12 @@
     .title-style {
         @apply font-bold text-3xl ml-3;
     }
+    .small-title-style {
+        @apply font-bold  text-xl ;
+    }
+    .small-style {
+        @apply ml-4 mt-3;
+    }
     .found-name-style {
         @apply font-bold text-3xl;
     }

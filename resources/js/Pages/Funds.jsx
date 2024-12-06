@@ -10,13 +10,12 @@ export default function Funds() {
     const {funds} = usePage().props;
 
     const [form, setForm] = useState();
-    const {errors} = usePage().props.errors;
     return (
         <MainStructure pageTitle="Fonds">
             <div className='flex flex-col w-full'>
                 <div className="p-3 ">
                     <TitleAndSpan title="Fonds"/>
-                    <FondList fonds={funds} errors={errors}/>
+                    <FondList fonds={funds}/>
                 </div>
             </div>
         </MainStructure>

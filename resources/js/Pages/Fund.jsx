@@ -1,10 +1,25 @@
 import {FundInfo} from "@/Components/FundInfo.jsx";
 import {usePage} from "@inertiajs/react";
+import MainStructure from "@/Components/MainStructure.jsx";
+import TitleAndSpan from "@/Components/TitleAndSpan.jsx";
+import {FondList} from "@/Components/FondList.jsx";
+import React from "react";
+import FondAction from "@/Components/FondAction.jsx";
 
-export function Fund() {
-    const {fond} = usePage().props
-    console.log(fond)
+export default function Fund() {
+    const {fund} = usePage().props
+    const {funds} = usePage().props
     return (
-        <p>{fond.name}</p>
+        <MainStructure pageTitle={fund.name}>
+            <div className='flex flex-col w-full'>
+                <div className="p-3 ">
+                    <TitleAndSpan title="Fonds"/>
+                    <FondList fonds={funds}/>
+                    <FundInfo fund={fund} />
+                    <FondAction fund={fund}/>
+                </div>
+
+            </div>
+        </MainStructure>
     )
 }

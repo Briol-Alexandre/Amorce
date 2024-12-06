@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('funds', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('description');
+            $table->boolean('permanent');
             $table->integer('amount');
             $table->integer('raise');
             $table->timestamps();

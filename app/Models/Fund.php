@@ -9,13 +9,14 @@ use Illuminate\Notifications\Notifiable;
 
 class Fund extends Model
 {
-    /** @use HasFactory<FundFactory> */
     use HasFactory, Notifiable;
 
     protected $fillable = [
         'name',
+        'description',
+        'permanent',
         'amount',
         'raise',
     ];
-
 }
+

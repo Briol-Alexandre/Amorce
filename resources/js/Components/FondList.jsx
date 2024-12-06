@@ -1,10 +1,10 @@
 import Fond from "@/Components/Fond.jsx";
-import {AddIcon} from "@/Components/icons/AddIcon.jsx";
-import React, {useState} from "react";
+import { AddIcon } from "@/Components/icons/AddIcon.jsx";
+import React, { useState } from "react";
 import Modal from "@/Components/Modal.jsx";
 import NewFund from "@/Components/NewFund.jsx";
 
-export function FondList({fonds, errors, displayFund}) {
+export function FondList({ fonds, displayFund }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = () => setIsModalOpen(true);
@@ -26,18 +26,17 @@ export function FondList({fonds, errors, displayFund}) {
                 ))}
                 <div
                     className="flex flex-col items-center mr-10 hover:cursor-pointer"
-                    onClick={openModal} // Ouvre la modal au clic
+                    onClick={openModal}
                 >
-                    <AddIcon color={'black'}/>
+                    <AddIcon color={'black'} />
                     <p>Ajouter un fond</p>
                 </div>
             </section>
             <span className="block h-0.5 bg-gray-300 mt-4"></span>
 
-            {/* Modal */}
             {isModalOpen && (
                 <Modal onClose={closeModal}>
-                    <NewFund onClose={closeModal} errors={errors} />
+                    <NewFund onClose={closeModal} />
                 </Modal>
             )}
         </>
