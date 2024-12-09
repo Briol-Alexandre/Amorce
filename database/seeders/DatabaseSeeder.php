@@ -30,9 +30,12 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Un fonds collectif géré démocratiquement par ses contributeurs pour financer des activités comme des bourses et des prêts.',
                 'permanent' => true,
                 'amount' => fake()->numberBetween(0, 5000),
-                'raise' => fake()->numberBetween(-100, 100)
-
-            ]);
+                'raise' => fake()->numberBetween(-100, 100),
+            ])
+            ->each(function ($fund) {
+                $totalAmount = $fund->transactions()->sum('amount');
+                $fund->update(['amount' => $totalAmount]);
+            });
 
         Fund::factory()
             ->has(Transaction::factory()->count(7))
@@ -42,6 +45,11 @@ class DatabaseSeeder extends Seeder
                 'permanent' => true,
                 'amount' => fake()->numberBetween(0, 5000),
                 'raise' => fake()->numberBetween(-100, 100),
-            ]);
+            ])
+            ->each(function ($fund) {
+                $totalAmount = $fund->transactions()->sum('amount');
+                $fund->update(['amount' => $totalAmount]);
+            });
+
     }
 }

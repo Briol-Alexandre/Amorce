@@ -4,10 +4,11 @@ import {Transactions} from "@/Components/Transactions.jsx";
 
 export function FundInfo({fund, transactions}) {
     const [isRotated, setIsRotated] = useState(false);
+
+    // Toggle rotation for the icon and show/hide TransactionsTable
     const toggleRotation = () => {
         setIsRotated(!isRotated);
     };
-
 
     return (
         <section>
@@ -18,7 +19,12 @@ export function FundInfo({fund, transactions}) {
             <p className="small-style">{fund.description}</p>
             <section className="p-6">
                 <div>
-                    <Transactions toggleRotation={toggleRotation} isRotated={isRotated} fund={fund} transactions={transactions}/>
+                    <Transactions
+                        toggleRotation={toggleRotation}
+                        isRotated={isRotated}
+                        fund={fund}
+                        transactions={transactions}
+                    />
                 </div>
             </section>
         </section>
