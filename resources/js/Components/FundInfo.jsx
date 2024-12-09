@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 import {DropIcon} from "@/Components/icons/DropIcon.jsx";
+import {Transactions} from "@/Components/Transactions.jsx";
 
-export function FundInfo({fund}) {
+export function FundInfo({fund, transactions}) {
     const [isRotated, setIsRotated] = useState(false);
     const toggleRotation = () => {
         setIsRotated(!isRotated);
@@ -16,13 +17,8 @@ export function FundInfo({fund}) {
             </span>
             <p className="small-style">{fund.description}</p>
             <section className="p-6">
-                <div className="flex items-center gap-4">
-                    <h4>Historique des transactions</h4>
-                    <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow"></span>
-                    <div onClick={toggleRotation}
-                         className={isRotated ? 'rotate-180 transition duration-100' : 'rotate-0 transition duration-100'}>
-                        <DropIcon/>
-                    </div>
+                <div>
+                    <Transactions toggleRotation={toggleRotation} isRotated={isRotated} fund={fund} transactions={transactions}/>
                 </div>
             </section>
         </section>

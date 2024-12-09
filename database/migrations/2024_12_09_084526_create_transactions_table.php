@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('transactor');
             $table->integer('amount');
             $table->timestamp('date');
+            $table->string('communication');
             $table->unsignedBigInteger('fund_id');
             $table->timestamps();
         });
