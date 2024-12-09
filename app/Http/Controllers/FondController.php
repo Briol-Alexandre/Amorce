@@ -28,9 +28,11 @@ class FondController extends Controller
     public function show(Fund $fund)
     {
         $funds = Fund::all();
+        $transactions = $fund->transactions()->get();
         return Inertia::render('Fund', [
             'fund' => $fund,
-            'funds' => $funds
+            'funds' => $funds,
+            'transactions' => $transactions,
         ]);
     }
 

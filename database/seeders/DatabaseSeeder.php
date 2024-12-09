@@ -23,28 +23,25 @@ class DatabaseSeeder extends Seeder
             'email' => 'a@a.a',
         ]);
 
-        Fund::factory(2)
-            ->has(
-                Transaction::factory()->count(7)
-            )
-            ->create();
+        Fund::factory()
+            ->has(Transaction::factory()->count(7))
+            ->create([
+                'name' => 'Fond Principal',
+                'description' => 'Un fonds collectif géré démocratiquement par ses contributeurs pour financer des activités comme des bourses et des prêts.',
+                'permanent' => true,
+                'amount' => fake()->numberBetween(0, 5000),
+                'raise' => fake()->numberBetween(-100, 100)
 
+            ]);
 
-        /*Fund::factory()->create([
-            'name'=> 'Fond Principal',
-            'description' => 'Un fonds collectif géré démocratiquement par ses contributeurs pour financer des activités comme des bourses et des prêts.',
-            'permanent'=>true,
-            'amount' => fake()->numberBetween(0, 5000),
-            'raise' => fake()->numberBetween(-100, 100)
-
-        ]);
-
-        Fund::factory()->create([
-            'name'=> 'Fond de Fonctionnement',
-            'description' => 'Un fonds dédié au fonctionnement de l‘amorce, couvrant les frais opérationnels, géré par une équipe de bénévoles.',
-            'permanent'=>true,
-            'amount' => fake()->numberBetween(0, 5000),
-            'raise' => fake()->numberBetween(-100, 100),
-        ]);*/
+        Fund::factory()
+            ->has(Transaction::factory()->count(7))
+            ->create([
+                'name' => 'Fond de Fonctionnement',
+                'description' => 'Un fonds dédié au fonctionnement de l‘amorce, couvrant les frais opérationnels, géré par une équipe de bénévoles.',
+                'permanent' => true,
+                'amount' => fake()->numberBetween(0, 5000),
+                'raise' => fake()->numberBetween(-100, 100),
+            ]);
     }
 }
