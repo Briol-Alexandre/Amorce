@@ -1,8 +1,8 @@
 import React from "react";
-import {DropIcon} from "@/Components/icons/DropIcon.jsx";
-import {TransactionsTable} from "@/Components/TransactionsTable.jsx";
+import { DropIcon } from "@/Components/icons/DropIcon.jsx";
+import { TransactionsTable } from "@/Components/TransactionsTable.jsx";
 
-export function Transactions({toggleRotation, isRotated, fund, transactions}) {
+export function Transactions({ toggleRotation, isRotated, fund, transactions }) {
     return (
         <section>
             <div className='flex items-center gap-4'>
@@ -12,7 +12,7 @@ export function Transactions({toggleRotation, isRotated, fund, transactions}) {
                     onClick={toggleRotation}
                     className={isRotated ? 'rotate-180 transition duration-100' : 'rotate-0 transition duration-100'}
                 >
-                    <DropIcon/>
+                    <DropIcon />
                 </div>
             </div>
             <div
@@ -22,7 +22,7 @@ export function Transactions({toggleRotation, isRotated, fund, transactions}) {
                         : 'max-h-0 opacity-0'
                 }`}
             >
-                <TransactionsTable transactions={transactions}/>
+                <TransactionsTable transactions={transactions} />
             </div>
         </section>
     );
