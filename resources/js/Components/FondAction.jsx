@@ -1,12 +1,13 @@
-import React, {useState} from "react";
-import {Inertia} from '@inertiajs/inertia';
+import React, { useState } from "react";
+import { Inertia } from '@inertiajs/inertia';
 import ActionButton from "@/Components/ActionButton.jsx";
 import Modal from "@/Components/Modal.jsx";
-import {ModalDelete} from "@/Components/Modals/ModalDelete.jsx";
-import {ModalTransfer} from "@/Components/Modals/ModalTransfer.jsx";
-import {ModalAdd} from "@/Components/Modals/ModalAdd.jsx";
+import { ModalDelete } from "@/Components/Modals/ModalDelete.jsx";
+import { ModalTransfer } from "@/Components/Modals/ModalTransfer.jsx";
+import { ModalAdd } from "@/Components/Modals/ModalAdd.jsx";
+import {router} from "@inertiajs/react";
 
-export default function FondAction({fund}) {
+export default function FondAction({ fund }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
@@ -21,7 +22,6 @@ export default function FondAction({fund}) {
         setIsAddModalOpen(true);
     }
 
-
     function openTransferModal(e) {
         e.preventDefault();
         setIsTransferModalOpen(true);
@@ -33,14 +33,14 @@ export default function FondAction({fund}) {
         setIsTransferModalOpen(false);
     }
 
-    function handleAdd(addAmount) {
-        Inertia.patch(route('fond.update', fund.id), {addAmount});
+    function handleAdd(formData) {
+        console.log("Fund ID:", formData);
+        router.post(route('transaction.store', { fund: formData.fundId }), formData);
         closeModal();
     }
 
-
     function handleTransfer() {
-
+        // Logic for handling fund transfer
     }
 
     function handleDelete(e) {
@@ -53,30 +53,29 @@ export default function FondAction({fund}) {
         <section>
             <h3 className="sr-only">Fond Principal</h3>
             <div className='flex justify-around'>
-                {fund.permanent ? null : (
-                    <ActionButton name="Supprimer le fond" color={'red'} onClick={openDeleteModal}/>
-
+                {!fund.permanent && (
+                    <ActionButton name="Supprimer le fond" color={'red'} onClick={openDeleteModal} />
                 )}
-                <ActionButton name="Ajouter de l'argent" color={'blue'} onClick={openAddModal}/>
-                <ActionButton name="Transferer vers un autre fond" color={'green'} onClick={openTransferModal}/>
 
+                <ActionButton name="Ajouter de l'argent" color={'blue'} onClick={openAddModal} />
+                <ActionButton name="Transferer vers un autre fond" color={'green'} onClick={openTransferModal} />
             </div>
 
             {isDeleteModalOpen && (
                 <Modal onClose={closeModal}>
-                    <ModalDelete closeModal={closeModal} handleDelete={handleDelete}/>
+                    <ModalDelete closeModal={closeModal} handleDelete={handleDelete} />
                 </Modal>
             )}
 
             {isAddModalOpen && (
                 <Modal onClose={closeModal}>
-                    <ModalAdd closeModal={closeModal} handleAdd={handleAdd}/>
+                    <ModalAdd closeModal={closeModal} handleAdd={handleAdd} fund={fund} />
                 </Modal>
             )}
 
             {isTransferModalOpen && (
                 <Modal onClose={closeModal}>
-                    <ModalTransfer closeModal={closeModal} handleTransfer={handleTransfer}/>
+                    <ModalTransfer closeModal={closeModal} handleTransfer={handleTransfer} />
                 </Modal>
             )}
         </section>

@@ -45,11 +45,7 @@ class FondController extends Controller
     #[NoReturn]
     public function update(FundStoreRequest $request, Fund $fund)
     {
-        dd($request);
-        $addAmount = $request->input('addAmount', 0);
-        $fund->amount += $addAmount;
-        $fund->update($request->validated());
-        return Inertia::location(route('fond.show', ['fund' => $fund->id]));
+        //
     }
 
 
