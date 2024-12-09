@@ -11,10 +11,11 @@ class Transaction extends Model
 {
     use HasFactory, Notifiable;
     protected $fillable = [
+        'fund_id',
         'transactor',
         'amount',
         'date',
-        'fund_id'
+        'communication',
     ];
 
     function fund(): BelongsTo

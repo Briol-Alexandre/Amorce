@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('transactor');
             $table->integer('amount');
-            $table->timestamp('date');
+            $table->date('date');
             $table->string('communication');
-            $table->unsignedBigInteger('fund_id');
+            $table->foreignId('fund_id')->constrained('funds')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

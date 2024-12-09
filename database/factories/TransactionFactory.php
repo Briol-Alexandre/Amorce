@@ -22,7 +22,6 @@ class TransactionFactory extends Factory
             'amount' => fake()->numberBetween(10, 250),
             'date' => fake()->dateTime(),
             'communication' => fake()->sentence(4),
-            'fund_id'=> fake()->numberBetween(1,2),
         ];
     }
 }
