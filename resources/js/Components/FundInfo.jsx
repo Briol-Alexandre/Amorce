@@ -3,7 +3,7 @@ import {DropIcon} from "@/Components/icons/DropIcon.jsx";
 import {Transactions} from "@/Components/Transactions.jsx";
 
 export function FundInfo({fund, transactions}) {
-    const [isRotated, setIsRotated] = useState(false);
+    const [isRotated, setIsRotated] = useState(true);
 
     // Toggle rotation for the icon and show/hide TransactionsTable
     const toggleRotation = () => {
