@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Fund;
+use App\Models\Transaction;
 use App\Models\User;
+
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -21,12 +23,20 @@ class DatabaseSeeder extends Seeder
             'email' => 'a@a.a',
         ]);
 
-        Fund::factory()->create([
+        Fund::factory(2)
+            ->has(
+                Transaction::factory()->count(7)
+            )
+            ->create();
+
+
+        /*Fund::factory()->create([
             'name'=> 'Fond Principal',
             'description' => 'Un fonds collectif géré démocratiquement par ses contributeurs pour financer des activités comme des bourses et des prêts.',
             'permanent'=>true,
             'amount' => fake()->numberBetween(0, 5000),
-            'raise' => fake()->numberBetween(-100, 100),
+            'raise' => fake()->numberBetween(-100, 100)
+
         ]);
 
         Fund::factory()->create([
@@ -35,6 +45,6 @@ class DatabaseSeeder extends Seeder
             'permanent'=>true,
             'amount' => fake()->numberBetween(0, 5000),
             'raise' => fake()->numberBetween(-100, 100),
-        ]);
+        ]);*/
     }
 }

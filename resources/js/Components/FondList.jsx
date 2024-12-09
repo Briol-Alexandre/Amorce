@@ -21,7 +21,6 @@ export function FondList({ fonds, displayFund }) {
                         foundAmount={fond.amount}
                         foundRaise={fond.raise}
                         fond={fond}
-                        displayFund={displayFund}
                     />
                 ))}
                 <div

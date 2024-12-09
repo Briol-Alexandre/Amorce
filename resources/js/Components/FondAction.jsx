@@ -1,38 +1,84 @@
-import React from "react";
-import SecondaryButton from "@/Components/SecondaryButton.jsx";
+import React, {useState} from "react";
+import {Inertia} from '@inertiajs/inertia';
 import ActionButton from "@/Components/ActionButton.jsx";
-import { Inertia } from '@inertiajs/inertia';
+import Modal from "@/Components/Modal.jsx";
+import {ModalDelete} from "@/Components/Modals/ModalDelete.jsx";
+import {ModalTransfer} from "@/Components/Modals/ModalTransfer.jsx";
+import {ModalAdd} from "@/Components/Modals/ModalAdd.jsx";
+
 export default function FondAction({fund}) {
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+
+    function openDeleteModal(e) {
+        e.preventDefault();
+        setIsDeleteModalOpen(true);
+    }
+
+    function openAddModal(e) {
+        e.preventDefault();
+        setIsAddModalOpen(true);
+    }
+
+
+    function openTransferModal(e) {
+        e.preventDefault();
+        setIsTransferModalOpen(true);
+    }
+
+    function closeModal() {
+        setIsDeleteModalOpen(false);
+        setIsAddModalOpen(false);
+        setIsTransferModalOpen(false);
+    }
+
+    function handleAdd(addAmount) {
+        Inertia.patch(route('fond.update', fund.id), {addAmount});
+        closeModal();
+    }
+
+
+    function handleTransfer() {
+
+    }
 
     function handleDelete(e) {
         e.preventDefault();
         Inertia.delete(route('fond.destroy', fund.id));
-    }
-
-
-    function handleAdd (e) {
-        e.preventDefault();
-    }
-
-    function handleTransfer (e) {
-        e.preventDefault();
+        setIsDeleteModalOpen(false);
     }
 
     return (
         <section>
-            <h3 className="sr-only">Fond Principal (titre à mettre dynamique)</h3>
+            <h3 className="sr-only">Fond Principal</h3>
             <div className='flex justify-around'>
-                {fund.permanent ? null : <form onSubmit={handleDelete}>
-                    <ActionButton name="Supprimer le fond" color={'red'}/>
-                </form>}
+                {fund.permanent ? null : (
+                    <ActionButton name="Supprimer le fond" color={'red'} onClick={openDeleteModal}/>
 
-                <form onSubmit={handleAdd}>
-                    <ActionButton name="Ajouter de l'argent" color={'blue'}/>
-                </form>
-                <form onSubmit={handleTransfer}>
-                    <ActionButton name="Transférer vers un autre fond" color={'green'}/>
-                </form>
+                )}
+                <ActionButton name="Ajouter de l'argent" color={'blue'} onClick={openAddModal}/>
+                <ActionButton name="Transferer vers un autre fond" color={'green'} onClick={openTransferModal}/>
+
             </div>
+
+            {isDeleteModalOpen && (
+                <Modal onClose={closeModal}>
+                    <ModalDelete closeModal={closeModal} handleDelete={handleDelete}/>
+                </Modal>
+            )}
+
+            {isAddModalOpen && (
+                <Modal onClose={closeModal}>
+                    <ModalAdd closeModal={closeModal} handleAdd={handleAdd}/>
+                </Modal>
+            )}
+
+            {isTransferModalOpen && (
+                <Modal onClose={closeModal}>
+                    <ModalTransfer closeModal={closeModal} handleTransfer={handleTransfer}/>
+                </Modal>
+            )}
         </section>
-    )
+    );
 }

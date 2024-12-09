@@ -57,7 +57,7 @@ export default function NewFund({onClose}) {
                     value={data.description}
                     idAndFor="description"
                     errors={errors?.description}
-                    labelName="Description du fond"
+                    labelName="Description du&nbsp;fond"
                     inputName="description"
                     containerClassName="flex items-center gap-4"
                     labelClassName="text-sm"
@@ -80,6 +80,7 @@ export default function NewFund({onClose}) {
                     name="raise"
                     value={data.raise}
                 />
+
                 <InputError message={customErrors.name}/>
                 <InputError message={customErrors.description}/>
 
