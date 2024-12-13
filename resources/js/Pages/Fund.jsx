@@ -14,8 +14,7 @@ export default function Fund() {
                 <div className="p-3 ">
                     <TitleAndSpan title="Fonds"/>
                     <FondList fonds={funds}/>
-                    <FundInfo fund={fund} transactions={transactions} />
-                    <FondAction fund={fund}/>
+                    <FundInfo fund={fund} funds={funds} transactions={transactions} />
                 </div>
 
             </div>
