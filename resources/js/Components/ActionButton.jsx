@@ -4,31 +4,29 @@ import { TransferIcon } from "@/Components/icons/TransferIcon.jsx";
 import { useState } from "react";
 
 export default function ActionButton({ name, color, onClick }) {
-    const [hover, setHover] = useState(false);  // État pour gérer le survol
-
-    // Colormap associant chaque couleur à des classes CSS
+    const [hover, setHover] = useState(false);
     const colorMap = {
         blue: {
-            text: "text-blue-500",
-            hoverBg: "hover:bg-blue-500",
+            text: "text-blue-400",
+            hoverBg: "hover:bg-blue-400",
             hoverText: "hover:text-white",
         },
         red: {
-            text: "text-red-500",
-            hoverBg: "hover:bg-red-500",
+            text: "text-red-400",
+            hoverBg: "hover:bg-red-400",
             hoverText: "hover:text-white",
         },
         green: {
-            text: "text-green-500",
-            hoverBg: "hover:bg-green-500",
+            text: "text-green-400",
+            hoverBg: "hover:bg-green-400",
             hoverText: "hover:text-white",
         },
     };
     const { text, hoverBg, hoverText } = colorMap[color] || {};
 
     const className = `group transition duration-200 border border-gray-300 p-2 rounded flex gap-3 items-center
-                       ${text || "text-gray-500"}
-                       ${hoverBg || "hover:bg-gray-500"}
+                       ${text || "text-gray-200"}
+                       ${hoverBg || "hover:bg-gray-200"}
                        ${hoverText || "hover:text-white"}`;
 
     const iconMap = {

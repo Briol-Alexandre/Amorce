@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {DropIcon} from "@/Components/icons/DropIcon.jsx";
 import {Transactions} from "@/Components/Transactions.jsx";
+import FondAction from "@/Components/FondAction.jsx";
 
 export function FundInfo({fund, transactions}) {
     const [isRotated, setIsRotated] = useState(true);
@@ -15,6 +16,7 @@ export function FundInfo({fund, transactions}) {
                 {fund.permanent ? <p className='border-2 border-black inline rounded-xl px-2 text-sm text-white bg-black'>Permanent</p> : null}
             </span>
             <p className="small-style">{fund.description}</p>
+            <FondAction fund={fund}/>
             <section className="p-6">
                 <div>
                     <Transactions

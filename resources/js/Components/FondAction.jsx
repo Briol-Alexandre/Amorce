@@ -45,12 +45,12 @@ export default function FondAction({ fund }) {
 
     function handleDelete(e) {
         e.preventDefault();
-        Inertia.delete(route('fond.destroy', fund.id));
+        router.delete(route('fond.destroy', fund.id));
         setIsDeleteModalOpen(false);
     }
 
     return (
-        <section>
+        <section className='m-8'>
             <h3 className="sr-only">Fond Principal</h3>
             <div className='flex justify-around'>
                 {!fund.permanent && (

@@ -3,11 +3,11 @@ import InputError from "@/Components/InputError.jsx";
 
 export function ModalAdd({ closeModal, handleAdd, fund }) {
     const [formData, setFormData] = useState({
-        amount: "24",
+        amount: "",
         date: "",
-        transactor: "John Doe",
-        communication: "Test",
-        fundId: fund.id, // ID du fond pré-rempli
+        transactor: "",
+        communication: "",
+        fundId: fund.id,
     });
     const [errors, setErrors] = useState({});
 
@@ -18,8 +18,6 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
             [name]: value
         }));
     };
-
-    // Fonction de validation
     const validateForm = () => {
         let formErrors = {};
 
@@ -41,7 +39,7 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
 
         setErrors(formErrors);
 
-        return Object.keys(formErrors).length === 0; // Retourne true si aucune erreur
+        return Object.keys(formErrors).length === 0;
     };
 
     const onSubmit = (e) => {

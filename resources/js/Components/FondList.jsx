@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import Modal from "@/Components/Modal.jsx";
 import NewFund from "@/Components/NewFund.jsx";
 
-export function FondList({ fonds, displayFund }) {
+export function FondList({ fonds }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
