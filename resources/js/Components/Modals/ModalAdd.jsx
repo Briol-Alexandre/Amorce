@@ -72,8 +72,8 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
                         placeholder="XX €"
                         onChange={handleInputChange}
                     />
-                    {errors.amount && <InputError message={errors.amount} />}
                 </fieldset>
+                {errors.amount && <InputError message={errors.amount} />}
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="date">Date</label>
                     <input
@@ -84,8 +84,8 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
                         value={formData.date}
                         onChange={handleInputChange}
                     />
-                    {errors.date && <InputError message={errors.date} />}
                 </fieldset>
+                {errors.date && <InputError message={errors.date} />}
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="transactor">Transacteur</label>
                     <input
@@ -97,8 +97,8 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
                         placeholder="Mr. Doe"
                         onChange={handleInputChange}
                     />
-                    {errors.transactor && <InputError message={errors.transactor} />}
                 </fieldset>
+                {errors.transactor && <InputError message={errors.transactor} />}
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="communication">Communication</label>
                     <input
@@ -110,8 +110,8 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
                         placeholder="Entrez une communication"
                         onChange={handleInputChange}
                     />
-                    {errors.communication && <InputError message={errors.communication} />}
                 </fieldset>
+                {errors.communication && <InputError message={errors.communication} />}
                 <div className="flex justify-end mt-8 gap-4">
                     <button
                         type="button"

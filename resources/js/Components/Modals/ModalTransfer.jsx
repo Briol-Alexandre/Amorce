@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import InputError from "@/Components/InputError.jsx";
 
-export function ModalTransfer({ closeModal, handleTransfer, fund, funds }) {
+export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
     const activeFundId = fund.id;
 
     const [formData, setFormData] = useState({
@@ -16,7 +16,7 @@ export function ModalTransfer({ closeModal, handleTransfer, fund, funds }) {
     const [errors, setErrors] = useState({});
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -83,8 +83,8 @@ export function ModalTransfer({ closeModal, handleTransfer, fund, funds }) {
                         placeholder="XX €"
                         onChange={handleInputChange}
                     />
-                    {errors.amount && <InputError message={errors.amount}/>}
                 </fieldset>
+                {errors.amount && <InputError message={errors.amount}/>}
 
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="fonds">Vers quel fond</label>
@@ -104,8 +104,8 @@ export function ModalTransfer({ closeModal, handleTransfer, fund, funds }) {
                                 </option>
                             ))}
                     </select>
-                    {errors.destinationFundId && <InputError message={errors.destinationFundId}/>}
                 </fieldset>
+                {errors.destinationFundId && <InputError message={errors.destinationFundId}/>}
 
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="transactor">Transacteur</label>
@@ -118,8 +118,8 @@ export function ModalTransfer({ closeModal, handleTransfer, fund, funds }) {
                         placeholder="Mr. Doe"
                         onChange={handleInputChange}
                     />
-                    {errors.transactor && <InputError message={errors.transactor}/>}
                 </fieldset>
+                {errors.transactor && <InputError message={errors.transactor}/>}
 
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="communication">Communication</label>
@@ -132,8 +132,8 @@ export function ModalTransfer({ closeModal, handleTransfer, fund, funds }) {
                         placeholder="Entrez une communication"
                         onChange={handleInputChange}
                     />
-                    {errors.communication && <InputError message={errors.communication}/>}
                 </fieldset>
+                {errors.communication && <InputError message={errors.communication}/>}
 
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="date">Date</label>
@@ -145,8 +145,8 @@ export function ModalTransfer({ closeModal, handleTransfer, fund, funds }) {
                         value={formData.date}
                         onChange={handleInputChange}
                     />
-                    {errors.date && <InputError message={errors.date}/>}
                 </fieldset>
+                {errors.date && <InputError message={errors.date}/>}
 
                 <div className="flex justify-end mt-8 gap-4">
                     <button
