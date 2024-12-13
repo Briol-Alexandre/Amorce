@@ -5,8 +5,8 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
     const [formData, setFormData] = useState({
         amount: "",
         date: "",
-        transactor: "",
-        communication: "",
+        transactor: "John Doe",
+        communication: "Test",
         fundId: fund.id,
     });
     const [errors, setErrors] = useState({});
@@ -45,7 +45,6 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
     const onSubmit = (e) => {
         e.preventDefault();
 
-        // Validation avant l'envoi
         if (validateForm()) {
             handleAdd(formData);
             closeModal();
@@ -62,7 +61,7 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
                     name="fundId"
                     value={formData.fundId}
                 />
-                <fieldset className="mt-5 self-end">
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="amount">Montant</label>
                     <input
                         type="text"
@@ -75,7 +74,7 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
                     />
                     {errors.amount && <InputError message={errors.amount} />}
                 </fieldset>
-                <fieldset className="mt-5 self-end">
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="date">Date</label>
                     <input
                         type="date"
@@ -87,7 +86,7 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
                     />
                     {errors.date && <InputError message={errors.date} />}
                 </fieldset>
-                <fieldset className="mt-5 self-end">
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="transactor">Transacteur</label>
                     <input
                         type="text"
@@ -100,7 +99,7 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
                     />
                     {errors.transactor && <InputError message={errors.transactor} />}
                 </fieldset>
-                <fieldset className="mt-5 self-end">
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="communication">Communication</label>
                     <input
                         type="text"

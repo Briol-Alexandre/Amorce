@@ -11,4 +11,6 @@ use Inertia\Inertia;
 
 Route::middleware('auth')->group(function () {
     Route::post('/fonds/{fund}', [TransactionController::class, 'store'])->name('transaction.store');
+    Route::patch('/fonds/{fund}', [TransactionController::class, 'update'])->name('transaction.update');
+
 });

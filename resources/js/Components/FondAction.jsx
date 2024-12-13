@@ -7,7 +7,7 @@ import { ModalTransfer } from "@/Components/Modals/ModalTransfer.jsx";
 import { ModalAdd } from "@/Components/Modals/ModalAdd.jsx";
 import {router} from "@inertiajs/react";
 
-export default function FondAction({ fund }) {
+export default function FondAction({ fund, funds }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
@@ -34,14 +34,27 @@ export default function FondAction({ fund }) {
     }
 
     function handleAdd(formData) {
-        console.log("Fund ID:", formData);
         router.post(route('transaction.store', { fund: formData.fundId }), formData);
         closeModal();
     }
 
-    function handleTransfer() {
-        // Logic for handling fund transfer
+    function handleTransfer(formData) {
+        // Vérifie d'abord les données avant d'envoyer la requête
+        console.log('Sending transfer data:', formData);
+
+        router.patch(route('transaction.update', { fund: formData.fundId }), formData, {
+            onSuccess: (response) => {
+                // Gère la réussite de la requête
+                console.log('Données envoyées avec succès:', response);
+                closeModal();
+            },
+            onError: (error) => {
+                // Gère l'erreur de la requête
+                console.error('Erreur lors de l\'envoi des données:', error);
+            },
+        });
     }
+
 
     function handleDelete(e) {
         e.preventDefault();
@@ -75,7 +88,7 @@ export default function FondAction({ fund }) {
 
             {isTransferModalOpen && (
                 <Modal onClose={closeModal}>
-                    <ModalTransfer closeModal={closeModal} handleTransfer={handleTransfer} />
+                    <ModalTransfer closeModal={closeModal} handleTransfer={handleTransfer} funds={funds} fund={fund} />
                 </Modal>
             )}
         </section>
