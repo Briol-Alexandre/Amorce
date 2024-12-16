@@ -52,14 +52,12 @@ export default function TitleAndSpan({title, transactions, funds}) {
 
         {isCheckModalOpen && (<Modal onClose={closeCheckModal}>
             <div className="max-h-[80vh] w-[80vw] lg:w-[50vw] overflow-y-auto bg-white p-4 rounded-md">
-                <h2 className="text-xl mb-4">Sélectionner un fond pour les transactions</h2>
-                <div className="grid grid-cols-[1fr_1fr_3fr_2fr] gap-6 bg-white p-4 rounded-md items-center">
-                    <p className="font-bold text-left">Date</p>
-                    <p className="font-bold text-left">Montant</p>
-                    <p className="font-bold text-left">Communication</p>
-                    <p className="font-bold text-left">Action</p>
-
-                    {/* Transactions */}
+                <h2 className="text-xl pb-4 sticky -top-4 bg-white">Sélectionner un fond pour les transactions</h2>
+                <div className="grid grid-cols-[1fr_1fr_3fr_2fr] gap-4 bg-white p-4 rounded-md items-center">
+                    <p className="font-bold text-left sticky top-5 pb-5 bg-white z-10">Date</p>
+                    <p className="font-bold text-left sticky top-5 pb-5 bg-white z-10">Montant</p>
+                    <p className="font-bold text-left sticky top-5 pb-5 bg-white z-10">Communication</p>
+                    <p className="font-bold text-left sticky top-5 pb-5 bg-white z-10">Action</p>
                     {transactions.map((transaction, index) => (
                         <React.Fragment key={index}>
                             <p className="py-2">{transaction.date}</p>
@@ -88,6 +86,7 @@ export default function TitleAndSpan({title, transactions, funds}) {
                     </button>
                 </div>
             </div>
+
         </Modal>)}
 
     </>);
