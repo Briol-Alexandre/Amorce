@@ -13,7 +13,7 @@ export default function Fond({foundName, foundAmount, foundRaise, fond}) {
                             {foundName}
                          </h4>
                         {fond.permanent ?
-                            <p className='border-2 border-black inline rounded-xl px-2 text-sm text-white bg-black'>Permanent</p> : null}
+                            <p className='border-2 border-black inline font-bold rounded-xl px-2 text-sm text-white bg-black'>Permanent</p> : null}
                     </span>
                     <div className="flex gap-6">
                         <p className="found-name-style">

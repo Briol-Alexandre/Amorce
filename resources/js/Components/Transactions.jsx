@@ -10,7 +10,7 @@ export function Transactions({ toggleRotation, isRotated, fund, transactions }) 
                 <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow"></span>
                 <div
                     onClick={toggleRotation}
-                    className={isRotated ? 'rotate-180 transition duration-100' : 'rotate-0 transition duration-100'}
+                    className={isRotated ? 'rotate-0 transition duration-100' : 'rotate-180 transition duration-100'}
                 >
                     <DropIcon />
                 </div>

@@ -4,7 +4,7 @@ import {Transactions} from "@/Components/Transactions.jsx";
 import FondAction from "@/Components/FondAction.jsx";
 
 export function FundInfo({fund, funds, transactions}) {
-    const [isRotated, setIsRotated] = useState(true);
+    const [isRotated, setIsRotated] = useState(false);
     const toggleRotation = () => {
         setIsRotated(!isRotated);
     };
@@ -13,7 +13,7 @@ export function FundInfo({fund, funds, transactions}) {
         <section>
             <span className='flex items-center ml-3 mt-6 gap-2'>
                 <h3 className='small-title-style'>{fund.name}</h3>
-                {fund.permanent ? <p className='border-2 border-black inline rounded-xl px-2 text-sm text-white bg-black'>Permanent</p> : null}
+                {fund.permanent ? <p className='border-2 border-black inline font-bold rounded-xl px-2 text-sm text-white bg-black'>Permanent</p> : null}
             </span>
             <p className="small-style mb-10">{fund.description}</p>
             <FondAction fund={fund} funds={funds}/>
