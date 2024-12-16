@@ -24,6 +24,7 @@ class FundStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|between:3,255',
+            'bank_code' => 'string|between:3,255',
             'description'=>'required|string|between:3,255',
             'permanent'=>'boolean',
             'amount' => 'required|int',

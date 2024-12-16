@@ -129,7 +129,7 @@ function NavBar({isOpened, isClosed, logOut}) {
 
 
     return (
-        <aside className="h-screen">
+        <aside className="h-[98vh]">
             <h2 className="sr-only">Navigation</h2>
         {navigation}
         </aside>

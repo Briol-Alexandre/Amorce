@@ -4,7 +4,6 @@ import MainStructure from "@/Components/MainStructure.jsx";
 import TitleAndSpan from "@/Components/TitleAndSpan.jsx";
 import {FondList} from "@/Components/FondList.jsx";
 import React from "react";
-import FondAction from "@/Components/FondAction.jsx";
 
 export default function Fund() {
     const {fund, funds, transactions} = usePage().props

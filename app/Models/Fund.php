@@ -14,6 +14,7 @@ class Fund extends Model
 
     protected $fillable = [
         'name',
+        'bank_code',
         'description',
         'permanent',
         'amount',
