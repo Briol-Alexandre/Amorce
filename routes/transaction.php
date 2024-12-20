@@ -13,4 +13,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/fonds/{fund}', [TransactionController::class, 'store'])->name('transaction.store');
     Route::patch('/fonds/{fund}', [TransactionController::class, 'update'])->name('transaction.update');
     Route::post('/fonds', [TransactionController::class, 'csv'])->name('transaction.seed-csv-transactions');
+    Route::patch('/fonds', [TransactionController::class, 'storeCsvTransactions'])->name('transaction.store-csv-transactions');
 });

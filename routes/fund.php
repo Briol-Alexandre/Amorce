@@ -13,6 +13,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/fonds/{fund}', [FondController::class, 'show'])->name('fond.show');
 
+    Route::post('/fonds', [FondController::class, 'store'])->name('fond.store');
+
     Route::delete('/fonds/{fund}', [FondController::class, 'destroy'])->name('fond.destroy');
 
     Route::patch('/fonds/{fund}', [FondController::class, 'update'])->name('fond.update');

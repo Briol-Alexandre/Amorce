@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
             ->has(Transaction::factory()->count(7))
             ->create([
                 'name' => 'Fond Principal',
-                'bank_code' => 'BE64523081419552' ,
+                'iban' => 'BE64523081419552',
                 'description' => 'Un fond collectif géré démocratiquement par ses contributeurs pour financer des activités comme des bourses et des prêts.',
                 'permanent' => true,
                 'amount' => fake()->numberBetween(0, 5000),
@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
             ->has(Transaction::factory()->count(7))
             ->create([
                 'name' => 'Fond de Fonctionnement',
-                'bank_code' => 'BE64523081417682',
+                'iban' => 'BE64523081417682',
                 'description' => 'Un fond dédié au fonctionnement de l‘amorce, couvrant les frais opérationnels, géré par une équipe de bénévoles.',
                 'permanent' => true,
                 'amount' => fake()->numberBetween(0, 5000),

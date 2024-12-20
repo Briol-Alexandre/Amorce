@@ -32,11 +32,10 @@ export default function FondAction({ fund, funds }) {
         setIsDeleteModalOpen(false);
         setIsAddModalOpen(false);
         setIsTransferModalOpen(false);
-        setIsModalOpen(false);
     }
 
     function handleAdd(formData) {
-        router.post(route('transaction.store', { fund: formData.fundId }), formData);
+        router.post(route('transaction.store', { fund: fund }), formData);
         closeModal();
     }
 
@@ -44,7 +43,7 @@ export default function FondAction({ fund, funds }) {
     function handleTransfer(formData) {
         console.log('Sending transfer data:', formData);
 
-        router.patch(route('transaction.update', { fund: formData.fundId }), formData, {
+        router.patch(route('transaction.update', { fund: fund }), formData, {
             onSuccess: (response) => {
                 console.log('Données envoyées avec succès:', response);
                 closeModal();

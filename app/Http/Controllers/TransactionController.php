@@ -31,30 +31,11 @@ class TransactionController extends Controller
     }
 
 
-    /*public function seedCsvTransactions(Request $request)
+    #[NoReturn] public function storeCsvTransactions(Request $request)
     {
+        dd($request);
+    }
 
-        $path = $request->file('csv')->getPathname();
-
-        $transactions = (new Transaction)->seedCsvTransaction($path);
-
-
-        if (isset($transactions['error'])) {
-            return response()->json(['error' => $transactions['error']]);
-        }
-        foreach ($transactions as $data) {
-            Transaction::create([
-                'fund_id' => $this->getFundIdForTransaction($data),
-                'bank_code' => $data['compte_crediteur'],
-                'amount' => isset($data['amount']) ? str_replace(',', '.', $data['amount']) : 0,
-                'transactor' => $data['transactor'],
-                'date' => isset($data['date']) ? Carbon::createFromFormat('d-m-Y', $data['date'])->format('Y-m-d') : now(),
-                'communication' => $data['communication'],
-            ]);
-        }
-
-        return Inertia::location(route('fond.show', ['fund' => 1]));
-    }*/
 
 
     #[NoReturn]
@@ -80,7 +61,6 @@ class TransactionController extends Controller
     public function store(Fund $fund, TransactionStoreRequest $request)
     {
         $validated = $request->validated();
-        $validated['fund_id'] = $fund->id;
         $transaction = Transaction::create($validated);
 
         $fund->amount += $transaction->amount;
@@ -101,6 +81,5 @@ class TransactionController extends Controller
 
         return Inertia::location(route('fond.show', ['fund' => $fund->id]));
     }
-
 
 }

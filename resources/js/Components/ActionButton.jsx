@@ -3,7 +3,7 @@ import { RemoveIcon } from "@/Components/icons/RemoveIcon.jsx";
 import { TransferIcon } from "@/Components/icons/TransferIcon.jsx";
 import { useState } from "react";
 
-export default function ActionButton({ name, color, onClick }) {
+export default function ActionButton({ name, color, onClick}) {
     const [hover, setHover] = useState(false);
     const colorMap = {
         black: {

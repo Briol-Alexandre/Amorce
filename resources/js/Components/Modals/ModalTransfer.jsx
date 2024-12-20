@@ -8,7 +8,7 @@ export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
 
     const [formData, setFormData] = useState({
         amount: "",
-        fundId: fund.id,
+        fund_id: fund.id,
         destinationFundId: "",
         transactor: "John Doe",
         communication: "",

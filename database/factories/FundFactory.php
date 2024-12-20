@@ -19,9 +19,9 @@ class FundFactory extends Factory
     {
         return [
             'name' => fake()->word(),
-            'bank_code' => fake()->iban(),
+            'iban' => fake()->iban(),
             'description' => fake()->sentence('10'),
-            'permanent' => boolval(true),
+            'permanent' => boolVal(true),
             'amount' => fake()->numberBetween(0, 5000),
             'raise' => fake()->numberBetween(-100, 100),
         ];
