@@ -27,6 +27,7 @@ class TransactionStoreRequest extends FormRequest
             'date' => 'required|date',
             'transactor' => 'required|string|max:255',
             'communication' => 'nullable|string|max:255',
+            'fund_id' => 'required|exists:funds,id',
         ];
     }
 }
