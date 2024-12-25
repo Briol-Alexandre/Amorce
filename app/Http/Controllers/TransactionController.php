@@ -24,7 +24,7 @@ class TransactionController extends Controller
         $path = $request->file('csv')->getPathname();
         $transactions = (new Transaction)->seedCsvTransaction($path);
 
-        return Inertia::render('Funds', [
+        return Inertia::render('Transactions/CsvList', [
             'funds' => $funds,
             'transactions' => $transactions,
         ]);
@@ -33,9 +33,39 @@ class TransactionController extends Controller
 
     #[NoReturn] public function storeCsvTransactions(Request $request)
     {
-        dd($request);
+        $transactions = collect($request->input('transactions'))->map(function ($transaction) {
+            return [
+                'fund_id' => $transaction['fund_id'],
+                'amount' => (float) str_replace(',', '.', $transaction['amount']),
+                'communication' => $transaction['communication'] ?? 'Aucune communication',
+                'transactor' => $transaction['transactor'],
+                'date' => Carbon::parse($transaction['date']),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        });
+
+        Transaction::insert($transactions->toArray());
+
+        foreach ($transactions as $transaction) {
+            $fund = Fund::find($transaction['fund_id']);
+            if ($fund) {
+                $fund->amount += $transaction['amount'];
+                $fund->save();
+            }
+        }
+
+        return redirect()->route('fond.index')->with([
+            'transactions' => $transactions,
+            'funds' => Fund::all(),
+        ]);
     }
 
+
+    public function csvList()
+    {
+        return Inertia::render('Transactions/CsvList');
+    }
 
 
     #[NoReturn]
@@ -43,6 +73,13 @@ class TransactionController extends Controller
     {
         $fund = Fund::where('bank_code', $data['compte_crediteur'])->first()->id;
         return $fund;
+    }
+
+
+    public function index()
+    {
+        return Inertia::render('Transactions/Csv');
+
     }
 
 
