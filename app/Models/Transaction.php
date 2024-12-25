@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
+use App\Services\CsvManager;
 
 class Transaction extends Model
 {
@@ -22,4 +23,11 @@ class Transaction extends Model
     {
         return $this->belongsTo(Fund::class);
     }
+
+    function seedCsvTransaction($filePath): array
+    {
+        $csvManager = new CsvManager();
+        return $csvManager->readCsv($filePath);
+    }
+
 }

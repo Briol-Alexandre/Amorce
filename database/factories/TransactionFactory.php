@@ -18,7 +18,7 @@ class TransactionFactory extends Factory
     public function definition(): array
     {
         return [
-            'transactor' => fake()->name,
+            'transactor' => fake()->name(),
             'amount' => fake()->numberBetween(10, 250),
             'date' => fake()->dateTime(),
             'communication' => fake()->sentence(4),

@@ -4,14 +4,18 @@ import InputError from "@/Components/InputError.jsx";
 export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
     const activeFundId = fund.id;
 
+    const currentDate = new Date().toISOString().split('T')[0];
+
     const [formData, setFormData] = useState({
         amount: "",
-        fundId: fund.id,
+        fund_id: fund.id,
         destinationFundId: "",
         transactor: "John Doe",
         communication: "",
-        date: "",
+        date: currentDate,
     });
+
+
 
     const [errors, setErrors] = useState({});
 
@@ -136,9 +140,8 @@ export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
                 {errors.communication && <InputError message={errors.communication}/>}
 
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
-                    <label htmlFor="date">Date</label>
                     <input
-                        type="date"
+                        type="hidden"
                         name="date"
                         id="date"
                         className="rounded-md ml-3"

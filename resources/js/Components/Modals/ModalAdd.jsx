@@ -7,7 +7,7 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
         date: "",
         transactor: "John Doe",
         communication: "Test",
-        fundId: fund.id,
+        fund_id: fund.id,
     });
     const [errors, setErrors] = useState({});
 
@@ -58,8 +58,8 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
             <form onSubmit={onSubmit}>
                 <input
                     type="hidden"
-                    name="fundId"
-                    value={formData.fundId}
+                    name="fund_id"
+                    value={formData.fund_id}
                 />
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="amount">Montant</label>

@@ -8,10 +8,11 @@ export default function NewFund({onClose}) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 
-    const {data, setData, post, processing, errors} = useForm({
+    const {data, setData, errors} = useForm({
         name: '',
         description: '',
         permanent: false,
+        iban: 'BE27429128531173',
         amount: 0,
         raise: 0,
     });
@@ -23,12 +24,14 @@ export default function NewFund({onClose}) {
 
     function submit(e) {
         e.preventDefault();
-        post('/fonds', {
+        router.post(route('fond.store'), data, {
             onSuccess: () => {
+                console.log("Succès !");
                 onClose();
             },
         });
     }
+
 
     function handleChange(e) {
         setData(e.target.name, e.target.value);
@@ -36,7 +39,7 @@ export default function NewFund({onClose}) {
 
     return (
         <div className="flex flex-col items-center">
-            <form className="flex flex-col gap-8 w-full max-w-sm" onSubmit={submit}>
+            <form className="grid grid-row-[1fr_1fr] gap-8 w-full max-w-sm" onSubmit={submit}>
                 <legend className="text-lg font-semibold">Créer un nouveau fond</legend>
                 <input type="hidden" name="_token" value={csrfToken}/>
 
@@ -63,10 +66,24 @@ export default function NewFund({onClose}) {
                     labelClassName="text-sm"
                     onChange={handleChange}
                 />
+                <TextAndLabel
+                    type="text"
+                    value={data.iban}
+                    idAndFor="iban"
+                    errors={errors?.iban}
+                    labelName="IBAN du fond"
+                    inputName="iban"
+                    containerClassName="flex items-center gap-4"
+                    labelClassName="text-sm"
+                    onChange={handleChange}
+                />
+
+
                 <fieldset className='flex gap-4 items-center'>
                     <input type="checkbox" name='permanent' id='permanent'
                            checked={data.permanent}
-                           onChange={(e) => setData('permanent', e.target.checked)}/>
+                           onChange={(e) => setData('permanent', e.target.checked || false)
+                           }/>
                     <label htmlFor="permanent">Ce fond est-il permanent&nbsp;?</label>
                 </fieldset>
 
@@ -83,6 +100,7 @@ export default function NewFund({onClose}) {
 
                 <InputError message={customErrors.name}/>
                 <InputError message={customErrors.description}/>
+                <InputError message={errors.iban}/>
 
                 <div className="flex justify-end">
                     <PrimaryButton children="Créer le fond" className="normal-case text-sm"/>
