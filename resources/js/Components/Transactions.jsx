@@ -5,11 +5,11 @@ import { TransactionsTable } from "@/Components/TransactionsTable.jsx";
 export function Transactions({ toggleRotation, isRotated, fund, transactions }) {
     return (
         <section>
-            <div className='flex items-center gap-4'>
+            <div className='flex items-center gap-4 hover:cursor-pointer' onClick={toggleRotation}>
                 <h4>Historique des transactions</h4>
                 <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow"></span>
                 <div
-                    onClick={toggleRotation}
+
                     className={isRotated ? 'rotate-0 transition duration-100' : 'rotate-180 transition duration-100'}
                 >
                     <DropIcon />

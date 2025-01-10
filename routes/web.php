@@ -13,8 +13,6 @@ Route::middleware('auth')->group(function () {
 
     Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
 
-    Route::inertia('/detente', 'Detente')->name('detente.index');
-
     Route::inertia('/evenement', 'Evenement')->name('meetup.index');
 
     Route::inertia('/compte', 'Compte')->name('account.index');
@@ -50,3 +48,4 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 require __DIR__ . '/fund.php';
 require __DIR__ . '/transaction.php';
+require __DIR__ . '/detente.php';

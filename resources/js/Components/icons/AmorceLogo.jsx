@@ -1,7 +1,7 @@
 function AmorceLogo({width, height}) {
     return (
         <svg width={width ? width : 130} height={height ? height : 32} viewBox="0 0 130 32" fill="none" xmlns="http://www.w3.org/2000/svg"
-             xmlns:xlink="http://www.w3.org/1999/xlink">
+             xmlnsXlink="http://www.w3.org/1999/xlink">
             <rect width="130" height="32" fill="url(#pattern0_221_2629)"/>
             <defs>
                 <pattern id="pattern0_221_2629" patternContentUnits="objectBoundingBox" width="1" height="1">
