@@ -5,11 +5,14 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/js/app.jsx', 'resources/js/ssr.jsx'], // Inclut SSR
-            ssr: 'resources/js/ssr.jsx', // Point d’entrée SSR
+            input: ['resources/js/app.jsx', 'resources/js/ssr.jsx'],
+            ssr: 'resources/js/ssr.jsx',
         }),
         react(),
     ],
+    build: {
+        rollupOptions: {
+            external: ['http', 'url'],
+        },
+    },
 });
-
-
