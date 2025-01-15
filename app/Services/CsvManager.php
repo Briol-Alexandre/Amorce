@@ -21,7 +21,7 @@ class CsvManager
 
             $stmt = Statement::create()
                 ->offset(10)
-                ->limit(25);
+                ->limit(100);
 
             $records = $stmt->process($csv);
 

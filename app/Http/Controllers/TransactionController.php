@@ -38,7 +38,7 @@ class TransactionController extends Controller
                 'fund_id' => $transaction['fund_id'],
                 'amount' => (float) str_replace(',', '.', $transaction['amount']),
                 'communication' => $transaction['communication'] ?? 'Aucune communication',
-                'transactor' => $transaction['transactor'],
+                'transactor' => $transaction['transactor'] ?? 'Transacteur anonyme',
                 'date' => Carbon::parse($transaction['date']),
                 'created_at' => now(),
                 'updated_at' => now(),

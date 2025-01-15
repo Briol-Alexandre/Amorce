@@ -1,14 +1,14 @@
 import DangerButton from '@/Components/DangerButton';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
-import Modal from '@/Components/Modal';
+import Modal from '@/Components/Modals/Modal.jsx';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
-import { useForm } from '@inertiajs/react';
-import { useRef, useState } from 'react';
+import {useForm} from '@inertiajs/react';
+import {useRef, useState} from 'react';
 
 export default function DeleteUserForm({ className = '' }) {
-    const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const passwordInput = useRef();
 
     const {
@@ -24,7 +24,8 @@ export default function DeleteUserForm({ className = '' }) {
     });
 
     const confirmUserDeletion = () => {
-        setConfirmingUserDeletion(true);
+        console.log('Opening modal...');
+        setIsModalOpen(true); // ouvrir la modal
     };
 
     const deleteUser = (e) => {
@@ -39,7 +40,8 @@ export default function DeleteUserForm({ className = '' }) {
     };
 
     const closeModal = () => {
-        setConfirmingUserDeletion(false);
+        console.log('Closing modal...');
+        setIsModalOpen(false); // fermer la modal
 
         clearErrors();
         reset();
@@ -49,32 +51,30 @@ export default function DeleteUserForm({ className = '' }) {
         <section className={`space-y-6 ${className}`}>
             <header>
                 <h2 className="text-lg font-medium text-gray-900">
-                    Delete Account
+                    Supprimer le compte
                 </h2>
 
                 <p className="mt-1 text-sm text-gray-600">
-                    Once your account is deleted, all of its resources and data
-                    will be permanently deleted. Before deleting your account,
-                    please download any data or information that you wish to
-                    retain.
+                    Une fois votre compte supprimé, toutes ses ressources et données seront définitivement supprimées.
+                    Avant de supprimer votre compte, veuillez télécharger toutes les données ou informations que vous
+                    souhaitez conserver.
                 </p>
             </header>
 
             <DangerButton onClick={confirmUserDeletion}>
-                Delete Account
+                Supprimer le compte
             </DangerButton>
 
-            <Modal show={confirmingUserDeletion} onClose={closeModal}>
+            {/* Passez isModalOpen comme prop */}
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <form onSubmit={deleteUser} className="p-6">
                     <h2 className="text-lg font-medium text-gray-900">
-                        Are you sure you want to delete your account?
+                        Êtes-vous sûr(e) de vouloir supprimer ce compte ?
                     </h2>
 
                     <p className="mt-1 text-sm text-gray-600">
-                        Once your account is deleted, all of its resources and
-                        data will be permanently deleted. Please enter your
-                        password to confirm you would like to permanently delete
-                        your account.
+                        Une fois supprimé, le compte ne sera plus récupérable. Veuillez entrer votre mot de passe pour
+                        confirmer.
                     </p>
 
                     <div className="mt-6">
@@ -106,11 +106,11 @@ export default function DeleteUserForm({ className = '' }) {
 
                     <div className="mt-6 flex justify-end">
                         <SecondaryButton onClick={closeModal}>
-                            Cancel
+                            Annuler
                         </SecondaryButton>
 
                         <DangerButton className="ms-3" disabled={processing}>
-                            Delete Account
+                            Supprimer le compte
                         </DangerButton>
                     </div>
                 </form>
@@ -118,3 +118,4 @@ export default function DeleteUserForm({ className = '' }) {
         </section>
     );
 }
+

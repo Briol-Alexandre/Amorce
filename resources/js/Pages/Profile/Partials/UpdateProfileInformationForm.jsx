@@ -28,17 +28,17 @@ export default function UpdateProfileInformation({
         <section className={className}>
             <header>
                 <h2 className="text-lg font-medium text-gray-900">
-                    Profile Information
+                    Information du profil
                 </h2>
 
                 <p className="mt-1 text-sm text-gray-600">
-                    Update your account's profile information and email address.
+                    Vous pouvez modifier votre profil en changeant les valeurs ci-dessous
                 </p>
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="name" value="Nom"/>
 
                     <TextInput
                         id="name"
@@ -50,11 +50,11 @@ export default function UpdateProfileInformation({
                         autoComplete="name"
                     />
 
-                    <InputError className="mt-2" message={errors.name} />
+                    <InputError className="mt-2" message={errors.name}/>
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email" value="E-mail"/>
 
                     <TextInput
                         id="email"
@@ -66,7 +66,11 @@ export default function UpdateProfileInformation({
                         autoComplete="username"
                     />
 
-                    <InputError className="mt-2" message={errors.email} />
+                    <InputError className="mt-2" message={errors.email}/>
+                </div>
+
+                <div>
+                    <p className='text-gray-500 font-black text-small'>Rôle : {user.role==='auth'? 'Administrateur': user.role==='comptable' ? 'Comptable' : 'Utilisateur'}</p>
                 </div>
 
                 {mustVerifyEmail && user.email_verified_at === null && (

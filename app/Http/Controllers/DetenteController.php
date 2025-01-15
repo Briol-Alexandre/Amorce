@@ -15,14 +15,12 @@ class DetenteController extends Controller
         $currentMonth = now()->month;
         $currentYear = now()->year;
 
-        // Obtenir les mois et années à vérifier
         $monthsToCheck = [
             ['month' => $currentMonth - 1, 'year' => $currentYear],
             ['month' => $currentMonth - 2, 'year' => $currentYear],
             ['month' => $currentMonth - 3, 'year' => $currentYear],
         ];
 
-        // Gérer le passage à l'année précédente si nécessaire
         foreach ($monthsToCheck as &$check) {
             if ($check['month'] <= 0) {
                 $check['month'] += 12;
@@ -30,7 +28,6 @@ class DetenteController extends Controller
             }
         }
 
-        // Récupérer toutes les transactions des 3 mois passés
         $transactions = Transaction::where(function ($query) use ($monthsToCheck) {
             foreach ($monthsToCheck as $check) {
                 $query->orWhereMonth('date', $check['month'])
@@ -38,24 +35,34 @@ class DetenteController extends Controller
             }
         })->get();
 
-        // Convertir la colonne 'date' en instance de Carbon
         $transactions->each(function ($transaction) {
             $transaction->date = Carbon::parse($transaction->date);
         });
 
-        // Filtrer les utilisateurs qui ont des transactions dans les 3 mois
-        $filteredTransactions = $transactions->groupBy('transactor')->map(function ($userTransactions) {
+        $filteredTransactions = $transactions->groupBy('transactor')->filter(function ($userTransactions) use ($monthsToCheck) {
+            $monthsWithTransactions = $userTransactions->map(function ($transaction) {
+                return $transaction->date->format('Y-m');
+            })->unique();
+
+            foreach ($monthsToCheck as $check) {
+                $formattedMonth = sprintf('%04d-%02d', $check['year'], $check['month']);
+                if (!$monthsWithTransactions->contains($formattedMonth)) {
+                    return false;
+                }
+            }
+
+            return true;
+        })->map(function ($userTransactions) {
             return [
-                'transactor' => $userTransactions->first()->transactor, // Nom de l'utilisateur
-                'amount' => $userTransactions->sum('amount'), // Somme des montants
-                'date' => $userTransactions->last()->date, // Dernière date
+                'transactor' => $userTransactions->first()->transactor,
             ];
         })->values();
 
         return Inertia::render('Detente', [
-            'transactions' => $filteredTransactions, // Renvoyer une liste aplatie
+            'transactions' => $filteredTransactions,
         ]);
     }
+
 
 
 

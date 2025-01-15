@@ -15,7 +15,7 @@ export default function Funds() {
         <MainStructure pageTitle="Fonds">
             <div className='flex flex-col w-full'>
                 <div className="p-3 ">
-                    <TitleAndSpan title="Fonds" transactions={transactions} funds={funds} />
+                    <TitleAndSpan title="Fonds" onClick={() => router.visit(route('fond.index'))} transactions={transactions} funds={funds} />
                     <FondList fonds={funds} />
                 </div>
             </div>
