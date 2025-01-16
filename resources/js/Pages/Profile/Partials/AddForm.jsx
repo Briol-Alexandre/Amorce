@@ -33,6 +33,8 @@ export default function Add() {
 
                 <p className="mt-1 text-sm text-gray-600">
                     Remplissez le formulaire ci-dessous pour ajouter un nouvel utilisateur.
+                    Un e-mail sera envoyé à l'adresse mail renseignée avec les identifiants.
+
                 </p>
             </header>
 

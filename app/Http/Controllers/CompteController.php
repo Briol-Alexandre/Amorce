@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileStoreRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use JetBrains\PhpStorm\NoReturn;
+use App\Mail\UserCreated;
 
 class CompteController extends Controller
 {
@@ -32,8 +34,11 @@ class CompteController extends Controller
      */
     #[NoReturn] public function store(ProfileStoreRequest $request)
     {
-        $password =
         $user = User::create($request->validated());
+
+        $plainPassword = $request['password'];
+
+        Mail::to($user->email)->send(new UserCreated($user, $plainPassword));
 
         return Inertia::render('Profile/Add');
     }
