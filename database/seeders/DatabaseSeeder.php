@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Detente;
 use App\Models\Fund;
+use App\Models\Potentials;
 use App\Models\Transaction;
 use App\Models\User;
 

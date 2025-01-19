@@ -1,6 +1,6 @@
 {
-  "_ActionButton-XY-wRbzt.js": {
-    "file": "assets/ActionButton-XY-wRbzt.js",
+  "_ActionButton-BJUYPVYk.js": {
+    "file": "assets/ActionButton-BJUYPVYk.js",
     "name": "ActionButton",
     "imports": [
       "_index-CsPu8fWU.js",
@@ -28,8 +28,8 @@
       "_index-CsPu8fWU.js"
     ]
   },
-  "_FondList-CgJ6zCpd.js": {
-    "file": "assets/FondList-CgJ6zCpd.js",
+  "_FondList-JynRv8hU.js": {
+    "file": "assets/FondList-JynRv8hU.js",
     "name": "FondList",
     "imports": [
       "_index-CsPu8fWU.js",
@@ -61,8 +61,8 @@
       "_index-CsPu8fWU.js"
     ]
   },
-  "_MainStructure-CYKyH_Pt.js": {
-    "file": "assets/MainStructure-CYKyH_Pt.js",
+  "_MainStructure-MNdyfXBv.js": {
+    "file": "assets/MainStructure-MNdyfXBv.js",
     "name": "MainStructure",
     "imports": [
       "_index-CsPu8fWU.js",
@@ -206,14 +206,14 @@
     ]
   },
   "resources/js/Pages/Compte.jsx": {
-    "file": "assets/Compte-B9nrgTm6.js",
+    "file": "assets/Compte-0gWPWNBJ.js",
     "name": "Compte",
     "src": "resources/js/Pages/Compte.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_index-CsPu8fWU.js",
       "_Dropdown-5X23ybU-.js",
-      "_MainStructure-CYKyH_Pt.js",
+      "_MainStructure-MNdyfXBv.js",
       "resources/js/Pages/Profile/Edit.jsx",
       "_AmorceLogo-Dmmpriey.js",
       "resources/js/Pages/Profile/Partials/DeleteUserForm.jsx",
@@ -228,52 +228,62 @@
     ]
   },
   "resources/js/Pages/Dashboard.jsx": {
-    "file": "assets/Dashboard-CsZFEBDf.js",
+    "file": "assets/Dashboard-DuVRpgmV.js",
     "name": "Dashboard",
     "src": "resources/js/Pages/Dashboard.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_index-CsPu8fWU.js",
-      "_Dropdown-5X23ybU-.js",
-      "_MainStructure-CYKyH_Pt.js",
+      "_MainStructure-MNdyfXBv.js",
       "_AmorceLogo-Dmmpriey.js"
     ]
   },
   "resources/js/Pages/Detente.jsx": {
-    "file": "assets/Detente-BUUtrz0S.js",
+    "file": "assets/Detente-DjDeo4Ao.js",
     "name": "Detente",
     "src": "resources/js/Pages/Detente.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_index-CsPu8fWU.js",
-      "_MainStructure-CYKyH_Pt.js",
+      "_MainStructure-MNdyfXBv.js",
+      "_AmorceLogo-Dmmpriey.js"
+    ]
+  },
+  "resources/js/Pages/Draw.jsx": {
+    "file": "assets/Draw-COQ9DXrE.js",
+    "name": "Draw",
+    "src": "resources/js/Pages/Draw.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_index-CsPu8fWU.js",
+      "_MainStructure-MNdyfXBv.js",
       "_AmorceLogo-Dmmpriey.js"
     ]
   },
   "resources/js/Pages/Evenement.jsx": {
-    "file": "assets/Evenement-BUj0wtYq.js",
+    "file": "assets/Evenement-5Y2LQPHu.js",
     "name": "Evenement",
     "src": "resources/js/Pages/Evenement.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_index-CsPu8fWU.js",
       "_Dropdown-5X23ybU-.js",
-      "_MainStructure-CYKyH_Pt.js",
+      "_MainStructure-MNdyfXBv.js",
       "_AmorceLogo-Dmmpriey.js"
     ]
   },
   "resources/js/Pages/Fund.jsx": {
-    "file": "assets/Fund-D7Irga-p.js",
+    "file": "assets/Fund-Cva7xw_-.js",
     "name": "Fund",
     "src": "resources/js/Pages/Fund.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_index-CsPu8fWU.js",
-      "_ActionButton-XY-wRbzt.js",
+      "_ActionButton-BJUYPVYk.js",
       "_Modal-BYzpn1LQ.js",
       "_InputError-CePxQjkM.js",
-      "_MainStructure-CYKyH_Pt.js",
-      "_FondList-CgJ6zCpd.js",
+      "_MainStructure-MNdyfXBv.js",
+      "_FondList-JynRv8hU.js",
       "_index-Cuc3lR1L.js",
       "_AmorceLogo-Dmmpriey.js",
       "_TextAndLabel-BDGooVUz.js",
@@ -283,14 +293,14 @@
     ]
   },
   "resources/js/Pages/Funds.jsx": {
-    "file": "assets/Funds-CEL1K25m.js",
+    "file": "assets/Funds-CIbvqjFq.js",
     "name": "Funds",
     "src": "resources/js/Pages/Funds.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_index-CsPu8fWU.js",
-      "_MainStructure-CYKyH_Pt.js",
-      "_FondList-CgJ6zCpd.js",
+      "_MainStructure-MNdyfXBv.js",
+      "_FondList-JynRv8hU.js",
       "_AmorceLogo-Dmmpriey.js",
       "_Modal-BYzpn1LQ.js",
       "_index-Cuc3lR1L.js",
@@ -302,14 +312,14 @@
     ]
   },
   "resources/js/Pages/Profile/Add.jsx": {
-    "file": "assets/Add-BAK8Zu-2.js",
+    "file": "assets/Add-DDmKHD2J.js",
     "name": "Add",
     "src": "resources/js/Pages/Profile/Add.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_index-CsPu8fWU.js",
       "resources/js/Pages/Profile/Partials/AddForm.jsx",
-      "_MainStructure-CYKyH_Pt.js",
+      "_MainStructure-MNdyfXBv.js",
       "_InputError-CePxQjkM.js",
       "_InputLabel-Cgq8RrXl.js",
       "_PrimaryButton-PBd2GHtH.js",
@@ -318,7 +328,7 @@
     ]
   },
   "resources/js/Pages/Profile/Edit.jsx": {
-    "file": "assets/Edit-Hza0ZJkc.js",
+    "file": "assets/Edit-Bq-gn5W8.js",
     "name": "Edit",
     "src": "resources/js/Pages/Profile/Edit.jsx",
     "isDynamicEntry": true,
@@ -337,7 +347,7 @@
     ]
   },
   "resources/js/Pages/Profile/Partials/AddForm.jsx": {
-    "file": "assets/AddForm-Db9gG3dQ.js",
+    "file": "assets/AddForm-4Kycoott.js",
     "name": "AddForm",
     "src": "resources/js/Pages/Profile/Partials/AddForm.jsx",
     "isDynamicEntry": true,
@@ -363,7 +373,7 @@
     ]
   },
   "resources/js/Pages/Profile/Partials/UpdatePasswordForm.jsx": {
-    "file": "assets/UpdatePasswordForm-DCYtDtXZ.js",
+    "file": "assets/UpdatePasswordForm-eyoZQtep.js",
     "name": "UpdatePasswordForm",
     "src": "resources/js/Pages/Profile/Partials/UpdatePasswordForm.jsx",
     "isDynamicEntry": true,
@@ -391,27 +401,27 @@
     ]
   },
   "resources/js/Pages/Transactions/Csv.jsx": {
-    "file": "assets/Csv-Bxuevhat.js",
+    "file": "assets/Csv-DCw58Ziz.js",
     "name": "Csv",
     "src": "resources/js/Pages/Transactions/Csv.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_index-CsPu8fWU.js",
-      "_MainStructure-CYKyH_Pt.js",
-      "_ActionButton-XY-wRbzt.js",
+      "_MainStructure-MNdyfXBv.js",
+      "_ActionButton-BJUYPVYk.js",
       "_Modal-BYzpn1LQ.js",
       "_AmorceLogo-Dmmpriey.js",
       "_index-Cuc3lR1L.js"
     ]
   },
   "resources/js/Pages/Transactions/CsvList.jsx": {
-    "file": "assets/CsvList-Cn46phd8.js",
+    "file": "assets/CsvList-CXVjSFPu.js",
     "name": "CsvList",
     "src": "resources/js/Pages/Transactions/CsvList.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_index-CsPu8fWU.js",
-      "_MainStructure-CYKyH_Pt.js",
+      "_MainStructure-MNdyfXBv.js",
       "_AmorceLogo-Dmmpriey.js"
     ]
   },
@@ -431,7 +441,7 @@
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-DVJye7Ne.js",
+    "file": "assets/app-8G2hmLCe.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -448,6 +458,7 @@
       "resources/js/Pages/Compte.jsx",
       "resources/js/Pages/Dashboard.jsx",
       "resources/js/Pages/Detente.jsx",
+      "resources/js/Pages/Draw.jsx",
       "resources/js/Pages/Evenement.jsx",
       "resources/js/Pages/Fund.jsx",
       "resources/js/Pages/Funds.jsx",
@@ -462,11 +473,11 @@
       "resources/js/Pages/Welcome.jsx"
     ],
     "css": [
-      "assets/app-BQGMBpvH.css"
+      "assets/app-Db3iCcSX.css"
     ]
   },
   "resources/js/ssr.jsx": {
-    "file": "assets/ssr-BODjga9r.js",
+    "file": "assets/ssr-O1jlTpyT.js",
     "name": "ssr",
     "src": "resources/js/ssr.jsx",
     "isEntry": true,
@@ -483,6 +494,7 @@
       "resources/js/Pages/Compte.jsx",
       "resources/js/Pages/Dashboard.jsx",
       "resources/js/Pages/Detente.jsx",
+      "resources/js/Pages/Draw.jsx",
       "resources/js/Pages/Evenement.jsx",
       "resources/js/Pages/Fund.jsx",
       "resources/js/Pages/Funds.jsx",

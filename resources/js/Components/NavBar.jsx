@@ -13,7 +13,7 @@ function NavBar({isOpened, isClosed, logOut}) {
     if (isOpened) {
         navigation =
             <nav
-                className="flex flex-col justify-between border-2 rounded-xl w-14 h-full p-2 border-gray-300 border-solid">
+                className="flex flex-col justify-between border-2 rounded-xl w-10 h-full p-0 lg:p-2  lg:w-14 border-gray-300 border-solid">
                 <h3 className="sr-only">Navigation Principale</h3>
                 <ul>
                     <li className="flex justify-center my-5 min-h-10">

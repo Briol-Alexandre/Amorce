@@ -29,7 +29,7 @@ export default function ActionButton({ name, color, onClick}) {
     };
     const { text, hoverBg, hoverText } = colorMap[color] || {};
 
-    const className = `group transition duration-200 border border-gray-300 p-2 rounded flex gap-3 items-center
+    const className = `group transition duration-200 border border-gray-300 p-2 rounded flex gap-3 justify-center items-center
                        ${text || "text-gray-200"}
                        ${hoverBg || "hover:bg-gray-200"}
                        ${hoverText || "hover:text-white"}`;

@@ -64,7 +64,7 @@ export default function FondAction({ fund, funds }) {
     return (
         <section className='m-8'>
             <h3 className="sr-only">Fond Principal</h3>
-            <div className='flex justify-around'>
+            <div className='flex flex-col lg:flex-row lg:justify-around gap-3 lg:gap-0'>
                 {!fund.permanent && (
                     <ActionButton name="Supprimer le fond" color={'red'} onClick={openDeleteModal} />
                 )}

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TransactionStoreRequest;
+use App\Models\Donators;
 use App\Models\Fund;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -31,9 +32,16 @@ class TransactionController extends Controller
     }
 
 
-    #[NoReturn] public function storeCsvTransactions(Request $request)
+    #[NoReturn]
+    public function storeCsvTransactions(Request $request)
     {
         $transactions = collect($request->input('transactions'))->map(function ($transaction) {
+            $donatorName = $transaction['transactor'] ?? 'Transacteur anonyme';
+            $donator = Donators::firstOrCreate(
+                ['name' => $donatorName],
+                ['name' => $donatorName]
+            );
+
             return [
                 'fund_id' => $transaction['fund_id'],
                 'amount' => (float) str_replace(',', '.', $transaction['amount']),
@@ -60,6 +68,7 @@ class TransactionController extends Controller
             'funds' => Fund::all(),
         ]);
     }
+
 
 
     public function csvList()
@@ -98,6 +107,13 @@ class TransactionController extends Controller
     public function store(Fund $fund, TransactionStoreRequest $request)
     {
         $validated = $request->validated();
+
+        $donatorName = $validated['transactor'];
+        $donator = Donators::firstOrCreate(
+            ['name' => $donatorName],
+            ['name' => $donatorName]
+        );
+
         $transaction = Transaction::create($validated);
 
         $fund->amount += $transaction->amount;
@@ -105,6 +121,7 @@ class TransactionController extends Controller
 
         return Inertia::location(route('fond.show', ['fund' => $fund->id]));
     }
+
 
     #[NoReturn]
     public function update(Fund $fund, TransactionStoreRequest $request)

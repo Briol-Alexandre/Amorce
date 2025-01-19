@@ -11,7 +11,7 @@ export function FondList({ fonds }) {
 
     return (
         <>
-            <section className="flex justify-around mt-4 flex-row">
+            <section className="flex justify-around items-center lg:items-stretch mt-4 flex-col lg:flex-row gap-4 lg:gap-0 w-full">
                 <h3 className="sr-only">Fonds</h3>
                 {fonds.map((fond) => (
                     <Fond

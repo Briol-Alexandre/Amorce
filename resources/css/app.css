@@ -4,7 +4,7 @@
 
 @layer utilities {
     .title-style {
-        @apply font-bold text-3xl ml-3;
+        @apply font-bold text-xl lg:text-3xl ml-3;
     }
     .small-title-style {
         @apply font-bold  text-xl ;

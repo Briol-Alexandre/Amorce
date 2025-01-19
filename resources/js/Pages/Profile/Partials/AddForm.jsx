@@ -2,12 +2,12 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { useForm } from '@inertiajs/react';
+import {useForm} from '@inertiajs/react';
 import {useState} from "react";
 
 export default function Add() {
     const [successMessage, setSuccessMessage] = useState(false);
-    const { data, setData, post, errors, processing } = useForm({
+    const {data, setData, post, errors, processing} = useForm({
         name: '',
         email: '',
         role: 'auth',
@@ -33,14 +33,15 @@ export default function Add() {
 
                 <p className="mt-1 text-sm text-gray-600">
                     Remplissez le formulaire ci-dessous pour ajouter un nouvel utilisateur.
-                    Un e-mail sera envoyé à l'adresse mail renseignée avec les identifiants.
-
                 </p>
+                <strong className='text-gray-600'>
+                    Un e-mail sera envoyé à l'adresse mail renseignée avec les identifiants.
+                </strong>
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="Prénom + Nom" />
+                    <InputLabel htmlFor="name" value="Prénom + Nom"/>
 
                     <TextInput
                         id="name"
@@ -51,11 +52,11 @@ export default function Add() {
                         autoComplete="name"
                     />
 
-                    <InputError className="mt-2" message={errors.name} />
+                    <InputError className="mt-2" message={errors.name}/>
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="email" value="E-mail" />
+                    <InputLabel htmlFor="email" value="E-mail"/>
 
                     <TextInput
                         id="email"
@@ -67,11 +68,11 @@ export default function Add() {
                         autoComplete="email"
                     />
 
-                    <InputError className="mt-2" message={errors.email} />
+                    <InputError className="mt-2" message={errors.email}/>
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="role" value="Rôle" />
+                    <InputLabel htmlFor="role" value="Rôle"/>
 
                     <select
                         id="role"
@@ -84,11 +85,11 @@ export default function Add() {
                         <option value="user">Utilisateur</option>
                     </select>
 
-                    <InputError className="mt-2" message={errors.role} />
+                    <InputError className="mt-2" message={errors.role}/>
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="password" value="Mot de passe" />
+                    <InputLabel htmlFor="password" value="Mot de passe"/>
 
                     <TextInput
                         id="password"
@@ -100,7 +101,7 @@ export default function Add() {
                         autoComplete="new-password"
                     />
 
-                    <InputError className="mt-2" message={errors.password} />
+                    <InputError className="mt-2" message={errors.password}/>
                 </div>
 
                 <div className="flex items-center gap-4">

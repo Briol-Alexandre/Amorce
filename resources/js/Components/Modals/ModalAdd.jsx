@@ -5,8 +5,8 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
     const [formData, setFormData] = useState({
         amount: "",
         date: "",
-        transactor: "John Doe",
-        communication: "Test",
+        transactor: "",
+        communication: "",
         fund_id: fund.id,
     });
     const [errors, setErrors] = useState({});

@@ -11,13 +11,15 @@ export default function TitleAndSpan({title, onClick}) {
             <h2 className="title-style hover:cursor-pointer"
                 onClick={onClick}>{title}</h2>
             {title === 'Fonds' && (
-                <Link href='/csv' className='bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black'>
+                <Link href='/csv' className="bg-black text-white p-1 lg:p-2 rounded hover:bg-white hover:text-black border border-black
+                                   text-xs lg:text-base">
                     Ajouter un Csv
                 </Link>
             )
             }
             {title === 'Compte' && (
-                <Link href='/addUser' className='bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black'>
+                <Link href='/addUser' className="bg-black text-white p-1 lg:p-2 rounded hover:bg-white hover:text-black border border-black
+                                   text-xs lg:text-base">
                     Ajouter un nouvel utilisateur
                 </Link>
             )

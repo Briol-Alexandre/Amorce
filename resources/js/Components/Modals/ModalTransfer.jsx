@@ -10,7 +10,7 @@ export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
         amount: "",
         fund_id: fund.id,
         destinationFundId: "",
-        transactor: "John Doe",
+        transactor: "",
         communication: "",
         date: currentDate,
     });
