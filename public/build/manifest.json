@@ -239,7 +239,7 @@
     ]
   },
   "resources/js/Pages/Detente.jsx": {
-    "file": "assets/Detente-DjDeo4Ao.js",
+    "file": "assets/Detente-BVKoXFYh.js",
     "name": "Detente",
     "src": "resources/js/Pages/Detente.jsx",
     "isDynamicEntry": true,
@@ -441,7 +441,7 @@
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-8G2hmLCe.js",
+    "file": "assets/app-hHKVJj2L.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -477,7 +477,7 @@
     ]
   },
   "resources/js/ssr.jsx": {
-    "file": "assets/ssr-O1jlTpyT.js",
+    "file": "assets/ssr-CM5fsEiC.js",
     "name": "ssr",
     "src": "resources/js/ssr.jsx",
     "isEntry": true,

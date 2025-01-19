@@ -63,7 +63,7 @@ export default function Detente() {
 
                 <Link href='/draw' className="mt-4 bg-black text-white p-1 lg:p-2 rounded hover:bg-white hover:text-black border border-black
                                    text-xs lg:text-base">
-                    Accéder au tirage
+                    Accéder au tirage.
                 </Link>
             </div>
         </MainStructure>
