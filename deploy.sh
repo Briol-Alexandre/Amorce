@@ -6,13 +6,18 @@
 echo "=== Laravel Cloud Deployment Script ==="
 
 echo "Checking database connection..."
-php check-db.php
-
-echo "Running database migrations..."
-php artisan migrate --force
-
-echo "Seeding database..."
-php artisan db:seed --force
+if php check-db.php; then
+    echo "Database connection successful, proceeding with migrations..."
+    
+    echo "Running database migrations..."
+    php artisan migrate --force
+    
+    echo "Seeding database..."
+    php artisan db:seed --force
+else
+    echo "⚠️  Database not available yet. Skipping database operations."
+    echo "Please ensure a MySQL database is configured in Laravel Cloud dashboard."
+fi
 
 echo "Clearing and caching configuration..."
 php artisan config:clear
