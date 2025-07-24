@@ -1,0 +1,12 @@
+id: 1
+name: amorce
+environments:
+  production:
+    build:
+      commands:
+        - 'npm ci'
+        - 'npm run build'
+        - 'php artisan config:cache'
+        - 'php artisan route:cache'
+    deploy:
+      - 'php artisan migrate --force'
