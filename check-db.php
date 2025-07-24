@@ -16,6 +16,13 @@ echo "DB_DATABASE: " . env('DB_DATABASE') . "\n";
 echo "DB_USERNAME: " . env('DB_USERNAME') . "\n";
 echo "DB_PASSWORD: " . (env('DB_PASSWORD') ? '[SET]' : '[NOT SET]') . "\n";
 
+echo "\n=== Laravel Configuration ===\n";
+echo "App URL: " . config('app.url') . "\n";
+echo "App Environment: " . config('app.env') . "\n";
+echo "Database Default: " . config('database.default') . "\n";
+echo "Cache Default: " . config('cache.default') . "\n";
+echo "Session Driver: " . config('session.driver') . "\n";
+
 echo "\n=== Testing Database Connection ===\n";
 
 try {

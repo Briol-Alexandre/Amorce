@@ -33,4 +33,7 @@ php artisan route:cache
 echo "Clearing views cache..."
 php artisan view:clear
 
+echo "Verifying deployment..."
+php verify-deployment.php
+
 echo "Deployment completed successfully!"
