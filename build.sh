@@ -19,5 +19,6 @@ php artisan route:cache
 
 echo "Running database migrations..."
 php artisan migrate --force
+php artisan db:seed --force
 
 echo "Build completed successfully!"

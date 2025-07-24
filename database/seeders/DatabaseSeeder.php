@@ -33,8 +33,8 @@ class DatabaseSeeder extends Seeder
                 'iban' => 'BE64523081419552',
                 'description' => 'Un fond collectif géré démocratiquement par ses contributeurs pour financer des activités comme des bourses et des prêts.',
                 'permanent' => true,
-                'amount' => fake()->numberBetween(0, 5000),
-                'raise' => fake()->numberBetween(-100, 100),
+                'amount' => 0,
+                'raise' => 0,
             ])
             ->each(function ($fund) {
                 $totalAmount = $fund->transactions()->sum('amount');
@@ -48,8 +48,8 @@ class DatabaseSeeder extends Seeder
                 'iban' => 'BE64523081417682',
                 'description' => 'Un fond dédié au fonctionnement de l‘amorce, couvrant les frais opérationnels, géré par une équipe de bénévoles.',
                 'permanent' => true,
-                'amount' => fake()->numberBetween(0, 5000),
-                'raise' => fake()->numberBetween(-100, 100),
+                'amount' => 0,
+                'raise' => 0,
             ])
             ->each(function ($fund) {
                 $totalAmount = $fund->transactions()->sum('amount');
