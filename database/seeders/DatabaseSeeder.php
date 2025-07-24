@@ -10,6 +10,7 @@ use App\Models\User;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,11 +21,15 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Alexandre Briol',
-            'email' => 'alexandre.briol@gmail.com',
-            'role' => 'auth',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'alexandre.briol@gmail.com'],
+            [
+                'name' => 'Alexandre Briol',
+                'role' => 'auth',
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+            ]
+        );
 
         Fund::factory()
             ->has(Transaction::factory()->count(7))

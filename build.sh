@@ -17,8 +17,6 @@ echo "Caching Laravel configuration..."
 php artisan config:cache
 php artisan route:cache
 
-echo "Running database migrations..."
-php artisan migrate --force
-php artisan db:seed --force
+echo "Note: Database operations will be handled during deployment phase"
 
 echo "Build completed successfully!"
