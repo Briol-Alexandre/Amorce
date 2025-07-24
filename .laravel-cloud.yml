@@ -9,4 +9,6 @@ environments:
         - 'php artisan config:cache'
         - 'php artisan route:cache'
     deploy:
+      - 'php artisan migrate --force'
+      - 'php artisan db:seed --force'
       - './deploy.sh'

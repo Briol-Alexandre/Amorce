@@ -47,6 +47,21 @@ Une fois la base de données configurée :
 2. **Les migrations s'exécuteront automatiquement**
 3. **La base de données sera seedée avec les données initiales**
 
+### 3.1 Si les migrations ne s'exécutent pas automatiquement
+
+Dans le terminal Laravel Cloud, exécutez manuellement :
+
+```bash
+# Exécuter les migrations
+php artisan migrate --force
+
+# Seeder la base de données
+php artisan db:seed --force
+
+# Ou utiliser le script tout-en-un
+./migrate.sh
+```
+
 ### 4. Vérification
 
 Après le déploiement, vérifiez que :
@@ -60,6 +75,12 @@ Après le déploiement, vérifiez que :
 - Vérifiez que la base de données MySQL est bien configurée dans Laravel Cloud
 - Attendez que le statut de la base de données soit "Active"
 - Redéployez l'application après configuration de la DB
+
+### Erreur "Table 'main.cache' doesn't exist"
+- La base de données est connectée mais les migrations n'ont pas été exécutées
+- Exécutez manuellement : `php artisan migrate --force`
+- Puis : `php artisan db:seed --force`
+- Ou utilisez le script : `./migrate.sh`
 
 ### Erreur "Vite manifest not found"
 - Vérifiez que Node.js est disponible (fichier `.nvmrc` présent)
