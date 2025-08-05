@@ -6,10 +6,12 @@ import { ModalTransfer } from "@/Components/Modals/ModalTransfer.jsx";
 import { ModalAdd } from "@/Components/Modals/ModalAdd.jsx";
 import { ModalEdit } from "@/Components/Modals/ModalEdit.jsx";
 import { ModalReceive } from "@/Components/Modals/ModalReceive.jsx";
+import { ModalTransferBeforeDelete } from "@/Components/Modals/ModalTransferBeforeDelete.jsx";
 import { router } from "@inertiajs/react";
 
 export default function FondAction({ fund, funds }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isTransferBeforeDeleteModalOpen, setIsTransferBeforeDeleteModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
     const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
@@ -18,7 +20,14 @@ export default function FondAction({ fund, funds }) {
 
     function openDeleteModal(e) {
         e.preventDefault();
-        setIsDeleteModalOpen(true);
+        // Vérifier si le fond a de l'argent
+        if (fund.amount > 0) {
+            // Si le fond a de l'argent, ouvrir la modale de transfert avant suppression
+            setIsTransferBeforeDeleteModalOpen(true);
+        } else {
+            // Si le fond est vide, ouvrir directement la modale de suppression
+            setIsDeleteModalOpen(true);
+        }
     }
 
     function openAddModal(e) {
@@ -43,6 +52,7 @@ export default function FondAction({ fund, funds }) {
 
     function closeModal() {
         setIsDeleteModalOpen(false);
+        setIsTransferBeforeDeleteModalOpen(false);
         setIsAddModalOpen(false);
         setIsTransferModalOpen(false);
         setIsReceiveModalOpen(false);
@@ -105,6 +115,48 @@ export default function FondAction({ fund, funds }) {
         });
     }
 
+    function handleTransferAndDelete(transfersData) {
+        console.log('Transferts multiples avant suppression:', transfersData);
+
+        // Utiliser la nouvelle route pour les transferts multiples
+        router.post(route('fond.transfer-multiple', { fund: fund }), {
+            transfers: transfersData
+        }, {
+            onSuccess: (page) => {
+                console.log('Tous les transferts effectués avec succès, suppression du fond...');
+                // Vérifier si les transferts ont été complétés
+                if (page.props.flash?.transfersCompleted) {
+                    // Une fois tous les transferts réussis, supprimer le fond
+                    router.delete(route('fond.destroy', fund.id), {
+                        onSuccess: () => {
+                            console.log('Fond supprimé avec succès après transferts multiples');
+                            closeModal();
+                        },
+                        onError: (error) => {
+                            console.error('Erreur lors de la suppression du fond:', error);
+                        }
+                    });
+                } else {
+                    console.log('Transferts effectués, mais pas de flag de confirmation');
+                    // Essayer quand même de supprimer
+                    router.delete(route('fond.destroy', fund.id), {
+                        onSuccess: () => {
+                            console.log('Fond supprimé avec succès');
+                            closeModal();
+                        },
+                        onError: (error) => {
+                            console.error('Erreur lors de la suppression du fond:', error);
+                        }
+                    });
+                }
+            },
+            onError: (errors) => {
+                console.error('Erreur lors des transferts multiples:', errors);
+                // Les erreurs seront affichées automatiquement par Inertia dans la modale
+            },
+        });
+    }
+
     function handleDelete(e) {
         e.preventDefault();
         router.delete(route('fond.destroy', fund.id));
@@ -127,6 +179,17 @@ export default function FondAction({ fund, funds }) {
             {isDeleteModalOpen && (
                 <Modal onClose={closeModal}>
                     <ModalDelete closeModal={closeModal} handleDelete={handleDelete} />
+                </Modal>
+            )}
+
+            {isTransferBeforeDeleteModalOpen && (
+                <Modal onClose={closeModal}>
+                    <ModalTransferBeforeDelete
+                        closeModal={closeModal}
+                        handleTransferAndDelete={handleTransferAndDelete}
+                        fund={fund}
+                        funds={funds}
+                    />
                 </Modal>
             )}
 

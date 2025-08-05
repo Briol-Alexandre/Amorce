@@ -1,20 +1,19 @@
 import React from "react";
 import TextAndLabel from "@/Components/TextAndLabel.jsx";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
-import {router, useForm} from "@inertiajs/react";
+import { router, useForm } from "@inertiajs/react";
 import InputError from "@/Components/InputError.jsx";
 
-export default function NewFund({onClose}) {
+export default function NewFund({ onClose }) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 
-    const {data, setData, errors} = useForm({
+    const { data, setData, errors } = useForm({
         name: '',
         description: '',
         permanent: false,
         iban: 'BE27429128531173',
         amount: 0,
-        raise: 0,
     });
 
     const customErrors = {
@@ -41,7 +40,7 @@ export default function NewFund({onClose}) {
         <div className="flex flex-col items-center">
             <form className="grid grid-row-[1fr_1fr] gap-8 w-full max-w-sm" onSubmit={submit}>
                 <legend className="text-lg font-semibold">Créer un nouveau fond</legend>
-                <input type="hidden" name="_token" value={csrfToken}/>
+                <input type="hidden" name="_token" value={csrfToken} />
 
                 <TextAndLabel
                     type="text"
@@ -81,9 +80,9 @@ export default function NewFund({onClose}) {
 
                 <fieldset className='flex gap-4 items-center'>
                     <input type="checkbox" name='permanent' id='permanent'
-                           checked={data.permanent}
-                           onChange={(e) => setData('permanent', e.target.checked || false)
-                           }/>
+                        checked={data.permanent}
+                        onChange={(e) => setData('permanent', e.target.checked || false)
+                        } />
                     <label htmlFor="permanent">Ce fond est-il permanent&nbsp;?</label>
                 </fieldset>
 
@@ -92,18 +91,13 @@ export default function NewFund({onClose}) {
                     name="amount"
                     value={data.amount}
                 />
-                <input
-                    type="hidden"
-                    name="raise"
-                    value={data.raise}
-                />
 
-                <InputError message={customErrors.name}/>
-                <InputError message={customErrors.description}/>
-                <InputError message={errors.iban}/>
+                <InputError message={customErrors.name} />
+                <InputError message={customErrors.description} />
+                <InputError message={errors.iban} />
 
                 <div className="flex justify-end">
-                    <PrimaryButton children="Créer le fond" className="normal-case text-sm"/>
+                    <PrimaryButton children="Créer le fond" className="normal-case text-sm" />
                 </div>
             </form>
         </div>

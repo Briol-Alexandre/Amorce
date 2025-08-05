@@ -39,7 +39,6 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Un fond collectif géré démocratiquement par ses contributeurs pour financer des activités comme des bourses et des prêts.',
                 'permanent' => true,
                 'amount' => 0,
-                'raise' => 0,
             ])
             ->each(function ($fund) {
                 $totalAmount = $fund->transactions()->sum('amount');
@@ -54,7 +53,6 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Un fond dédié au fonctionnement de l‘amorce, couvrant les frais opérationnels, géré par une équipe de bénévoles.',
                 'permanent' => true,
                 'amount' => 0,
-                'raise' => 0,
             ])
             ->each(function ($fund) {
                 $totalAmount = $fund->transactions()->sum('amount');

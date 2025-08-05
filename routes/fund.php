@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\FondController;
+use App\Http\Controllers\MultipleTransferController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -18,4 +19,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/fonds/{fund}', [FondController::class, 'destroy'])->name('fond.destroy');
 
     Route::patch('/fonds/{fund}/edit', [FondController::class, 'update'])->name('fond.update');
+    
+    Route::post('/fonds/{fund}/transfer-multiple', [MultipleTransferController::class, 'transferMultiple'])->name('fond.transfer-multiple');
 });
