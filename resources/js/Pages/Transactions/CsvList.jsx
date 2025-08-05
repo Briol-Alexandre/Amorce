@@ -12,7 +12,10 @@ export default function CsvList() {
 
     useEffect(() => {
         if (transactions && transactions.length > 0 && funds.length > 0) {
-            setSelectedFunds(transactions.map(() => funds[0].id));
+            setSelectedFunds(transactions.map((transaction) => {
+                // Utiliser le fund_id pré-rempli si disponible, sinon le premier fond
+                return transaction.fund_id || funds[0].id;
+            }));
         }
     }, [transactions, funds]);
 
@@ -29,9 +32,11 @@ export default function CsvList() {
         const formData = {
             transactions: transactions.map((transaction, index) => ({
                 ...transaction,
-                fund_id: selectedFunds[index],
+                fund_id: parseInt(selectedFunds[index]), // S'assurer que c'est un nombre
             })),
         };
+        
+        console.log('Submitting CSV data:', formData);
 
         router.post('/csv/submit', formData, {
             forceFormData: true,
@@ -70,9 +75,13 @@ export default function CsvList() {
                                             <p className="py-2">{transaction.amount}</p>
                                             <p className="py-2 truncate">{transaction.communication}</p>
                                             <p className='hidden'>{transaction.transactor}</p>
-                                            <div className="py-2">
+                                            <div className="py-2 relative">
                                                 <select
-                                                    className="border border-gray-300 p-2 rounded w-full"
+                                                    className={`border p-2 rounded w-full ${
+                                                        transaction.fund_id 
+                                                            ? 'border-green-500 bg-green-50' 
+                                                            : 'border-gray-300'
+                                                    }`}
                                                     value={selectedFunds[index]}
                                                     onChange={(e) => handleFundChange(e, index)}
                                                 >
@@ -80,6 +89,11 @@ export default function CsvList() {
                                                         <option key={fund.id} value={fund.id}>{fund.name}</option>
                                                     ))}
                                                 </select>
+                                                {transaction.fund_id && (
+                                                    <span className="absolute -top-1 -right-1 bg-green-500 text-white text-xs px-1 py-0.5 rounded-full">
+                                                        ✓
+                                                    </span>
+                                                )}
                                             </div>
                                         </React.Fragment>
                                     ))}
