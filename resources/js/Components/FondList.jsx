@@ -18,7 +18,6 @@ export function FondList({ fonds }) {
                         key={fond.id}
                         foundName={fond.name}
                         foundAmount={fond.amount}
-                        foundRaise={fond.raise}
                         fond={fond}
                     />
                 ))}

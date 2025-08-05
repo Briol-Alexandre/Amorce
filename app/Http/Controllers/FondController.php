@@ -42,10 +42,11 @@ class FondController extends Controller
         return redirect()->route('fond.index')->with('success', 'Fond supprimé avec succès');
     }
 
-    #[NoReturn]
     public function update(FundStoreRequest $request, Fund $fund)
     {
-        //
+        $fund->update($request->validated());
+        
+        return redirect()->back()->with('success', 'Fond modifié avec succès');
     }
 
 

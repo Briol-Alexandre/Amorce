@@ -17,5 +17,5 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/fonds/{fund}', [FondController::class, 'destroy'])->name('fond.destroy');
 
-    Route::patch('/fonds/{fund}', [FondController::class, 'update'])->name('fond.update');
+    Route::patch('/fonds/{fund}/edit', [FondController::class, 'update'])->name('fond.update');
 });

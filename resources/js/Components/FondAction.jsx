@@ -4,12 +4,14 @@ import Modal from "@/Components/Modal.jsx";
 import { ModalDelete } from "@/Components/Modals/ModalDelete.jsx";
 import { ModalTransfer } from "@/Components/Modals/ModalTransfer.jsx";
 import { ModalAdd } from "@/Components/Modals/ModalAdd.jsx";
+import { ModalEdit } from "@/Components/Modals/ModalEdit.jsx";
 import { router } from "@inertiajs/react";
 
 export default function FondAction({ fund, funds }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
 
     function openDeleteModal(e) {
@@ -27,10 +29,16 @@ export default function FondAction({ fund, funds }) {
         setIsTransferModalOpen(true);
     }
 
+    function openEditModal(e) {
+        e.preventDefault();
+        setIsEditModalOpen(true);
+    }
+
     function closeModal() {
         setIsDeleteModalOpen(false);
         setIsAddModalOpen(false);
         setIsTransferModalOpen(false);
+        setIsEditModalOpen(false);
     }
 
     function handleAdd(formData) {
@@ -54,6 +62,24 @@ export default function FondAction({ fund, funds }) {
     }
 
 
+    function handleEdit(formData) {
+        router.patch(route('fond.update', fund.id), formData, {
+            onSuccess: (page) => {
+                closeModal();
+                // Optionnel: afficher un message de succès
+                console.log('Fond modifié avec succès');
+            },
+            onError: (errors) => {
+                console.error('Erreur lors de la modification du fond:', errors);
+                // Les erreurs de validation seront affichées automatiquement par Inertia
+            },
+            onFinish: () => {
+                // Cette fonction est appelée dans tous les cas (succès ou erreur)
+                console.log('Requête terminée');
+            }
+        });
+    }
+
     function handleDelete(e) {
         e.preventDefault();
         router.delete(route('fond.destroy', fund.id));
@@ -66,6 +92,7 @@ export default function FondAction({ fund, funds }) {
             <div className='flex flex-col lg:flex-row lg:justify-around gap-3 lg:gap-0'>
                 <ActionButton name="Ajouter de l'argent" color={'blue'} onClick={openAddModal} />
                 <ActionButton name="Transferer vers un autre fond" color={'green'} onClick={openTransferModal} />
+                <ActionButton name="Modifier le fond" color={'orange'} onClick={openEditModal} />
                 {!fund.permanent && (
                     <ActionButton name="Supprimer le fond" color={'red'} onClick={openDeleteModal} />
                 )}
@@ -86,6 +113,12 @@ export default function FondAction({ fund, funds }) {
             {isTransferModalOpen && (
                 <Modal onClose={closeModal}>
                     <ModalTransfer closeModal={closeModal} handleTransfer={handleTransfer} funds={funds} fund={fund} />
+                </Modal>
+            )}
+
+            {isEditModalOpen && (
+                <Modal onClose={closeModal}>
+                    <ModalEdit closeModal={closeModal} handleEdit={handleEdit} fund={fund} />
                 </Modal>
             )}
         </section>

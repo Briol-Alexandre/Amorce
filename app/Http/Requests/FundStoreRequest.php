@@ -22,13 +22,14 @@ class FundStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isUpdate = $this->isMethod('patch') || $this->isMethod('put');
+        
         return [
             'name' => 'required|string|between:3,255',
-            'iban' => 'required|string|size:16',
-            'description'=>'required|string|between:3,255',
-            'permanent'=>'boolean',
-            'amount' => 'required|int',
-            'raise' => 'required|int',
+            'iban' => 'nullable|string|min:15|max:34', // IBAN peut varier en longueur
+            'description' => 'required|string|between:3,255',
+            'permanent' => 'boolean',
+            'amount' => $isUpdate ? 'nullable|numeric|min:0' : 'required|numeric|min:0',
         ];
     }
 }

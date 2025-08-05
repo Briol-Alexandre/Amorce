@@ -18,7 +18,6 @@ class Fund extends Model
         'description',
         'permanent',
         'amount',
-        'raise',
     ];
 
     function transactions(): HasMany
