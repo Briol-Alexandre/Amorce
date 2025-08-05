@@ -3,6 +3,7 @@ import { AddIcon } from "@/Components/icons/AddIcon.jsx";
 import { RemoveIcon } from "@/Components/icons/RemoveIcon.jsx";
 import { TransferIcon } from "@/Components/icons/TransferIcon.jsx";
 import { EditIcon } from "@/Components/icons/EditIcon.jsx";
+import { ReceiveIcon } from "@/Components/icons/ReceiveIcon.jsx";
 
 // Configuration des couleurs et styles
 const COLOR_THEMES = {
@@ -26,6 +27,10 @@ const COLOR_THEMES = {
         base: "text-white bg-orange-500 border border-transparent",
         hover: "hover:text-orange-500 hover:bg-white hover:border-orange-500",
     },
+    purple: {
+        base: "text-white bg-purple-500 border border-transparent",
+        hover: "hover:text-purple-500 hover:bg-white hover:border-purple-500",
+    },
 };
 
 // Configuration des icônes par couleur
@@ -37,6 +42,7 @@ const getIcon = (color, isHovered) => {
         red: <RemoveIcon color={iconColor} />,
         green: <TransferIcon color={iconColor} />,
         orange: <EditIcon color={iconColor} />,
+        purple: <ReceiveIcon color={iconColor} />,
     };
 
     return iconMap[color] || null;
@@ -64,7 +70,7 @@ export default function ActionButton({ name, color, onClick }) {
 
     // Style inline pour la largeur avec transition CSS
     const buttonStyle = {
-        width: isHovered ? '200px' : '40px',
+        width: isHovered ? '280px' : '40px', // Augmenté pour les textes plus longs
         minWidth: '40px',
         paddingLeft: isHovered ? '16px' : '8px',
         paddingRight: isHovered ? '16px' : '8px',

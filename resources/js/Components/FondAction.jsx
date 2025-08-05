@@ -5,12 +5,14 @@ import { ModalDelete } from "@/Components/Modals/ModalDelete.jsx";
 import { ModalTransfer } from "@/Components/Modals/ModalTransfer.jsx";
 import { ModalAdd } from "@/Components/Modals/ModalAdd.jsx";
 import { ModalEdit } from "@/Components/Modals/ModalEdit.jsx";
+import { ModalReceive } from "@/Components/Modals/ModalReceive.jsx";
 import { router } from "@inertiajs/react";
 
 export default function FondAction({ fund, funds }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+    const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
 
@@ -29,6 +31,11 @@ export default function FondAction({ fund, funds }) {
         setIsTransferModalOpen(true);
     }
 
+    function openReceiveModal(e) {
+        e.preventDefault();
+        setIsReceiveModalOpen(true);
+    }
+
     function openEditModal(e) {
         e.preventDefault();
         setIsEditModalOpen(true);
@@ -38,6 +45,7 @@ export default function FondAction({ fund, funds }) {
         setIsDeleteModalOpen(false);
         setIsAddModalOpen(false);
         setIsTransferModalOpen(false);
+        setIsReceiveModalOpen(false);
         setIsEditModalOpen(false);
     }
 
@@ -57,6 +65,23 @@ export default function FondAction({ fund, funds }) {
             },
             onError: (error) => {
                 console.error('Erreur lors de l\'envoi des données:', error);
+            },
+        });
+    }
+
+    function handleReceive(formData) {
+        console.log('Sending receive data:', formData);
+
+        // Pour la réception, on utilise le fond source comme paramètre de route
+        const sourceFund = funds.find(f => f.id == formData.fund_id);
+
+        router.patch(route('transaction.update', { fund: sourceFund }), formData, {
+            onSuccess: (response) => {
+                console.log('Transfert reçu avec succès:', response);
+                closeModal();
+            },
+            onError: (error) => {
+                console.error('Erreur lors de la réception:', error);
             },
         });
     }
@@ -89,8 +114,9 @@ export default function FondAction({ fund, funds }) {
     return (
         <section>
             <h3 className="sr-only">Fond Principal</h3>
-            <div className='flex flex-col lg:flex-row lg:justify-around gap-3 lg:gap-0'>
+            <div className='flex flex-col lg:flex-row lg:justify-center lg:flex-wrap'>
                 <ActionButton name="Ajouter de l'argent" color={'blue'} onClick={openAddModal} />
+                <ActionButton name="Recevoir depuis un autre fond" color={'purple'} onClick={openReceiveModal} />
                 <ActionButton name="Transferer vers un autre fond" color={'green'} onClick={openTransferModal} />
                 <ActionButton name="Modifier le fond" color={'orange'} onClick={openEditModal} />
                 {!fund.permanent && (
@@ -113,6 +139,12 @@ export default function FondAction({ fund, funds }) {
             {isTransferModalOpen && (
                 <Modal onClose={closeModal}>
                     <ModalTransfer closeModal={closeModal} handleTransfer={handleTransfer} funds={funds} fund={fund} />
+                </Modal>
+            )}
+
+            {isReceiveModalOpen && (
+                <Modal onClose={closeModal}>
+                    <ModalReceive closeModal={closeModal} handleReceive={handleReceive} funds={funds} fund={fund} />
                 </Modal>
             )}
 
