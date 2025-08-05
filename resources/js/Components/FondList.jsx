@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Modal from "@/Components/Modal.jsx";
 import NewFund from "@/Components/NewFund.jsx";
 
-export function FondList({ fonds }) {
+export function FondList({ fonds, activeFundId = null }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -19,10 +19,11 @@ export function FondList({ fonds }) {
                         foundName={fond.name}
                         foundAmount={fond.amount}
                         fond={fond}
+                        isActive={activeFundId === fond.id}
                     />
                 ))}
                 <div
-                    className="flex flex-col items-center mr-10 hover:cursor-pointer"
+                    className="flex flex-col items-center justify-center mr-10 hover:cursor-pointer"
                     onClick={openModal}
                 >
                     <AddIcon color={'black'} />

@@ -51,7 +51,7 @@ export default function ActionButton({ name, color, onClick }) {
         hover: "hover:text-gray-200",
     };
 
-    // Construction des classes CSS pour le bouton
+    // Construction des classes CSS pour le bouton avec largeurs fixes
     const buttonClasses = [
         "group relative overflow-hidden",
         "transition-all duration-300 ease-in-out",
@@ -62,25 +62,34 @@ export default function ActionButton({ name, color, onClick }) {
         theme.hover,
     ].join(" ");
 
+    // Style inline pour la largeur avec transition CSS
+    const buttonStyle = {
+        width: isHovered ? '200px' : '40px',
+        minWidth: '40px',
+        paddingLeft: isHovered ? '16px' : '8px',
+        paddingRight: isHovered ? '16px' : '8px',
+        transition: 'all 200ms ease-in-out',
+    };
+
     // Classes CSS pour le texte avec animation
     const textClasses = [
-        "transition-all duration-300 ease-in-out",
         "whitespace-nowrap text-sm font-medium",
         "overflow-hidden",
-        isHovered ? "opacity-100 max-w-xs ml-2" : "opacity-0 max-w-0 ml-0",
     ].join(" ");
+
+    // Style inline pour le texte avec transition
+    const textStyle = {
+        opacity: isHovered ? 1 : 0,
+        marginLeft: isHovered ? '8px' : '0px',
+        transition: 'all 300ms ease-in-out',
+    };
 
     const icon = getIcon(color, isHovered);
 
     return (
         <button
             className={buttonClasses}
-            style={{
-                width: isHovered ? 'auto' : '2.5rem',
-                minWidth: '2.5rem',
-                paddingLeft: isHovered ? '1rem' : '0.5rem',
-                paddingRight: isHovered ? '1rem' : '0.5rem',
-            }}
+            style={buttonStyle}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onClick={onClick}
@@ -89,7 +98,7 @@ export default function ActionButton({ name, color, onClick }) {
             <span className="flex-shrink-0">
                 {icon}
             </span>
-            <span className={textClasses}>
+            <span className={textClasses} style={textStyle}>
                 {name}
             </span>
         </button>

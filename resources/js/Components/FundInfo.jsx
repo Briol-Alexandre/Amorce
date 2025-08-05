@@ -4,7 +4,7 @@ import { Transactions } from "@/Components/Transactions.jsx";
 import FondAction from "@/Components/FondAction.jsx";
 
 export function FundInfo({ fund, funds, transactions }) {
-    const [isRotated, setIsRotated] = useState(false);
+    const [isRotated, setIsRotated] = useState(true);
     const toggleRotation = () => {
         setIsRotated(!isRotated);
     };
