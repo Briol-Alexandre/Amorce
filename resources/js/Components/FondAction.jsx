@@ -4,8 +4,7 @@ import Modal from "@/Components/Modal.jsx";
 import { ModalDelete } from "@/Components/Modals/ModalDelete.jsx";
 import { ModalTransfer } from "@/Components/Modals/ModalTransfer.jsx";
 import { ModalAdd } from "@/Components/Modals/ModalAdd.jsx";
-import {router} from "@inertiajs/react";
-import {ModalCsv} from "@/Components/Modals/ModalCsv.jsx";
+import { router } from "@inertiajs/react";
 
 export default function FondAction({ fund, funds }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -62,15 +61,14 @@ export default function FondAction({ fund, funds }) {
     }
 
     return (
-        <section className='m-8'>
+        <section>
             <h3 className="sr-only">Fond Principal</h3>
             <div className='flex flex-col lg:flex-row lg:justify-around gap-3 lg:gap-0'>
+                <ActionButton name="Ajouter de l'argent" color={'blue'} onClick={openAddModal} />
+                <ActionButton name="Transferer vers un autre fond" color={'green'} onClick={openTransferModal} />
                 {!fund.permanent && (
                     <ActionButton name="Supprimer le fond" color={'red'} onClick={openDeleteModal} />
                 )}
-
-                <ActionButton name="Ajouter de l'argent" color={'blue'} onClick={openAddModal} />
-                <ActionButton name="Transferer vers un autre fond" color={'green'} onClick={openTransferModal} />
             </div>
 
             {isDeleteModalOpen && (
@@ -79,13 +77,13 @@ export default function FondAction({ fund, funds }) {
                 </Modal>
             )}
 
-            {isAddModalOpen &&  (
+            {isAddModalOpen && (
                 <Modal onClose={closeModal}>
                     <ModalAdd closeModal={closeModal} handleAdd={handleAdd} fund={fund} />
                 </Modal>
             )}
 
-            {isTransferModalOpen &&  (
+            {isTransferModalOpen && (
                 <Modal onClose={closeModal}>
                     <ModalTransfer closeModal={closeModal} handleTransfer={handleTransfer} funds={funds} fund={fund} />
                 </Modal>
