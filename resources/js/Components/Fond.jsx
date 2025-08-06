@@ -1,11 +1,13 @@
 import { Link } from "@inertiajs/react";
 import React from "react";
 
-export default function Fond({ foundName, foundAmount, fond, isActive = false }) {
+export default function Fond({ foundName, foundAmount, fond, isActive = false, isLast = false }) {
     // Classes conditionnelles : les fonds inactifs deviennent transparents
     const articleClasses = [
-        'lg:border-none border-b-2 lg:pb-0 pb-4 lg:w-auto w-full',
+        'lg:border-none border-b-2 lg:pb-0 pb-4 w-full',
         'transition-all duration-300 ease-in-out',
+        'flex justify-center items-center',
+        'lg:flex-1',  // Prend une part égale de l'espace disponible
         isActive ? 'opacity-100' : 'opacity-50 hover:opacity-75'
     ].join(' ');
     
@@ -20,7 +22,7 @@ export default function Fond({ foundName, foundAmount, fond, isActive = false })
     return (
         <>
             <article className={articleClasses}>
-                <Link href={route('fond.show', fond)} className={linkClasses}>
+                <Link href={route('fond.show', fond)} className={`${linkClasses} text-center`}>
                     <span className='flex items-center gap-2'>
                         <h4 className={titleClasses}>
                             {foundName}
@@ -35,7 +37,7 @@ export default function Fond({ foundName, foundAmount, fond, isActive = false })
                     </div>
                 </Link>
             </article>
-            <span className="bg-gray-300 w-0.5"></span>
+            {!isLast && <span className="bg-gray-300 w-0.5"></span>}
         </>
     )
 }

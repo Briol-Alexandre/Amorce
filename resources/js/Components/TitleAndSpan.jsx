@@ -1,49 +1,23 @@
-import React, {useState} from "react";
-import ActionButton from "@/Components/ActionButton.jsx";
-import Modal from "@/Components/Modal.jsx";
-import {ModalCsv} from "@/Components/Modals/ModalCsv.jsx";
-import {Link, router} from "@inertiajs/react";
-import {AddIcon} from "@/Components/icons/AddIcon.jsx";
+import React, { useState } from "react";
+import { Link } from "@inertiajs/react";
+import { AddIcon } from "@/Components/icons/AddIcon.jsx";
 import { usePage } from "@inertiajs/react";
+import { route } from "ziggy-js";
+import Modal from "@/Components/Modal.jsx";
+import NewFund from "@/Components/NewFund.jsx";
 
-export default function TitleAndSpan({title, onClick}) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+export default function TitleAndSpan({ title, onClick }) {
     const { funds } = usePage().props;
-    
-    function openCsvModal(e) {
-        e.preventDefault();
-        setIsModalOpen(true);
-    }
-    
-    function closeModal() {
-        setIsModalOpen(false);
-    }
-    
-    function onSubmit(formData) {
-        router.post(route('transaction.seed-csv-transactions'), formData, {
-            forceFormData: true,
-            onSuccess: () => {
-                // La redirection est gérée par le contrôleur
-            },
-            onError: (errors) => {
-                console.error('Erreur :', errors);
-            },
-        });
-    }
-    
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+
     return (<>
         <div className="flex justify-between">
             <h2 className="title-style hover:cursor-pointer"
                 onClick={onClick}>{title}</h2>
-            {title === 'Fonds' && (
-                <button 
-                    onClick={openCsvModal}
-                    className="bg-black text-white p-1 lg:p-2 rounded hover:bg-white hover:text-black border border-black
-                                   text-xs lg:text-base">
-                    Ajouter un Csv
-                </button>
-            )
-            }
+            {/* Le bouton d'ajout CSV a été intégré dans le modal d'ajout de fonds */}
             {title === 'Compte' && (
                 <Link href='/addUser' className="bg-black text-white p-1 lg:p-2 rounded hover:bg-white hover:text-black border border-black
                                    text-xs lg:text-base">
@@ -51,12 +25,18 @@ export default function TitleAndSpan({title, onClick}) {
                 </Link>
             )
             }
+            {title === 'Fonds' && (
+                <button onClick={openModal} className="bg-black text-white p-1 lg:p-2 rounded hover:bg-white hover:text-black border border-black
+                                   text-xs lg:text-base">
+                    Ajouter un nouveau fond
+                </button>
+            )
+            }
         </div>
         <span className="block h-0.5 bg-gray-300 mt-1.5"></span>
-        
         {isModalOpen && (
             <Modal onClose={closeModal}>
-                <ModalCsv closeModal={closeModal} onSubmit={onSubmit} />
+                <NewFund onClose={closeModal} />
             </Modal>
         )}
     </>);
