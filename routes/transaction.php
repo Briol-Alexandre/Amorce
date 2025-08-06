@@ -20,5 +20,6 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('/csv', [TransactionController::class, 'index'])->name('transaction.index');
+    Route::get('/csv/list', [TransactionController::class, 'csvList'])->name('transaction.csv-list');
     Route::post('/csv', [TransactionController::class, 'csv'])->name('transaction.seed-csv-transactions');
 });

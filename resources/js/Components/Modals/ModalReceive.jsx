@@ -1,15 +1,15 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import InputError from "@/Components/InputError.jsx";
 
-export function ModalReceive({closeModal, handleReceive, fund, funds}) {
+export function ModalReceive({ closeModal, handleReceive, fund, funds }) {
     const activeFundId = fund.id;
 
     const currentDate = new Date().toISOString().split('T')[0];
 
     const [formData, setFormData] = useState({
         amount: "",
-        fund_id: "", // Le fond source (d'où vient l'argent)
-        destinationFundId: fund.id, // Le fond actuel (où va l'argent)
+        fund_id: "",
+        destinationFundId: fund.id,
         transactor: "",
         communication: "",
         date: currentDate,
@@ -18,11 +18,26 @@ export function ModalReceive({closeModal, handleReceive, fund, funds}) {
     const [errors, setErrors] = useState({});
 
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+        const { name, value } = e.target;
+
+
+        setFormData((prevData) => {
+            const newData = {
+                ...prevData,
+                [name]: value,
+            };
+
+
+            if (name === 'fund_id' && value) {
+                const sourceFund = funds.find(f => f.id == value);
+                if (sourceFund) {
+                    newData.transactor = sourceFund.name;
+                }
+            }
+
+            return newData;
+        });
+
         setErrors((prevErrors) => ({
             ...prevErrors,
             [name]: "",
@@ -40,7 +55,7 @@ export function ModalReceive({closeModal, handleReceive, fund, funds}) {
             formErrors.fund_id = "Veuillez sélectionner un fond source.";
         }
 
-        // Vérifier si le fond source a assez d'argent
+
         if (formData.fund_id) {
             const sourceFund = funds.find(f => f.id == formData.fund_id);
             if (sourceFund && formData.amount > sourceFund.amount) {
@@ -48,9 +63,7 @@ export function ModalReceive({closeModal, handleReceive, fund, funds}) {
             }
         }
 
-        if (!formData.transactor) {
-            formErrors.transactor = "Le nom du transacteur est requis.";
-        }
+
 
         if (!formData.communication) {
             formErrors.communication = "La communication est requise.";
@@ -90,7 +103,7 @@ export function ModalReceive({closeModal, handleReceive, fund, funds}) {
                         onChange={handleInputChange}
                     />
                 </fieldset>
-                {errors.amount && <InputError message={errors.amount}/>}
+                {errors.amount && <InputError message={errors.amount} />}
 
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="fonds">Depuis quel fond</label>
@@ -111,7 +124,7 @@ export function ModalReceive({closeModal, handleReceive, fund, funds}) {
                             ))}
                     </select>
                 </fieldset>
-                {errors.fund_id && <InputError message={errors.fund_id}/>}
+                {errors.fund_id && <InputError message={errors.fund_id} />}
 
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="transactor">Transacteur</label>
@@ -119,13 +132,12 @@ export function ModalReceive({closeModal, handleReceive, fund, funds}) {
                         type="text"
                         name="transactor"
                         id="transactor"
-                        className="rounded-md ml-3"
+                        className="rounded-md ml-3 bg-gray-100"
                         value={formData.transactor}
-                        placeholder="Mr. Doe"
-                        onChange={handleInputChange}
+                        readOnly
+                        title="Le transacteur est automatiquement défini comme le fond source"
                     />
                 </fieldset>
-                {errors.transactor && <InputError message={errors.transactor}/>}
 
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="communication">Communication</label>
@@ -139,7 +151,7 @@ export function ModalReceive({closeModal, handleReceive, fund, funds}) {
                         onChange={handleInputChange}
                     />
                 </fieldset>
-                {errors.communication && <InputError message={errors.communication}/>}
+                {errors.communication && <InputError message={errors.communication} />}
 
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <input
@@ -151,7 +163,7 @@ export function ModalReceive({closeModal, handleReceive, fund, funds}) {
                         onChange={handleInputChange}
                     />
                 </fieldset>
-                {errors.date && <InputError message={errors.date}/>}
+                {errors.date && <InputError message={errors.date} />}
 
                 <div className="flex justify-end mt-8 gap-4">
                     <button

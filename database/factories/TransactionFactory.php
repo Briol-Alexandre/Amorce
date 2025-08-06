@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Fund;
 use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,6 +19,7 @@ class TransactionFactory extends Factory
     public function definition(): array
     {
         return [
+            'fund_id' => Fund::factory(),
             'transactor' => fake()->name(),
             'amount' => fake()->numberBetween(10, 250),
             'date' => fake()->dateTime(),

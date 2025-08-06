@@ -35,11 +35,12 @@ class TransactionController extends Controller
                 'totalTransactions' => count($transactions),
             ]);
         }
-
-        return Inertia::render('Transactions/CsvList', [
-            'funds' => $funds,
-            'transactions' => $transactions,
-        ]);
+        
+        // Stocker les transactions dans la session pour les récupérer dans la page CsvList
+        session(['csv_transactions' => $transactions]);
+        
+        // Rediriger vers la page CsvList au lieu de rendre la vue
+        return redirect()->route('transaction.csv-list');
     }
 
 
@@ -112,7 +113,16 @@ class TransactionController extends Controller
 
     public function csvList()
     {
-        return Inertia::render('Transactions/CsvList');
+        $transactions = session('csv_transactions', []);
+        $funds = Fund::all();
+        
+        // Vider la session après récupération des données
+        session()->forget('csv_transactions');
+        
+        return Inertia::render('Transactions/CsvList', [
+            'funds' => $funds,
+            'transactions' => $transactions,
+        ]);
     }
 
 

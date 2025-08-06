@@ -10,7 +10,7 @@ export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
         amount: "",
         fund_id: fund.id,
         destinationFundId: "",
-        transactor: "",
+        transactor: fund.name, // Pré-remplir avec le nom du fond source
         communication: "",
         date: currentDate,
     });
@@ -46,9 +46,7 @@ export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
             formErrors.destinationFundId = "Veuillez sélectionner un fond destinataire.";
         }
 
-        if (!formData.transactor) {
-            formErrors.transactor = "Le nom du transacteur est requis.";
-        }
+        // Le transacteur est toujours défini, pas besoin de validation
 
         if (!formData.communication) {
             formErrors.communication = "La communication est requise.";
@@ -117,13 +115,12 @@ export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
                         type="text"
                         name="transactor"
                         id="transactor"
-                        className="rounded-md ml-3"
+                        className="rounded-md ml-3 bg-gray-100"
                         value={formData.transactor}
-                        placeholder="Mr. Doe"
-                        onChange={handleInputChange}
+                        readOnly
+                        title="Le transacteur est automatiquement défini comme le fond source"
                     />
                 </fieldset>
-                {errors.transactor && <InputError message={errors.transactor}/>}
 
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="communication">Communication</label>

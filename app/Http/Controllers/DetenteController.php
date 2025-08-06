@@ -18,26 +18,9 @@ class DetenteController extends Controller
 {
 
 
-    #[NoReturn] public function store(DetenteStoreRequest $request)
+    public function store(DetenteStoreRequest $request)
     {
         $donatorId = $request['donator_id'];
-
-
-        /*
-         * A ajouter dans la méthode update
-         * $participation = Detente::query()->increment('participation');
-         * $donatorToDelete = Detente::where('participation', 3)->get();
-
-
-        foreach ($donatorToDelete as $donator) {
-            Participations::create([
-                'donator_id' => $donator->id,
-                'last_detente' => now(),
-            ]);
-            Detente::where('donator_id', $donator->id)->delete();
-        }
-        */
-
 
         Detente::create($request->validated());
 
@@ -51,72 +34,76 @@ class DetenteController extends Controller
 
     public function getPotentialsDetenteParticipants($excludedDonatorId = null)
     {
-        $currentMonth = now()->month;
-        $currentYear = now()->year;
-
-        $monthsToCheck = [
-            ['month' => $currentMonth - 1, 'year' => $currentYear],
-            ['month' => $currentMonth - 2, 'year' => $currentYear],
-            ['month' => $currentMonth - 3, 'year' => $currentYear],
-        ];
-
-        foreach ($monthsToCheck as &$check) {
-            if ($check['month'] <= 0) {
-                $check['month'] += 12;
-                $check['year'] -= 1;
-            }
+        // 1. Calculer les 3 derniers mois
+        $lastThreeMonths = collect();
+        for ($i = 1; $i <= 3; $i++) {
+            $date = now()->subMonths($i);
+            $lastThreeMonths->push([
+                'month' => $date->month,
+                'year' => $date->year,
+                'formatted' => $date->format('Y-m')
+            ]);
         }
 
-        $transactions = Transaction::where(function ($query) use ($monthsToCheck) {
-            foreach ($monthsToCheck as $check) {
-                $query->orWhereMonth('date', $check['month'])
-                    ->whereYear('date', $check['year']);
-            }
-        })->get();
+        // 2. Récupérer tous les donateurs
+        $donators = Donators::all();
+        $eligibleDonators = collect();
 
-        $transactions->each(function ($transaction) {
-            $transaction->date = Carbon::parse($transaction->date);
-        });
+        foreach ($donators as $donator) {
+            // Condition 1: A fait un don dans chacun des 3 derniers mois
+            $hasDonationsInAllMonths = true;
 
-        $filteredTransactions = $transactions->groupBy('transactor')->filter(function ($userTransactions) use ($monthsToCheck, $excludedDonatorId) {
-            $monthsWithTransactions = $userTransactions->map(function ($transaction) {
-                return $transaction->date->format('Y-m');
-            })->unique();
+            foreach ($lastThreeMonths as $monthData) {
+                $donationExists = Transaction::where('transactor', $donator->name)
+                    ->whereMonth('date', $monthData['month'])
+                    ->whereYear('date', $monthData['year'])
+                    ->exists();
 
-            foreach ($monthsToCheck as $check) {
-                $formattedMonth = sprintf('%04d-%02d', $check['year'], $check['month']);
-                if (!$monthsWithTransactions->contains($formattedMonth)) {
-                    return false;
+                if (!$donationExists) {
+                    $hasDonationsInAllMonths = false;
+                    break;
                 }
             }
 
-            $donator = Donators::where('name', $userTransactions->first()->transactor)->first();
-            return $donator && $donator->id != $excludedDonatorId;
-        })->map(function ($userTransactions) {
-            $donator = Donators::where('name', $userTransactions->first()->transactor)->first();
-
-            return [
-                'transactor' => $userTransactions->first()->transactor,
-                'donator_id' => $donator ? $donator->id : null,
-            ];
-        })->values();
-
-        foreach ($filteredTransactions as $potential) {
-            $existsInDetente = Detente::where('donator_id', $potential['donator_id'])->exists();
-            if (!$existsInDetente) {
-                Potentials::firstOrCreate([
-                    'name' => $potential['transactor'],
-                    'donator_id' => $potential['donator_id'],
-                ]);
+            if (!$hasDonationsInAllMonths) {
+                continue; // Passer au donateur suivant
             }
 
+            // Condition 2: Ne fait pas partie de la détente actuelle
+            $isInCurrentDetente = Detente::where('donator_id', $donator->id)->exists();
+            if ($isInCurrentDetente) {
+                continue; // Passer au donateur suivant
+            }
+
+            // Condition 3: N'a pas fait partie d'une détente il y a moins d'un an
+            $hasRecentParticipation = Participations::where('user_id', $donator->id)
+                ->where('last_detente', '>', now()->subYear())
+                ->exists();
+            if ($hasRecentParticipation) {
+                continue; // Passer au donateur suivant
+            }
+
+            // Si toutes les conditions sont remplies, ajouter à la liste des éligibles
+            $eligibleDonators->push([
+                'transactor' => $donator->name,
+                'donator_id' => $donator->id
+            ]);
         }
 
-        return $filteredTransactions;
+        // Créer ou mettre à jour les potentiels participants
+        Potentials::truncate(); // Vider la table des potentiels
+
+        foreach ($eligibleDonators as $eligible) {
+            Potentials::create([
+                'name' => $eligible['transactor'],
+                'donator_id' => $eligible['donator_id']
+            ]);
+        }
+
+        return $eligibleDonators;
     }
 
 
-    #[NoReturn]
     public function index()
     {
         $this->getPotentialsDetenteParticipants();
@@ -144,7 +131,6 @@ class DetenteController extends Controller
         ]);
     }
 
-    #[NoReturn]
     public function participationUpdate()
     {
 

@@ -1,14 +1,14 @@
 import TitleAndSpan from "@/Components/TitleAndSpan.jsx";
 import MainStructure from "@/Components/MainStructure.jsx";
 import ActionButton from "@/Components/ActionButton.jsx";
-import React, {useEffect, useState} from "react";
-import {router, usePage} from "@inertiajs/react";
+import React, { useEffect, useState } from "react";
+import { router, usePage } from "@inertiajs/react";
 import Modal from "@/Components/Modal.jsx";
-import {ModalCsv} from "@/Components/Modals/ModalCsv.jsx";
+import { ModalCsv } from "@/Components/Modals/ModalCsv.jsx";
 
 export default function Csv() {
-    const {funds} = usePage().props;
-    const {transactions} = usePage().props;
+    const { funds } = usePage().props;
+    const { transactions } = usePage().props;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedFunds, setSelectedFunds] = useState([]);
@@ -45,22 +45,22 @@ export default function Csv() {
         <>
             <MainStructure pageTitle='Csv'>
                 <div className='w-full'>
-                <div className='flex flex-col w-full'>
-                    <div className="p-3 ">
-                        <TitleAndSpan title='CSV'/>
-                        <div className='flex justify-center m-4'>
-                            {transactions ? '' : <ActionButton
-                                name="Importer un fichier CSV"
-                                color="black"
-                                onClick={openCsvModal}
-                            />}
+                    <div className='flex flex-col w-full'>
+                        <div className="p-3 ">
+                            <TitleAndSpan title='CSV' />
+                            <div className='flex justify-center m-4'>
 
+                                {transactions ? '' : <button
+                                    className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-700"
+                                    onClick={openCsvModal}
+                                >Importer un fichier CSV</button>}
+
+                            </div>
                         </div>
                     </div>
-                </div>
-                {isModalOpen && (<Modal onClose={closeModal}>
-                    <ModalCsv closeModal={closeModal} onSubmit={onSubmit}/>
-                </Modal>)}
+                    {isModalOpen && (<Modal onClose={closeModal}>
+                        <ModalCsv closeModal={closeModal} onSubmit={onSubmit} />
+                    </Modal>)}
                 </div>
             </MainStructure>
         </>
