@@ -3,152 +3,190 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DetenteStoreRequest;
-use App\Models\Detente;
-use App\Models\Donators;
-use App\Models\Participations;
-use App\Models\Potentials;
-use App\Models\Transaction;
-use Carbon\Carbon;
+use App\Http\Requests\DetenteRemoveRequest;
+use App\Models\{Detente, Donators, Draw, Participations, Potentials, Transaction};
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
-use JetBrains\PhpStorm\NoReturn;
-use Request;
-use function Termwind\render;
+use Illuminate\Http\Request;
 
 class DetenteController extends Controller
 {
-
-
-    public function store(DetenteStoreRequest $request)
+    public function index(Request $request)
     {
-        $donatorId = $request['donator_id'];
-
-        Detente::create($request->validated());
-
-        Potentials::where('donator_id', $donatorId)->delete();
-
-        $potentials = Potentials::all();
-
-        return Inertia::render('Detente', ['transactions' => $potentials]);
-    }
-
-
-    public function getPotentialsDetenteParticipants($excludedDonatorId = null)
-    {
-        // 1. Calculer le mois actuel et les 2 mois précédents
-        $lastThreeMonths = collect();
-        for ($i = 0; $i < 3; $i++) {
-            $date = now()->subMonths($i);
-            $lastThreeMonths->push([
-                'month' => $date->month,
-                'year' => $date->year,
-                'formatted' => $date->format('Y-m')
-            ]);
+        if ($request->has('refresh')) {
+            $this->getPotentialsDetenteParticipants(forceRefresh: true);
+            return redirect()->route('detente.index')
+                ->with('success', 'La liste des donateurs éligibles a été mise à jour.');
         }
 
-        // 2. Récupérer tous les donateurs
-        $donators = Donators::all();
-        $eligibleDonators = collect();
-
-        foreach ($donators as $donator) {
-            // Condition 1: A fait un don dans chacun des 3 derniers mois
-            $hasDonationsInAllMonths = true;
-
-            foreach ($lastThreeMonths as $monthData) {
-                $donationExists = Transaction::where('transactor', $donator->name)
-                    ->whereMonth('date', $monthData['month'])
-                    ->whereYear('date', $monthData['year'])
-                    ->exists();
-
-                if (!$donationExists) {
-                    $hasDonationsInAllMonths = false;
-                    break;
-                }
-            }
-
-            if (!$hasDonationsInAllMonths) {
-                continue; // Passer au donateur suivant
-            }
-
-            // Condition 2: Ne fait pas partie de la détente actuelle
-            $isInCurrentDetente = Detente::where('donator_id', $donator->id)->exists();
-            if ($isInCurrentDetente) {
-                continue; // Passer au donateur suivant
-            }
-
-            // Condition 3: N'a pas fait partie d'une détente il y a moins d'un an
-            $hasRecentParticipation = Participations::where('user_id', $donator->id)
-                ->where('last_detente', '>', now()->subYear())
-                ->exists();
-            if ($hasRecentParticipation) {
-                continue; // Passer au donateur suivant
-            }
-
-            // Si toutes les conditions sont remplies, ajouter à la liste des éligibles
-            $eligibleDonators->push([
-                'transactor' => $donator->name,
-                'donator_id' => $donator->id
-            ]);
-        }
-
-        // Créer ou mettre à jour les potentiels participants
-        Potentials::truncate(); // Vider la table des potentiels
-
-        foreach ($eligibleDonators as $eligible) {
-            Potentials::create([
-                'name' => $eligible['transactor'],
-                'donator_id' => $eligible['donator_id']
-            ]);
-        }
-
-        return $eligibleDonators;
-    }
-
-
-    public function index()
-    {
         $this->getPotentialsDetenteParticipants();
-        $potentials = Potentials::all();
+
         return Inertia::render('Detente', [
-            'transactions' => $potentials,
+            'transactions' => Potentials::all(),
+            'drawParticipantsCount' => Draw::count(),
         ]);
     }
-
 
     public function draw()
     {
-        $detente = Detente::all();
         return Inertia::render('Draw', [
-            'detente' => $detente,
+            'drawParticipants' => Draw::all(),
+            'detenteParticipants' => Detente::all(),
+            'flash' => session('flash', []),
         ]);
     }
 
-    public function destroy(DetenteStoreRequest $request)
+    public function store(DetenteStoreRequest $request)
     {
-        Detente::where($request->validated())->delete();
-        $detente = Detente::all();
-        return Inertia::render('Draw', [
-            'detente' => $detente
-        ]);
+        $data = $request->validated();
+
+        if (Draw::where('donator_id', $data['donator_id'])->exists()) {
+            return back()->with('error', "$data[name] est déjà dans la liste des participants au tirage.");
+        }
+
+        if (Detente::where('donator_id', $data['donator_id'])->exists()) {
+            return back()->with('error', "$data[name] fait déjà partie de la détente actuelle.");
+        }
+
+        Draw::create($data);
+        $deleted = Potentials::where('donator_id', $data['donator_id'])->delete();
+
+        return redirect()->route('detente.index')
+            ->with('success', "$data[name] a été ajouté(e) au tirage. " . ($deleted ? 'Supprimé des éligibles.' : 'Attention: non supprimé des éligibles!'))
+            ->with('drawParticipantsCount', Draw::count());
+    }
+
+    public function remove(DetenteRemoveRequest $request)
+    {
+        $data = $request->validated();
+
+        if ($data['source'] === 'draw') {
+            if (Draw::where('donator_id', $data['donator_id'])->exists()) {
+                Potentials::create(['name' => $data['name'], 'donator_id' => $data['donator_id']]);
+                Draw::where('donator_id', $data['donator_id'])->delete();
+                return back()->with('success', "$data[name] a été retiré(e) du tirage et remis(e) parmi les éligibles.");
+            }
+        } else {
+            Detente::where('donator_id', $data['donator_id'])->delete();
+            return back()->with('success', "$data[name] a été retiré(e) de la détente.");
+        }
+
+        return back()->with('error', 'Participant non trouvé.');
+    }
+
+    public function destroy(Request $request)
+    {
+        $data = $request->only(['donator_id', 'name', 'source']);
+
+        if (!$data['donator_id'] || !$data['name'] || !$data['source']) {
+            $json = $request->json();
+            $data = [
+                'donator_id' => $json->get('donator_id'),
+                'name' => $json->get('name'),
+                'source' => $json->get('source'),
+            ];
+        }
+
+        return $this->remove(new DetenteRemoveRequest($data));
+    }
+
+    public function performDraw()
+    {
+        if (Draw::count() === 0) {
+            return back()->with('error', 'Aucun participant disponible dans le tirage.');
+        }
+
+        $availableSpots = 9 - Detente::count();
+        if ($availableSpots <= 0) {
+            return back()->with('error', 'La détente est déjà complète.');
+        }
+
+        $participantsToSelect = min(3, $availableSpots, Draw::count());
+        $selected = Draw::inRandomOrder()->take($participantsToSelect)->get();
+
+        foreach ($selected as $participant) {
+            Detente::create([
+                'name' => $participant->name,
+                'donator_id' => $participant->donator_id,
+                'participation' => 0
+            ]);
+        }
+
+        $remaining = Draw::whereNotIn('id', $selected->pluck('id'))->get();
+        foreach ($remaining as $participant) {
+            Potentials::create([
+                'name' => $participant->name,
+                'donator_id' => $participant->donator_id
+            ]);
+        }
+
+        Draw::truncate();
+
+        return back()->with('success', $selected->count() . ' participant(s) ajouté(s) à la détente. Les autres ont été remis dans les éligibles.');
     }
 
     public function participationUpdate()
     {
+        Detente::query()->increment('participation');
 
-        $participation = Detente::query()->increment('participation');
-        $donatorToDelete = Detente::where('participation', 3)->get();
-
-
-        foreach ($donatorToDelete as $donator) {
+        $toRemove = Detente::where('participation', '>=', 3)->get();
+        foreach ($toRemove as $donator) {
             Participations::create([
                 'name' => $donator->name,
-                'user_id' => $donator->id,
+                'user_id' => $donator->donator_id,
                 'last_detente' => now(),
             ]);
-            Detente::where('donator_id', $donator->id)->delete();
+
+            $donator->delete();
         }
 
-
+        return back()->with('success', $toRemove->count() . ' participant(s) ont quitté la détente après 3 participations.');
     }
 
+    public function history()
+    {
+        return Inertia::render('DetenteHistory', [
+            'participationsHistory' => Participations::latest('last_detente')->get(),
+            'flash' => session('flash', []),
+        ]);
+    }
 
+    private function getPotentialsDetenteParticipants($excludedDonatorId = null, $forceRefresh = false)
+    {
+        if (!$forceRefresh && Potentials::exists())
+            return;
+
+        $lastThreeMonths = collect(range(0, 2))->map(fn($i) => now()->subMonths($i));
+        $eligible = Donators::all()->filter(function ($donator) use ($lastThreeMonths) {
+            if (Draw::where('donator_id', $donator->id)->exists())
+                return false;
+
+            $donatedAllThreeMonths = $lastThreeMonths->every(
+                fn($date) =>
+                Transaction::where('transactor', $donator->name)
+                    ->whereMonth('date', $date->month)
+                    ->whereYear('date', $date->year)
+                    ->exists()
+            );
+
+            if (!$donatedAllThreeMonths)
+                return false;
+            if (Detente::where('donator_id', $donator->id)->exists())
+                return false;
+
+            return !Participations::where('user_id', $donator->id)
+                ->where('last_detente', '>', now()->subYear())->exists();
+        });
+
+        if ($forceRefresh)
+            Potentials::truncate();
+
+        foreach ($eligible as $donator) {
+            Potentials::firstOrCreate([
+                'donator_id' => $donator->id
+            ], [
+                'name' => $donator->name
+            ]);
+        }
+    }
 }

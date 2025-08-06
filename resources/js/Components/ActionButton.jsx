@@ -38,11 +38,11 @@ const getIcon = (color, isHovered) => {
     const iconColor = isHovered ? color : "white";
 
     const iconMap = {
-        blue: <AddIcon color={iconColor} small={true} />,
-        red: <RemoveIcon color={iconColor} />,
-        green: <TransferIcon color={iconColor} />,
-        orange: <EditIcon color={iconColor} />,
-        purple: <ReceiveIcon color={iconColor} />,
+        blue: <AddIcon color={iconColor} animate={isHovered} small={true} />,
+        red: <RemoveIcon color={iconColor} animate={isHovered} />,
+        green: <TransferIcon color={iconColor} animate={isHovered} />,
+        orange: <EditIcon color={iconColor} animate={isHovered} />,
+        purple: <ReceiveIcon color={iconColor} animate={isHovered} />,
     };
 
     return iconMap[color] || null;

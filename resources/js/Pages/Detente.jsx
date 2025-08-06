@@ -5,7 +5,7 @@ import PrimaryButton from "@/Components/PrimaryButton.jsx";
 import React from "react";
 
 export default function Detente() {
-    const { transactions } = usePage().props;
+    const { transactions, drawParticipantsCount, flash } = usePage().props;
 
     const handleSubmit = (donatorId, name) => {
         router.post(route('detente.store'), {
@@ -13,7 +13,6 @@ export default function Detente() {
             donator_id: donatorId,
             participation: 0
         });
-        console.log('Envoyer le donator_id et participation:', donatorId, 0);
     };
 
 
@@ -23,6 +22,30 @@ export default function Detente() {
                 <section className="w-full">
                     <TitleAndSpan title="Détente" />
                 </section>
+                
+                {/* Messages flash */}
+                {flash && flash.success && (
+                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 w-3/4">
+                        {flash.success}
+                    </div>
+                )}
+                
+                {flash && flash.error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 w-3/4">
+                        {flash.error}
+                    </div>
+                )}
+                
+                {/* Informations sur le tirage */}
+                <div className="w-3/4 flex justify-between items-center mb-4">
+                    <div className="text-gray-700">
+                        <span className="font-medium">{transactions.length}</span> donateur(s) éligible(s)
+                    </div>
+                    <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-2 rounded">
+                        <span className="font-medium">{drawParticipantsCount}</span> participant(s) dans le tirage
+                    </div>
+                </div>
+                
                 <div className="flex items-center gap-4 w-full justify-center mt-4">
                     <h4>Personnes éligibles</h4>
                     <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow" />
@@ -61,10 +84,28 @@ export default function Detente() {
                     </table>
                 </div>
 
-                <Link href='/draw' className="mt-4 bg-black text-white p-1 lg:p-2 rounded hover:bg-white hover:text-black border border-black
-                                   text-xs lg:text-base">
-                    Accéder au tirage
-                </Link>
+                <div className="flex space-x-4 mt-6">
+                    <Link 
+                        href={route('detente.draw')} 
+                        className="bg-green-600 text-white p-2 lg:p-3 rounded hover:bg-green-700 text-sm lg:text-base font-medium"
+                    >
+                        Accéder au tirage ({drawParticipantsCount})
+                    </Link>
+                    
+                    <Link 
+                        href={route('detente.history')} 
+                        className="bg-purple-600 text-white p-2 lg:p-3 rounded hover:bg-purple-700 text-sm lg:text-base font-medium"
+                    >
+                        Voir l'historique
+                    </Link>
+                    
+                    <Link 
+                        href={route('detente.index') + '?refresh=true'} 
+                        className="bg-blue-600 text-white p-2 lg:p-3 rounded hover:bg-blue-700 text-sm lg:text-base font-medium"
+                    >
+                        Rafraîchir la liste des éligibles
+                    </Link>
+                </div>
             </div>
         </MainStructure>
     );
