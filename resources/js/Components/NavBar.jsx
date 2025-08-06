@@ -6,47 +6,47 @@ import EventIcon from "@/Components/icons/EventIcon.jsx";
 import UserIcon from "@/Components/icons/UserIcon.jsx";
 import LogoutIcon from "@/Components/icons/LogoutIcon.jsx";
 import DashboardIcon from "@/Components/icons/DashboardIcon.jsx";
-import {Link, router} from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 
-function NavBar({isOpened, isClosed, logOut}) {
+function NavBar({ isOpened, isClosed, logOut }) {
     let navigation;
     if (isOpened) {
         navigation =
             <nav
-                className="flex flex-col justify-between border-2 rounded-xl w-10 h-full p-0 lg:p-2  lg:w-14 border-gray-300 border-solid">
+                className="flex flex-col justify-between border-2 rounded-xl w-10 h-[99%] p-0 lg:p-2 fixed z-30 lg:w-14 border-gray-300 border-solid">
                 <h3 className="sr-only">Navigation Principale</h3>
                 <ul>
                     <li className="flex justify-center my-5 min-h-10">
                         <svg className="cursor-pointer" onClick={isClosed} width="24" height="24" viewBox="0 0 24 24"
-                             fill="none" xmlns="http://www.w3.org/2000/svg">
+                            fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M4 12H20" stroke="black" strokeWidth="2" strokeLinecap="round"
-                                  strokeLinejoin="round"/>
+                                strokeLinejoin="round" />
                             <path d="M4 6H20" stroke="black" strokeWidth="2" strokeLinecap="round"
-                                  strokeLinejoin="round"/>
+                                strokeLinejoin="round" />
                             <path d="M4 18H20" stroke="black" strokeWidth="2" strokeLinecap="round"
-                                  strokeLinejoin="round"/>
+                                strokeLinejoin="round" />
                         </svg>
                     </li>
                     <li>
                         <ul className="flex-col pl-2">
                             <li className="mb-4">
                                 <Link href="/dashboard">
-                                    <DashboardIcon/>
+                                    <DashboardIcon />
                                 </Link>
                             </li>
                             <li className="mb-4">
                                 <Link href="/fonds">
-                                    <FondIcon/>
+                                    <FondIcon />
                                 </Link>
                             </li>
                             <li className="mb-4">
                                 <Link href="/detente">
-                                    <DetenteIcon/>
+                                    <DetenteIcon />
                                 </Link>
                             </li>
                             <li className="mb-4">
                                 <Link href="/evenement">
-                                    <EventIcon/>
+                                    <EventIcon />
                                 </Link>
                             </li>
                         </ul>
@@ -55,30 +55,30 @@ function NavBar({isOpened, isClosed, logOut}) {
                 <ul className="flex-col pl-2">
                     <li className="mb-4">
                         <Link href='/compte'>
-                            <UserIcon/>
+                            <UserIcon />
                         </Link>
                     </li>
                     <li className="mb-4 hover:cursor-pointer" onClick={logOut}>
-                        <LogoutIcon/>
+                        <LogoutIcon />
                     </li>
                 </ul>
             </nav>
     } else {
         navigation =
             <nav
-                className="flex flex-col justify-between border-2 rounded-xl w-52 h-full p-2 border-gray-300 border-solid px-4 text-black font-bold">
+                className="flex flex-col justify-between border-2 rounded-xl w-52 h-[99%] z-30 fixed p-2 border-gray-300 border-solid px-4 text-black font-bold">
                 <h3 className="sr-only">Navigation Principale</h3>
                 <ul>
                     <li className="flex w-full justify-center align-middle my-5 min-h-10">
-                        <AmorceLogo/>
+                        <AmorceLogo />
                         <div onClick={isClosed} className="hover:cursor-pointer">
-                            <BackArrowIcon/>
+                            <BackArrowIcon />
                         </div>
                     </li>
                     <li>
                         <Link href="/dashboard"
-                              className="flex mb-4 items-center gap-2">
-                            <DashboardIcon/>
+                            className="flex mb-4 items-center gap-2">
+                            <DashboardIcon />
                             <p>
                                 Dashboard
                             </p>
@@ -86,8 +86,8 @@ function NavBar({isOpened, isClosed, logOut}) {
                     </li>
                     <li>
                         <Link href="/fonds"
-                              className="flex mb-4 items-center gap-2">
-                            <FondIcon/>
+                            className="flex mb-4 items-center gap-2">
+                            <FondIcon />
                             <p>
                                 Fonds
                             </p>
@@ -95,8 +95,8 @@ function NavBar({isOpened, isClosed, logOut}) {
                     </li>
                     <li>
                         <Link href="/detente"
-                              className="flex mb-4 items-center gap-2">
-                            <DetenteIcon/>
+                            className="flex mb-4 items-center gap-2">
+                            <DetenteIcon />
                             <p>
                                 Détente
                             </p>
@@ -104,8 +104,8 @@ function NavBar({isOpened, isClosed, logOut}) {
                     </li>
                     <li>
                         <Link href="/evenement"
-                              className="flex mb-4 items-center gap-2">
-                            <EventIcon/>
+                            className="flex mb-4 items-center gap-2">
+                            <EventIcon />
                             <p>
                                 Évenements
                             </p>
@@ -115,12 +115,12 @@ function NavBar({isOpened, isClosed, logOut}) {
                 <ul>
                     <li>
                         <Link href='/compte' className="flex mb-4 items-center gap-2">
-                            <UserIcon/>
+                            <UserIcon />
                             <p>Utilisateurs</p>
                         </Link>
                     </li>
                     <li className="flex mb-4 items-center gap-2" onClick={logOut}>
-                        <LogoutIcon/>
+                        <LogoutIcon />
                         <p>Se déconnecter</p>
                     </li>
                 </ul>
@@ -129,9 +129,9 @@ function NavBar({isOpened, isClosed, logOut}) {
 
 
     return (
-        <aside className="h-[98vh]">
+        <aside className={`h-[98vh] ${isOpened ? 'w-14' : 'w-52'}`}>
             <h2 className="sr-only">Navigation</h2>
-        {navigation}
+            {navigation}
         </aside>
     );
 }
