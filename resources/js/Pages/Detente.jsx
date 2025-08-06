@@ -2,17 +2,42 @@ import MainStructure from "@/Components/MainStructure.jsx";
 import TitleAndSpan from "@/Components/TitleAndSpan.jsx";
 import { Link, router, usePage } from '@inertiajs/react';
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Detente() {
     const { transactions, drawParticipantsCount, flash } = usePage().props;
+    const [selectedDonators, setSelectedDonators] = useState([]);
 
-    const handleSubmit = (donatorId, name) => {
-        router.post(route('detente.store'), {
-            name: name,
-            donator_id: donatorId,
-            participation: 0
+    const handleCheckboxChange = (donatorId, name, isChecked) => {
+        if (isChecked) {
+            setSelectedDonators([...selectedDonators, { id: donatorId, name }]);
+        } else {
+            setSelectedDonators(selectedDonators.filter(donator => donator.id !== donatorId));
+        }
+    };
+
+    const handleSubmitSelected = () => {
+        selectedDonators.forEach((donator, index) => {
+            if (index === selectedDonators.length - 1) {
+                router.post(route('detente.store'), {
+                    name: donator.name,
+                    donator_id: donator.id,
+                    participation: 0
+                }, {
+                    onSuccess: () => {
+                        router.visit(route('detente.draw'));
+                    }
+                });
+            } else {
+                router.post(route('detente.store'), {
+                    name: donator.name,
+                    donator_id: donator.id,
+                    participation: 0
+                });
+            }
         });
+
+        setSelectedDonators([]);
     };
 
 
@@ -58,46 +83,44 @@ export default function Detente() {
                                         </span>
                                     </td>
                                     <td className="border border-gray-400 p-2">
-                                        <form onSubmit={(e) => {
-                                            e.preventDefault();
-                                            handleSubmit(transaction.donator_id, transaction.name);
-                                        }}>
-                                            <input type="hidden" name="donator_id" value={transaction.donator_id} />
-                                            <input type="hidden" name="participation" value="0" />
-                                            <button type="submit" className="text-blue-600 underline underline-offset-2 px-4 py-2 rounded">
-                                                Ajouter&nbsp;?
-                                            </button>
-                                        </form>
+                                        <div className="flex justify-center items-center">
+                                            <input
+                                                type="checkbox"
+                                                id={`donator-${transaction.donator_id}`}
+                                                className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
+                                                onChange={(e) => handleCheckboxChange(transaction.donator_id, transaction.name, e.target.checked)}
+                                                checked={selectedDonators.some(donator => donator.id === transaction.donator_id)}
+                                            />
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
-
-                <div className="flex space-x-4 mt-6">
-                    <Link
-                        href={route('detente.draw')}
-                        className="bg-green-600 text-white p-2 lg:p-3 rounded hover:bg-green-700 text-sm lg:text-base font-medium"
-                    >
-                        Accéder au tirage ({drawParticipantsCount})
-                    </Link>
-
-                    <Link
-                        href={route('detente.history')}
-                        className="bg-purple-600 text-white p-2 lg:p-3 rounded hover:bg-purple-700 text-sm lg:text-base font-medium"
-                    >
-                        Voir l'historique
-                    </Link>
-
-                    <Link
-                        href={route('detente.index') + '?refresh=true'}
-                        className="bg-blue-600 text-white p-2 lg:p-3 rounded hover:bg-blue-700 text-sm lg:text-base font-medium"
-                    >
-                        Rafraîchir la liste des éligibles
-                    </Link>
-                </div>
             </div>
+            {selectedDonators.length > 0 && (
+                <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 p-4 flex justify-between items-center">
+                    <div className="text-gray-800 font-medium">
+                        <span className="mr-2">{selectedDonators.length}</span>
+                        {selectedDonators.length === 1 ? 'personne sélectionnée' : 'personnes sélectionnées'}
+                    </div>
+                    <div className="flex space-x-4">
+                        <button
+                            onClick={() => setSelectedDonators([])}
+                            className="text-gray-600 hover:text-gray-800 underline"
+                        >
+                            Annuler
+                        </button>
+                        <button
+                            onClick={handleSubmitSelected}
+                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm lg:text-base font-medium"
+                        >
+                            Ajouter au tirage et continuer
+                        </button>
+                    </div>
+                </div>
+            )}
         </MainStructure>
     );
 }
