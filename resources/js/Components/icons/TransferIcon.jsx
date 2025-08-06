@@ -38,7 +38,7 @@ export function TransferIcon({ color, animate = false }) {
                     }
                 }
                 .animate-send-icon {
-                    animation: send-animation 0.8s ease-in-out;
+                    animation: send-animation 0.5s ease-in-out;
                 }
                 `}
             </style>

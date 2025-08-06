@@ -1,15 +1,15 @@
 import TitleAndSpan from "@/Components/TitleAndSpan.jsx";
-import {router, usePage, Link} from "@inertiajs/react";
+import { router, usePage, Link } from "@inertiajs/react";
 import MainStructure from "@/Components/MainStructure.jsx";
 import React from "react";
 
 export default function Draw() {
-    const {drawParticipants, detenteParticipants, flash} = usePage().props;
+    const { drawParticipants, detenteParticipants, flash } = usePage().props;
 
     function removeParticipant(donatorId, name, source) {
         router.post(route('detente.remove'), {
-            donator_id: donatorId, 
-            name: name, 
+            donator_id: donatorId,
+            name: name,
             source: source
         });
     }
@@ -17,7 +17,7 @@ export default function Draw() {
     function handleParticipationUpdate() {
         router.post(route('detente.participation-update'));
     }
-    
+
     function performDraw() {
         router.get(route('detente.perform-draw'));
     }
@@ -25,44 +25,44 @@ export default function Draw() {
     return (
         <MainStructure pageTitle={'Tirage Détente'}>
             <section className={"flex-grow p-3"}>
-                <TitleAndSpan onClick={() => router.visit(route('detente.draw'))} title={'Tirage'}/>
-                
+                <TitleAndSpan onClick={() => router.visit(route('detente.draw'))} title={'Tirage'} />
+
                 {/* Messages flash */}
                 {flash && flash.success && (
                     <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 mx-8">
                         {flash.success}
                     </div>
                 )}
-                
+
                 {flash && flash.error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 mx-8">
                         {flash.error}
                     </div>
                 )}
-                
+
                 {/* Navigation */}
                 <div className="flex justify-between items-center mt-4 mx-8 mb-6">
                     <div className="text-gray-700">
-                        <span className="font-medium">{drawParticipants.length}</span> participant(s) dans le tirage | 
+                        <span className="font-medium">{drawParticipants.length}</span> participant(s) dans le tirage |
                         <span className="font-medium ml-2">{detenteParticipants.length}</span> participant(s) dans la détente
                     </div>
                     <div className="space-x-4">
-                        <Link 
-                            href={route('detente.index')} 
+                        <Link
+                            href={route('detente.index')}
                             className='bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700'
                         >
                             Ajouter des participants
                         </Link>
-                        
-                        <Link 
-                            href={route('detente.history')} 
+
+                        <Link
+                            href={route('detente.history')}
                             className='bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700'
                         >
                             Voir l'historique
                         </Link>
                     </div>
                 </div>
-                
+
                 {/* Section des participants au tirage */}
                 <section className="mb-8 mx-8">
                     <h2 className="text-xl font-semibold mb-4">Liste des participants au tirage</h2>
@@ -83,7 +83,7 @@ export default function Draw() {
                                     </li>
                                 ))}
                             </ul>
-                            
+
                             <div className='flex justify-center mt-4'>
                                 <button
                                     className='bg-green-600 text-white py-2 px-6 rounded hover:bg-green-700 font-medium'
@@ -98,7 +98,7 @@ export default function Draw() {
                         <p className="text-gray-500">Aucun participant dans le tirage. Ajoutez des participants depuis la page Détente.</p>
                     )}
                 </section>
-                
+
                 {/* Section des participants actuels de la détente */}
                 <section className="mb-8 mx-8">
                     <h2 className="text-xl font-semibold mb-4">Participants actuels de la détente</h2>
@@ -122,16 +122,6 @@ export default function Draw() {
                                     </li>
                                 ))}
                             </ul>
-                            
-                            <div className='flex justify-center mt-4'>
-                                <button
-                                    className='bg-blue-600 text-white py-2 px-6 rounded hover:bg-blue-700 font-medium'
-                                    onClick={handleParticipationUpdate}
-                                    disabled={detenteParticipants.length === 0}
-                                >
-                                    Incrémenter les participations
-                                </button>
-                            </div>
                         </div>
                     ) : (
                         <p className="text-gray-500">Aucun participant dans la détente actuelle.</p>

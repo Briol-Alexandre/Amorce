@@ -20,9 +20,43 @@ class DetenteController extends Controller
         }
 
         $this->getPotentialsDetenteParticipants();
+        
+        // Récupérer les potentiels participants
+        $potentials = Potentials::all();
+        $lastThreeMonths = collect(range(0, 2))->map(fn($i) => now()->subMonths($i));
+        
+        // Enrichir les données avec les informations dynamiques
+        $transactions = $potentials->map(function ($potential) use ($lastThreeMonths) {
+            $donator = Donators::find($potential->donator_id);
+            
+            // Vérifier si le donateur a fait des dons au cours des 3 derniers mois
+            $hasRecentDonations = $lastThreeMonths->every(
+                fn($date) => 
+                Transaction::where('transactor', $donator->name)
+                    ->whereMonth('date', $date->month)
+                    ->whereYear('date', $date->year)
+                    ->exists()
+            );
+            
+            // Vérifier si le donateur ne fait pas partie de la détente actuelle
+            $notInDetente = !Detente::where('donator_id', $donator->id)->exists();
+            
+            // Vérifier si la dernière participation à la détente date de plus d'un an
+            $lastDetenteOverYear = !Participations::where('user_id', $donator->id)
+                ->where('last_detente', '>', now()->subYear())->exists();
+                
+            return [
+                'id' => $potential->id,
+                'name' => $potential->name,
+                'donator_id' => $potential->donator_id,
+                'has_recent_donations' => $hasRecentDonations,
+                'not_in_detente' => $notInDetente,
+                'last_detente_over_year' => $lastDetenteOverYear
+            ];
+        });
 
         return Inertia::render('Detente', [
-            'transactions' => Potentials::all(),
+            'transactions' => $transactions,
             'drawParticipantsCount' => Draw::count(),
         ]);
     }
@@ -96,11 +130,28 @@ class DetenteController extends Controller
             return back()->with('error', 'Aucun participant disponible dans le tirage.');
         }
 
-        $availableSpots = 9 - Detente::count();
-        if ($availableSpots <= 0) {
-            return back()->with('error', 'La détente est déjà complète.');
+        // Incrémenter les participations des utilisateurs existants dans la détente
+        Detente::query()->increment('participation');
+
+        // Vérifier si des participants ont atteint 4 participations et les retirer
+        $toRemove = Detente::where('participation', '>', 3)->get();
+        foreach ($toRemove as $donator) {
+            Participations::create([
+                'name' => $donator->name,
+                'user_id' => $donator->donator_id,
+                'last_detente' => now(),
+            ]);
+
+            $donator->delete();
         }
 
+        // Vérifier s'il y a de la place dans la détente APRÈS avoir retiré les participants
+        $availableSpots = 9 - Detente::count();
+        if ($availableSpots <= 0) {
+            return back()->with('error', 'La détente est toujours complète après rotation. Aucun nouveau participant ne peut être ajouté.');
+        }
+
+        // Sélectionner les nouveaux participants pour la détente
         $participantsToSelect = min(3, $availableSpots, Draw::count());
         $selected = Draw::inRandomOrder()->take($participantsToSelect)->get();
 
@@ -108,7 +159,7 @@ class DetenteController extends Controller
             Detente::create([
                 'name' => $participant->name,
                 'donator_id' => $participant->donator_id,
-                'participation' => 0
+                'participation' => 1 // Initialisation à 1 participation pour les nouveaux
             ]);
         }
 
@@ -122,7 +173,13 @@ class DetenteController extends Controller
 
         Draw::truncate();
 
-        return back()->with('success', $selected->count() . ' participant(s) ajouté(s) à la détente. Les autres ont été remis dans les éligibles.');
+        $message = $selected->count() . ' participant(s) ajouté(s) à la détente. ';
+        if ($toRemove->count() > 0) {
+            $message .= $toRemove->count() . ' participant(s) ont quitté la détente après 3 participations. ';
+        }
+        $message .= 'Les autres ont été remis dans les éligibles.';
+
+        return back()->with('success', $message);
     }
 
     public function participationUpdate()

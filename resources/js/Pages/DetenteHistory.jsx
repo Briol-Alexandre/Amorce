@@ -1,10 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import { router, usePage, Link } from "@inertiajs/react";
 import MainStructure from "@/Components/MainStructure.jsx";
 import TitleAndSpan from "@/Components/TitleAndSpan.jsx";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 export default function DetenteHistory() {
     const { participationsHistory, flash } = usePage().props;
+    
+    // Pagination
+    const itemsPerPage = 5;
+    const [currentPage, setCurrentPage] = useState(1);
+    
+    const totalPages = Math.ceil(participationsHistory.length / itemsPerPage);
+    
+    const currentParticipations = participationsHistory.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+    
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+    
+    const getPages = () => {
+        const pages = [];
+        const maxPagesToShow = 7;
+
+        if (totalPages <= maxPagesToShow) {
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(i);
+            }
+        } else {
+            pages.push(1);
+
+            if (currentPage > 3) pages.push('...');
+            const start = Math.max(currentPage - 1, 2);
+            const end = Math.min(currentPage + 1, totalPages - 1);
+
+            for (let i = start; i <= end; i++) {
+                pages.push(i);
+            }
+
+            if (currentPage < totalPages - 2) pages.push('...');
+            if (totalPages > 1) pages.push(totalPages);
+        }
+
+        return pages;
+    };
 
     return (
         <MainStructure pageTitle={'Historique des participations'}>
@@ -48,40 +93,79 @@ export default function DetenteHistory() {
                 
                 {/* Section de l'historique des participations */}
                 <section className="mb-8 mx-8">
-                    <h2 className="text-xl font-semibold mb-4">Historique des participations à la détente</h2>
-                    {participationsHistory.length > 0 ? (
-                        <div className='flex flex-col'>
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full bg-white border border-gray-200">
-                                    <thead className="bg-gray-100">
-                                        <tr>
-                                            <th className="py-3 px-4 text-left font-medium text-gray-600">Nom</th>
-                                            <th className="py-3 px-4 text-left font-medium text-gray-600">ID Donateur</th>
-                                            <th className="py-3 px-4 text-left font-medium text-gray-600">Dernière détente</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-200">
-                                        {participationsHistory.map((participation) => (
-                                            <tr key={participation.id} className="hover:bg-gray-50">
-                                                <td className="py-3 px-4">{participation.name}</td>
-                                                <td className="py-3 px-4">{participation.user_id}</td>
-                                                <td className="py-3 px-4">
-                                                    {new Date(participation.last_detente).toLocaleDateString('fr-FR', {
-                                                        year: 'numeric',
-                                                        month: 'long',
-                                                        day: 'numeric',
-                                                        hour: '2-digit',
-                                                        minute: '2-digit'
-                                                    })}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                    <div className='flex items-center gap-4'>
+                        <h4 className='text-sm lg:text-base'>Historique des participations à la détente</h4>
+                        <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow"></span>
+                    </div>
+                    
+                    {participationsHistory.length === 0 ? (
+                        <p className="text-center m-4 font-bold">
+                            Aucun historique de participation disponible.
+                        </p>
+                    ) : (
+                        <div className="px-6 mt-4">
+                            <ul>
+                                <li className="grid grid-cols-3 items-center mb-6 border-b-2 border-gray-400 pb-4">
+                                    <span className="font-bold">Nom</span>
+                                    <span className="text-center font-bold">ID Donateur</span>
+                                    <span className="text-right font-bold">Dernière détente</span>
+                                </li>
+                                {currentParticipations.map((participation) => (
+                                    <li
+                                        key={participation.id}
+                                        className="grid grid-cols-3 items-center border-b-2 border-gray-200 mb-4 pb-4 last-of-type:border-none"
+                                    >
+                                        <span>{participation.name}</span>
+                                        <span className="text-center">{participation.user_id}</span>
+                                        <span className="text-right">
+                                            {format(new Date(participation.last_detente), "dd MMMM yyyy à HH:mm", { locale: fr })}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            {/* Pagination */}
+                            <div className="flex justify-between items-center mt-4 space-x-2">
+                                <button
+                                    className={`px-4 py-2 bg-gray-200 rounded ${
+                                        currentPage === 1 && "opacity-50 cursor-not-allowed"
+                                    }`}
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                >
+                                    Précédent
+                                </button>
+                                <div className="flex gap-2">
+                                    {getPages().map((page, index) => (
+                                        <button
+                                            key={index}
+                                            className={`px-4 py-2 bg-gray-200 rounded ${
+                                                page === currentPage
+                                                    ? "bg-gray-900 text-white"
+                                                    : "text-gray-700"
+                                            }`}
+                                            onClick={() => {
+                                                if (page !== '...') {
+                                                    handlePageChange(page);
+                                                }
+                                            }}
+                                            disabled={page === '...'}
+                                        >
+                                            {page}
+                                        </button>
+                                    ))}
+                                </div>
+                                <button
+                                    className={`px-4 py-2 bg-gray-200 rounded ${
+                                        currentPage === totalPages && "opacity-50 cursor-not-allowed"
+                                    }`}
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                >
+                                    Suivant
+                                </button>
                             </div>
                         </div>
-                    ) : (
-                        <p className="text-gray-500">Aucun historique de participation disponible.</p>
                     )}
                 </section>
             </section>
