@@ -11,7 +11,7 @@ export default function Fund() {
         <MainStructure pageTitle={fund.name}>
             <div className='flex flex-col w-full'>
                 <div className="p-3 ">
-                    <TitleAndSpan title="Fonds"/>
+                    <TitleAndSpan title={`Fonds > ${fund.name}`} />
                     <FondList fonds={funds} activeFundId={fund.id} />
                     <FundInfo fund={fund} funds={funds} transactions={transactions} />
                 </div>

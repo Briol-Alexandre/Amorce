@@ -42,7 +42,7 @@ export default function MainStructure({children, pageTitle}) {
     }
 
     return (
-        <div className={'flex'}>
+        <div className={'flex w-full overflow-x-hidden'}>
             <Head title={pageTitle}/>
             <div>
                 <NavBar
@@ -51,7 +51,9 @@ export default function MainStructure({children, pageTitle}) {
                     logOut={handleLogout}
                 />
             </div>
-            {children}
+            <div className="w-full overflow-x-hidden">
+                {children}
+            </div>
         </div>
     );
 }

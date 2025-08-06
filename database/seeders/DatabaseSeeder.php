@@ -46,6 +46,11 @@ class DatabaseSeeder extends Seeder
             'permanent' => true,
             'amount' => 0,
         ]);
+        
+        // Appel au seeder de transactions pour créer des donnateurs éligibles à la détente
+        $this->call([
+            TransactionSeeder::class,
+        ]);
 
     }
 }

@@ -34,9 +34,9 @@ class DetenteController extends Controller
 
     public function getPotentialsDetenteParticipants($excludedDonatorId = null)
     {
-        // 1. Calculer les 3 derniers mois
+        // 1. Calculer le mois actuel et les 2 mois précédents
         $lastThreeMonths = collect();
-        for ($i = 1; $i <= 3; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $date = now()->subMonths($i);
             $lastThreeMonths->push([
                 'month' => $date->month,

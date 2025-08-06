@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { AddIcon } from "@/Components/icons/AddIcon.jsx";
 import { RemoveIcon } from "@/Components/icons/RemoveIcon.jsx";
 import { TransferIcon } from "@/Components/icons/TransferIcon.jsx";
@@ -16,20 +16,20 @@ const COLOR_THEMES = {
         hover: "hover:text-blue-400 hover:bg-white hover:border-blue-400",
     },
     red: {
-        base: "text-white bg-red-400 border border-transparent",
-        hover: "hover:text-red-400 hover:bg-white hover:border-red-400",
+        base: "text-white bg-red-600 border border-transparent",
+        hover: "hover:text-red-600 hover:bg-white hover:border-red-600",
     },
     green: {
-        base: "text-white bg-green-400 border border-transparent",
-        hover: "hover:text-green-400 hover:bg-white hover:border-green-400",
+        base: "text-white bg-green-600 border border-transparent",
+        hover: "hover:text-green-600 hover:bg-white hover:border-green-600",
     },
     orange: {
-        base: "text-white bg-orange-500 border border-transparent",
-        hover: "hover:text-orange-500 hover:bg-white hover:border-orange-500",
+        base: "text-white bg-orange-600 border border-transparent",
+        hover: "hover:text-orange-600 hover:bg-white hover:border-orange-600",
     },
     purple: {
-        base: "text-white bg-purple-500 border border-transparent",
-        hover: "hover:text-purple-500 hover:bg-white hover:border-purple-500",
+        base: "text-black bg-purple-600 border border-transparent",
+        hover: "hover:text-purple-600 hover:bg-white hover:border-purple-600",
     },
 };
 
@@ -50,6 +50,8 @@ const getIcon = (color, isHovered) => {
 
 export default function ActionButton({ name, color, onClick }) {
     const [isHovered, setIsHovered] = useState(false);
+    const [tooltipPosition, setTooltipPosition] = useState('center'); // 'left', 'center', 'right'
+    const buttonRef = useRef(null);
 
     // Récupération du thème de couleur
     const theme = COLOR_THEMES[color] || {
@@ -57,55 +59,124 @@ export default function ActionButton({ name, color, onClick }) {
         hover: "hover:text-gray-200",
     };
 
-    // Construction des classes CSS pour le bouton avec largeurs fixes
+    // Construction des classes CSS pour le bouton
     const buttonClasses = [
-        "group relative overflow-hidden",
-        "transition-all duration-300 ease-in-out",
-        "h-10 rounded-full",
+        "group relative",
+        "transition-all duration-200 ease-in-out",
+        "h-10 w-10 rounded-full",
         "flex items-center justify-center",
         "ml-2 mr-2 last:mr-0 first:ml-0",
         theme.base,
         theme.hover,
     ].join(" ");
 
-    // Style inline pour la largeur avec transition CSS
-    const buttonStyle = {
-        width: isHovered ? '280px' : '40px', // Augmenté pour les textes plus longs
-        minWidth: '40px',
-        paddingLeft: isHovered ? '16px' : '8px',
-        paddingRight: isHovered ? '16px' : '8px',
-        transition: 'all 200ms ease-in-out',
+    // Fonction pour calculer la position du tooltip
+    const calculateTooltipPosition = () => {
+        if (!buttonRef.current) return;
+
+        const buttonRect = buttonRef.current.getBoundingClientRect();
+        const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+        const viewportWidth = window.innerWidth;
+
+        // Estimer la largeur du tooltip (approximativement 150px + la longueur du texte * 8px)
+        const estimatedTooltipWidth = Math.min(150 + name.length * 8, 300);
+
+        // Vérifier si le tooltip déborde à gauche ou à droite
+        if (buttonCenterX - estimatedTooltipWidth / 2 < 0) {
+            setTooltipPosition('left');
+        } else if (buttonCenterX + estimatedTooltipWidth / 2 > viewportWidth) {
+            setTooltipPosition('right');
+        } else {
+            setTooltipPosition('center');
+        }
     };
 
-    // Classes CSS pour le texte avec animation
-    const textClasses = [
-        "whitespace-nowrap text-sm font-medium",
-        "overflow-hidden",
+    // Effet pour recalculer la position du tooltip lors du survol
+    useEffect(() => {
+        if (isHovered) {
+            calculateTooltipPosition();
+        }
+    }, [isHovered]);
+
+    // Déterminer la couleur de fond du tooltip en fonction de la couleur du bouton
+    const getTooltipBgColor = () => {
+        // Extraire la couleur de base du thème
+        const colorName = color || 'black';
+
+        // Mapping des couleurs pour les tooltips
+        const bgColorMap = {
+            'black': 'bg-black',
+            'blue': 'bg-blue-400',
+            'red': 'bg-red-600',
+            'green': 'bg-green-600',
+            'orange': 'bg-orange-600',
+            'purple': 'bg-purple-600',
+        };
+
+        return bgColorMap[colorName] || 'bg-gray-800';
+    };
+
+    // Classes pour le tooltip qui utilise group-hover pour l'affichage
+    const tooltipClasses = [
+        "absolute bottom-full mb-2", // Positionné au-dessus
+        tooltipPosition === 'left' ? "left-0" :
+            tooltipPosition === 'right' ? "right-0" :
+                "left-1/2 transform -translate-x-1/2", // Ajustement horizontal selon la position
+        getTooltipBgColor(), // Couleur de fond dynamique selon le bouton
+        "text-white text-sm font-bold rounded py-1 px-3", // Style du tooltip
+        "whitespace-nowrap pointer-events-none", // Éviter les interactions avec le tooltip
+        "opacity-0 scale-95", // Caché par défaut
+        "group-hover:opacity-100 group-hover:scale-100", // Visible au survol du groupe
+        "transition-all duration-200 ease-in-out",
+        "shadow-lg z-50", // Ombre et z-index élevé
     ].join(" ");
 
-    // Style inline pour le texte avec transition
-    const textStyle = {
-        opacity: isHovered ? 1 : 0,
-        marginLeft: isHovered ? '8px' : '0px',
-        transition: 'all 300ms ease-in-out',
+    // Classes pour la flèche du tooltip avec couleur correspondante
+    const getTooltipArrowColor = () => {
+        // Mapping des couleurs pour les flèches des tooltips
+        const borderColorMap = {
+            'black': 'border-t-black',
+            'blue': 'border-t-blue-500',
+            'red': 'border-t-red-500',
+            'green': 'border-t-green-500',
+            'orange': 'border-t-orange-500',
+            'purple': 'border-t-purple-500',
+        };
+
+        return borderColorMap[color] || 'border-t-gray-800';
     };
 
+    // Classes pour la flèche du tooltip
+    const tooltipArrowClasses = [
+        "absolute -bottom-2",
+        tooltipPosition === 'left' ? "left-4" :
+            tooltipPosition === 'right' ? "right-4" :
+                "left-1/2 transform -translate-x-1/2",
+        "h-0 w-0",
+        "border-x-4 border-t-4 border-b-0",
+        "border-x-transparent",
+        getTooltipArrowColor(), // Couleur de flèche dynamique
+    ].join(" ");
+
+    // Utiliser l'état de survol pour changer la couleur de l'icône
     const icon = getIcon(color, isHovered);
 
     return (
         <button
+            ref={buttonRef}
             className={buttonClasses}
-            style={buttonStyle}
+            onClick={onClick}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            onClick={onClick}
-            title={name} // Tooltip pour l'accessibilité
+            aria-label={name}
         >
+            {/* Tooltip qui s'affiche au survol grâce à group-hover */}
+            <div className={tooltipClasses}>
+                {name}
+                <div className={tooltipArrowClasses}></div>
+            </div>
             <span className="flex-shrink-0">
                 {icon}
-            </span>
-            <span className={textClasses} style={textStyle}>
-                {name}
             </span>
         </button>
     );

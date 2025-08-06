@@ -25,7 +25,7 @@ export default function TitleAndSpan({ title, onClick }) {
                 </Link>
             )
             }
-            {title === 'Fonds' && (
+            {title.includes('Fonds') && (
                 <button onClick={openModal} className="bg-black text-white p-1 lg:p-2 rounded hover:bg-white hover:text-black border border-black
                                    text-xs lg:text-base">
                     Ajouter un nouveau fond

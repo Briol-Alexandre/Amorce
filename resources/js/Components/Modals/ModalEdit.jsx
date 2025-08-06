@@ -38,7 +38,7 @@ export function ModalEdit({ closeModal, handleEdit, fund }) {
             }
 
             if (formData.iban && !/^[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}$/.test(formData.iban.replace(/\s/g, ''))) {
-                formErrors.iban = "L'IBAN doit être au format valide.";
+                formErrors.iban = "L'IBAN doit être au format valide. Ex: BE68 5390 0754 7034";
             }
         }
 
@@ -51,7 +51,7 @@ export function ModalEdit({ closeModal, handleEdit, fund }) {
 
         if (validateForm() && !isSubmitting) {
             setIsSubmitting(true);
-            
+
             // Si c'est un fond principal (ID 1 ou 2), on n'envoie que la description
             if (fund.id === 1 || fund.id === 2) {
                 handleEdit({
@@ -60,7 +60,7 @@ export function ModalEdit({ closeModal, handleEdit, fund }) {
             } else {
                 handleEdit(formData);
             }
-            
+
             // closeModal() sera appelé dans handleEdit en cas de succès
             // En cas d'erreur, on remet isSubmitting à false
             setTimeout(() => setIsSubmitting(false), 3000);
@@ -71,8 +71,8 @@ export function ModalEdit({ closeModal, handleEdit, fund }) {
         <div>
             <h2 className="text-xl">Modifier le fond</h2>
             <p className="text-gray-400">
-                {(fund.id === 1 || fund.id === 2) 
-                    ? "Seule la description peut être modifiée pour ce fond principal." 
+                {(fund.id === 1 || fund.id === 2)
+                    ? "Seule la description peut être modifiée pour ce fond principal."
                     : "Modifiez les informations du fond."}
             </p>
             <form onSubmit={onSubmit}>
@@ -153,8 +153,8 @@ export function ModalEdit({ closeModal, handleEdit, fund }) {
                         type="submit"
                         disabled={isSubmitting}
                         className={`px-4 py-2 rounded-md border border-1 transition-colors ${isSubmitting
-                                ? 'bg-gray-400 text-white cursor-not-allowed border-gray-400'
-                                : 'bg-orange-500 text-white hover:bg-white hover:text-orange-500 border-orange-500'
+                            ? 'bg-gray-400 text-white cursor-not-allowed border-gray-400'
+                            : 'bg-orange-500 text-white hover:bg-white hover:text-orange-500 border-orange-500'
                             }`}
                     >
                         {isSubmitting ? 'Modification...' : 'Modifier'}
