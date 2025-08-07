@@ -210,8 +210,10 @@ class DetenteController extends Controller
 
     public function removeAll()
     {
-        // Supprimer tous les participants du tirage
-
+        Draw::truncate();
+        Detente::truncate();
+        Potentials::truncate();
+        return back()->with('success', 'Tous les participants ont été supprimés.');
     }
 
     private function getPotentialsDetenteParticipants($excludedDonatorId = null, $forceRefresh = false)
