@@ -61,7 +61,7 @@ export default function NewFund({ onClose }) {
                     errors={errors?.description}
                     labelName="Description du&nbsp;fond"
                     inputName="description"
-                    containerClassName="flex items-center gap-4"
+                    containerClassName="flex items-center gap-4 justify-between"
                     labelClassName="text-sm"
                     onChange={handleChange}
                 />
@@ -72,7 +72,7 @@ export default function NewFund({ onClose }) {
                     errors={errors?.iban}
                     labelName="IBAN du fond"
                     inputName="iban"
-                    containerClassName="flex items-center gap-4"
+                    containerClassName="flex items-center gap-4 justify-between"
                     labelClassName="text-sm"
                     onChange={handleChange}
                 />

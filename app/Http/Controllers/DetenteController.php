@@ -21,16 +21,12 @@ class DetenteController extends Controller
 
         $this->getPotentialsDetenteParticipants();
 
-        // Récupérer les potentiels participants
         $potentials = Potentials::all();
         $lastThreeMonths = collect(range(0, 2))->map(fn($i) => now()->subMonths($i));
 
-        // Enrichir les données avec les informations dynamiques
         $transactions = $potentials->map(function ($potential) use ($lastThreeMonths) {
             $donator = Donators::find($potential->donator_id);
 
-            // Vérifier si le donateur a fait des dons pour chacun des trois derniers mois
-            // en utilisant la relation directe via donator_id
             $hasRecentDonations = $lastThreeMonths->every(
                 fn($date) =>
                 Transaction::where('donator_id', $donator->id)
@@ -39,10 +35,8 @@ class DetenteController extends Controller
                     ->exists()
             );
 
-            // Vérifier si le donateur ne fait pas partie de la détente actuelle
             $notInDetente = !Detente::where('donator_id', $donator->id)->exists();
 
-            // Vérifier si la dernière participation à la détente date de plus d'un an
             $lastDetenteOverYear = !Participations::where('user_id', $donator->id)
                 ->where('last_detente', '>', now()->subYear())->exists();
 
@@ -131,10 +125,8 @@ class DetenteController extends Controller
             return back()->with('error', 'Aucun participant disponible dans le tirage.');
         }
 
-        // Incrémenter les participations des utilisateurs existants dans la détente
         Detente::query()->increment('participation');
 
-        // Vérifier si des participants ont atteint 4 participations et les retirer
         $toRemove = Detente::where('participation', '>', 3)->get();
         foreach ($toRemove as $donator) {
             Participations::create([
@@ -146,13 +138,11 @@ class DetenteController extends Controller
             $donator->delete();
         }
 
-        // Vérifier s'il y a de la place dans la détente APRÈS avoir retiré les participants
         $availableSpots = 9 - Detente::count();
         if ($availableSpots <= 0) {
             return back()->with('error', 'La détente est toujours complète après rotation. Aucun nouveau participant ne peut être ajouté.');
         }
 
-        // Sélectionner les nouveaux participants pour la détente
         $participantsToSelect = min(3, $availableSpots, Draw::count());
         $selected = Draw::inRandomOrder()->take($participantsToSelect)->get();
 
@@ -160,7 +150,7 @@ class DetenteController extends Controller
             Detente::create([
                 'name' => $participant->name,
                 'donator_id' => $participant->donator_id,
-                'participation' => 1 // Initialisation à 1 participation pour les nouveaux
+
             ]);
         }
 
@@ -227,10 +217,7 @@ class DetenteController extends Controller
             if (Draw::where('donator_id', $donator->id)->exists())
                 return false;
 
-            // Vérifier si le donateur a fait des dons pour chacun des trois derniers mois
-            $donatedAllThreeMonths = $lastThreeMonths->every(function($date) use ($donator) {
-                // Vérifier si le donateur a des transactions pour ce mois/année
-                // en utilisant la relation directe via donator_id
+            $donatedAllThreeMonths = $lastThreeMonths->every(function ($date) use ($donator) {
                 return Transaction::where('donator_id', $donator->id)
                     ->whereMonth('date', $date->month)
                     ->whereYear('date', $date->year)
