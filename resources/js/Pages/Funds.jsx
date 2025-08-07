@@ -15,6 +15,7 @@ export default function Funds() {
                     <TitleAndSpan title="Fonds" onClick={() => router.visit(route('fond.index'))} transactions={transactions} funds={funds} />
                     <FondList fonds={funds} />
                 </div>
+                <p className="text-center">Veuillez cliquer sur un des fonds pour en voir les informations</p>
             </div>
         </MainStructure>
     );

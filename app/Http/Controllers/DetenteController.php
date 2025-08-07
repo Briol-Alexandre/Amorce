@@ -20,31 +20,31 @@ class DetenteController extends Controller
         }
 
         $this->getPotentialsDetenteParticipants();
-        
+
         // Récupérer les potentiels participants
         $potentials = Potentials::all();
         $lastThreeMonths = collect(range(0, 2))->map(fn($i) => now()->subMonths($i));
-        
+
         // Enrichir les données avec les informations dynamiques
         $transactions = $potentials->map(function ($potential) use ($lastThreeMonths) {
             $donator = Donators::find($potential->donator_id);
-            
+
             // Vérifier si le donateur a fait des dons au cours des 3 derniers mois
             $hasRecentDonations = $lastThreeMonths->every(
-                fn($date) => 
+                fn($date) =>
                 Transaction::where('transactor', $donator->name)
                     ->whereMonth('date', $date->month)
                     ->whereYear('date', $date->year)
                     ->exists()
             );
-            
+
             // Vérifier si le donateur ne fait pas partie de la détente actuelle
             $notInDetente = !Detente::where('donator_id', $donator->id)->exists();
-            
+
             // Vérifier si la dernière participation à la détente date de plus d'un an
             $lastDetenteOverYear = !Participations::where('user_id', $donator->id)
                 ->where('last_detente', '>', now()->subYear())->exists();
-                
+
             return [
                 'id' => $potential->id,
                 'name' => $potential->name,
@@ -206,6 +206,12 @@ class DetenteController extends Controller
             'participationsHistory' => Participations::latest('last_detente')->get(),
             'flash' => session('flash', []),
         ]);
+    }
+
+    public function removeAll()
+    {
+        // Supprimer tous les participants du tirage
+
     }
 
     private function getPotentialsDetenteParticipants($excludedDonatorId = null, $forceRefresh = false)

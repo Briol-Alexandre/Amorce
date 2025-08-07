@@ -22,6 +22,10 @@ export default function Draw() {
         router.get(route('detente.perform-draw'));
     }
 
+    function removeParticipants() {
+        router.post(route('detente.remove-all'));
+    }
+
     return (
         <MainStructure pageTitle={'Tirage Détente'}>
             <section className={"flex-grow p-3"}>
@@ -65,7 +69,17 @@ export default function Draw() {
 
                 {/* Section des participants au tirage */}
                 <section className="mb-8 mx-8">
-                    <h2 className="text-xl font-semibold mb-4">Liste des participants au tirage</h2>
+                    <div className="flex justify-between">
+                        <h2 className="text-xl font-semibold mb-4">Liste des participants au tirage</h2>
+                        <button
+                            className='bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700'
+                            onClick={() => removeParticipants()}
+                        >
+                            Retirer tous les participants
+                        </button>
+                    </div>
+
+
                     {drawParticipants.length > 0 ? (
                         <div className='flex flex-col'>
                             <ul className='w-full mt-2 border border-gray-200 rounded-md overflow-hidden'>

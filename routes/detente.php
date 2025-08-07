@@ -12,4 +12,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/remove', [DetenteController::class, 'remove'])->name('detente.remove');
     Route::get('/perform-draw', [DetenteController::class, 'performDraw'])->name('detente.perform-draw');
     Route::get('/history', [DetenteController::class, 'history'])->name('detente.history');
+    Route::post('/remove-all', [DetenteController::class, 'removeAll'])->name('detente.remove-all');
 });

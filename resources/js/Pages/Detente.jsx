@@ -1,11 +1,10 @@
 import MainStructure from "@/Components/MainStructure.jsx";
 import TitleAndSpan from "@/Components/TitleAndSpan.jsx";
-import { Link, router, usePage } from '@inertiajs/react';
-import PrimaryButton from "@/Components/PrimaryButton.jsx";
-import React, { useState, useEffect } from "react";
+import { router, usePage } from '@inertiajs/react';
+import React, { useState } from "react";
 
 export default function Detente() {
-    const { transactions, drawParticipantsCount, flash } = usePage().props;
+    const { transactions } = usePage().props;
     const [selectedDonators, setSelectedDonators] = useState([]);
 
     const handleCheckboxChange = (donatorId, name, isChecked) => {
@@ -53,14 +52,18 @@ export default function Detente() {
                     <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow" />
                 </div>
                 <div className="w-full overflow-x-auto mt-4">
-                    <table className="border-collapse border border-gray-300 mx-auto w-3/4 text-center">
+                    <table className="border-collapse border border-gray-300 mx-auto w-3/4 text-center mb-20">
                         <thead>
                             <tr>
                                 <th className="border border-gray-400 p-2 w-1/5">Personnes</th>
                                 <th className="border border-gray-400 p-2 w-1/5">Dons les 3 derniers mois</th>
                                 <th className="border border-gray-400 p-2 w-1/5">Ne fait pas partie de l'actuelle détente</th>
                                 <th className="border border-gray-400 p-2 w-1/5">Dernière détente + de 1 an</th>
-                                <th className="border border-gray-400 p-2 w-1/5">Ajouter au tirage ?</th>
+                                <th className="border border-gray-400 p-2 w-1/5">
+                                    <span className="flex items-center justify-center">
+                                        Ajouter au tirage ? <input type="checkbox" className="w-5 h-5 ml-4 text-blue-600 rounded focus:ring-blue-500" onChange={(e) => e.target.checked ? setSelectedDonators(transactions.map(transaction => ({ id: transaction.donator_id, name: transaction.name }))) : setSelectedDonators([])} />
+                                    </span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -100,23 +103,17 @@ export default function Detente() {
                 </div>
             </div>
             {selectedDonators.length > 0 && (
-                <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 p-4 flex justify-between items-center">
+                <div className="fixed bottom-0 z-50 left-0 right-0 bg-white shadow-lg border-t border-gray-200 p-4 flex justify-between items-center">
                     <div className="text-gray-800 font-medium">
                         <span className="mr-2">{selectedDonators.length}</span>
                         {selectedDonators.length === 1 ? 'personne sélectionnée' : 'personnes sélectionnées'}
                     </div>
                     <div className="flex space-x-4">
                         <button
-                            onClick={() => setSelectedDonators([])}
-                            className="text-gray-600 hover:text-gray-800 underline"
-                        >
-                            Annuler
-                        </button>
-                        <button
                             onClick={handleSubmitSelected}
                             className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm lg:text-base font-medium"
                         >
-                            Ajouter au tirage et continuer
+                            Ajouter et accéder au tirage
                         </button>
                     </div>
                 </div>

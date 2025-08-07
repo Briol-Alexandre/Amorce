@@ -28,7 +28,10 @@ class FondController extends Controller
     public function show(Fund $fund)
     {
         $funds = Fund::all();
-        $transactions = $fund->transactions()->orderBy('date', 'desc')->get();
+        $transactions = $fund->transactions()
+            ->orderBy('created_at', 'desc')
+            ->orderBy('date', 'desc')
+            ->get();
         return Inertia::render('Fund', [
             'fund' => $fund,
             'funds' => $funds,
@@ -42,12 +45,12 @@ class FondController extends Controller
         if ($fund->id === 1 || $fund->id === 2) {
             return redirect()->route('fond.index')->with('error', 'Impossible de supprimer ce fond principal');
         }
-        
+
         // Protection des fonds marqués comme permanents
         if ($fund->permanent) {
             return redirect()->route('fond.index')->with('error', 'Impossible de supprimer un fond permanent');
         }
-        
+
         $fund->delete();
         return redirect()->route('fond.index')->with('success', 'Fond supprimé avec succès');
     }
@@ -60,13 +63,13 @@ class FondController extends Controller
             $fund->update([
                 'description' => $request->validated()['description']
             ]);
-            
+
             return redirect()->back()->with('success', 'Description du fond principal modifiée avec succès');
         }
-        
+
         // Pour les autres fonds, modification normale
         $fund->update($request->validated());
-        
+
         return redirect()->back()->with('success', 'Fond modifié avec succès');
     }
 
