@@ -41,7 +41,10 @@ class CsvManager
                     $fondIban = $record['fond'] ?? null;
                     $date = $record['date'] ?? null;
                     $amount = $record['amount'] ?? 0;
-                    $transactor = $record['transactor'] ?? '';
+                    $compteCreditor = $record['compte_crediteur'] ?? null;
+                    $donatorName = $record['transactor'] ?? ''; // Conserver le nom du donateur
+                    // Utiliser le numéro de compte comme transactor s'il est disponible, sinon utiliser le nom du transactor
+                    $transactor = !empty($compteCreditor) ? $compteCreditor : $donatorName;
                     $communication = $record['communication'] ?? null;
                 } else {
                     // Sans en-tête, utiliser les indices (ordre des colonnes)
@@ -49,7 +52,10 @@ class CsvManager
                     $fondIban = $record[1] ?? null; // colonne 'fond'
                     $date = $record[0] ?? null; // colonne 'date'
                     $amount = $record[2] ?? 0; // colonne 'amount'
-                    $transactor = $record[5] ?? ''; // colonne 'transactor'
+                    $compteCreditor = $record[3] ?? null; // colonne 'compte_crediteur'
+                    $donatorName = $record[5] ?? ''; // colonne 'transactor' contient le nom du donateur
+                    // Utiliser le numéro de compte comme transactor s'il est disponible, sinon utiliser le nom du transactor
+                    $transactor = !empty($compteCreditor) ? $compteCreditor : $donatorName;
                     $communication = $record[8] ?? null; // colonne 'communication'
                 }
                 
@@ -69,6 +75,7 @@ class CsvManager
                     'amount' => $amount,
                     'compte_crediteur' => $fondIban,
                     'transactor' => $transactor,
+                    'donator_name' => $donatorName, // Ajouter le nom du donateur pour l'enregistrement dans la table donators
                     'communication' => $communication,
                     'fund_id' => $fundId, // Pré-remplir le fund_id si trouvé
                     'fund_name' => $fund ? $fund->name : null, // Ajouter le nom du fond pour l'affichage

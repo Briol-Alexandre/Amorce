@@ -81,35 +81,43 @@ class TransactionSeeder extends Seeder
             $donators[] = $donator;
         }
 
-        // Générer des transactions pour le mois actuel et les 2 mois précédents pour chaque donnateur
+        // Générer des transactions pour chaque donateur
         foreach ($donators as $donator) {
             // Pour le mois actuel et les 2 mois précédents (0 = mois actuel, 1 = mois précédent, 2 = il y a 2 mois)
             for ($monthsAgo = 0; $monthsAgo < 3; $monthsAgo++) {
                 $month = Carbon::now()->subMonths($monthsAgo);
-
-                // Générer 1 à 3 transactions par mois pour chaque donnateur
+                
+                // Générer 1 à 3 transactions par mois pour chaque donateur
                 $transactionsCount = rand(1, 3);
-
+                
                 for ($i = 0; $i < $transactionsCount; $i++) {
                     // Choisir un jour aléatoire dans le mois
                     $day = rand(1, $month->daysInMonth);
                     $date = Carbon::create($month->year, $month->month, $day);
-
+                    
                     // Choisir un fond aléatoire
                     $fund = $funds->random();
-
+                    
                     // Montant aléatoire entre 10 et 500 euros
                     $amount = rand(10, 500);
-
-                    // Créer la transaction
+                    
+                    // Générer un numéro de compte au format IBAN simplifié
+                    $accountNumber = 'BE' . rand(10, 99) . ' ' . 
+                                    substr(str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT), 0, 4) . ' ' . 
+                                    substr(str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT), 0, 4) . ' ' . 
+                                    substr(str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT), 0, 4);
+                    
+                    // Créer la transaction avec le numéro de compte comme transactor
+                    // et l'associer directement au donateur via donator_id
                     Transaction::create([
                         'fund_id' => $fund->id,
-                        'transactor' => $donator->name,
+                        'transactor' => $accountNumber, // Numéro de compte
                         'amount' => $amount,
                         'date' => $date,
                         'communication' => "Don de {$donator->name} - " . $date->format('m/Y'),
+                        'donator_id' => $donator->id, // Association directe au donateur
                     ]);
-
+                    
                     // Mettre à jour le montant du fond
                     $fund->amount += $amount;
                     $fund->save();

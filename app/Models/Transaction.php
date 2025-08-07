@@ -17,7 +17,16 @@ class Transaction extends Model
         'amount',
         'date',
         'communication',
+        'donator_id',
     ];
+    
+    /**
+     * Obtenir le donateur associé à cette transaction.
+     */
+    public function donator()
+    {
+        return $this->belongsTo(Donators::class, 'donator_id');
+    }
 
     function fund(): BelongsTo
     {

@@ -49,11 +49,15 @@ class TransactionController extends Controller
         \Log::info('CSV Transactions received:', $request->input('transactions'));
         
         $transactions = collect($request->input('transactions'))->map(function ($transaction) {
-            $donatorName = $transaction['transactor'] ?? 'Transacteur anonyme';
+            // Utiliser le nom du donateur fourni dans le CSV si disponible
+            $donatorName = $transaction['donator_name'] ?? 'Transacteur anonyme';
+            
             // Si c'est une chaîne vide, utiliser 'Transacteur anonyme'
             if (empty(trim($donatorName))) {
                 $donatorName = 'Transacteur anonyme';
             }
+            
+            // Créer ou récupérer le donateur avec son vrai nom
             $donator = Donators::firstOrCreate(
                 ['name' => $donatorName],
                 ['name' => $donatorName]
@@ -83,10 +87,38 @@ class TransactionController extends Controller
             ]);
         }
         
-        Transaction::insert($uniqueTransactions->toArray());
-
+        // Insérer les transactions et associer aux donateurs
         foreach ($uniqueTransactions as $transaction) {
-            \Log::info('Processing transaction for fund_id:', ['fund_id' => $transaction['fund_id'], 'amount' => $transaction['amount']]);
+            // Récupérer le nom du donateur associé à cette transaction
+            $donatorName = collect($request->input('transactions'))
+                ->firstWhere('transactor', $transaction['transactor'])['donator_name'] ?? 'Transacteur anonyme';
+            
+            // Si c'est une chaîne vide, utiliser 'Transacteur anonyme'
+            if (empty(trim($donatorName))) {
+                $donatorName = 'Transacteur anonyme';
+            }
+            
+            // Trouver ou créer le donateur
+            $donator = Donators::firstOrCreate(['name' => $donatorName]);
+            
+            // Créer la transaction avec l'association au donateur
+            $newTransaction = Transaction::create([
+                'fund_id' => $transaction['fund_id'],
+                'transactor' => $transaction['transactor'], // Numéro de compte
+                'amount' => $transaction['amount'],
+                'date' => $transaction['date'],
+                'communication' => $transaction['communication'],
+                'donator_id' => $donator->id, // Associer directement au donateur
+            ]);
+            
+            \Log::info('Transaction created and linked to donator:', [
+                'transaction_id' => $newTransaction->id,
+                'donator_id' => $donator->id,
+                'donator_name' => $donator->name,
+                'transactor' => $transaction['transactor']
+            ]);
+            
+            // Mettre à jour le montant du fond
             $fund = Fund::find($transaction['fund_id']);
             if ($fund) {
                 $oldAmount = $fund->amount;

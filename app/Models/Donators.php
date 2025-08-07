@@ -13,4 +13,12 @@ class Donators extends Model
     protected $fillable = [
         'name',
     ];
+    
+    /**
+     * Obtenir les transactions associées à ce donateur.
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'donator_id');
+    }
 }

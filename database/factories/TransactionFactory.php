@@ -18,9 +18,15 @@ class TransactionFactory extends Factory
      */
     public function definition(): array
     {
+        // Générer un numéro de compte au format IBAN (simplifié)
+        $accountNumber = 'BE' . fake()->numerify('##') . ' ' . 
+                        fake()->numerify('####') . ' ' . 
+                        fake()->numerify('####') . ' ' . 
+                        fake()->numerify('####');
+        
         return [
             'fund_id' => Fund::factory(),
-            'transactor' => fake()->name(),
+            'transactor' => $accountNumber, // Utiliser le numéro de compte comme transactor
             'amount' => fake()->numberBetween(10, 250),
             'date' => fake()->dateTime(),
             'communication' => fake()->sentence(4),

@@ -29,10 +29,11 @@ class DetenteController extends Controller
         $transactions = $potentials->map(function ($potential) use ($lastThreeMonths) {
             $donator = Donators::find($potential->donator_id);
 
-            // Vérifier si le donateur a fait des dons au cours des 3 derniers mois
+            // Vérifier si le donateur a fait des dons pour chacun des trois derniers mois
+            // en utilisant la relation directe via donator_id
             $hasRecentDonations = $lastThreeMonths->every(
                 fn($date) =>
-                Transaction::where('transactor', $donator->name)
+                Transaction::where('donator_id', $donator->id)
                     ->whereMonth('date', $date->month)
                     ->whereYear('date', $date->year)
                     ->exists()
@@ -226,13 +227,15 @@ class DetenteController extends Controller
             if (Draw::where('donator_id', $donator->id)->exists())
                 return false;
 
-            $donatedAllThreeMonths = $lastThreeMonths->every(
-                fn($date) =>
-                Transaction::where('transactor', $donator->name)
+            // Vérifier si le donateur a fait des dons pour chacun des trois derniers mois
+            $donatedAllThreeMonths = $lastThreeMonths->every(function($date) use ($donator) {
+                // Vérifier si le donateur a des transactions pour ce mois/année
+                // en utilisant la relation directe via donator_id
+                return Transaction::where('donator_id', $donator->id)
                     ->whereMonth('date', $date->month)
                     ->whereYear('date', $date->year)
-                    ->exists()
-            );
+                    ->exists();
+            });
 
             if (!$donatedAllThreeMonths)
                 return false;

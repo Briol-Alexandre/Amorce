@@ -53,15 +53,16 @@ export function TransactionsTable({transactions}) {
             ) : (
                 <div className="px-6 mt-4">
                     <ul>
-                        <li className="grid grid-cols-3 items-center mb-6 border-b-2 border-gray-400 pb-4">
+                        <li className="grid grid-cols-4 items-center mb-6 border-b-2 border-gray-400 pb-4">
                             <span className="font-bold">Date</span>
                             <span className="text-center font-bold">Montant</span>
+                            <span className="text-center font-bold">N° Compte</span>
                             <span className="text-right font-bold">Communication</span>
                         </li>
                         {currentTransactions.map((transaction) => (
                             <li
                                 key={transaction.id}
-                                className="grid grid-cols-3 items-center border-b-2 border-gray-200 mb-4 pb-4 last-of-type:border-none"
+                                className="grid grid-cols-4 items-center border-b-2 border-gray-200 mb-4 pb-4 last-of-type:border-none"
                             >
                                 <span>{format(new Date(transaction.date), "MM-yyyy")}</span>
                                 <span
@@ -73,6 +74,7 @@ export function TransactionsTable({transactions}) {
                                 >
                                     {transaction.amount}&nbsp;€
                                 </span>
+                                <span className="text-center font-mono">{transaction.transactor}</span>
                                 <span className="text-right">{transaction.communication}</span>
                             </li>
                         ))}

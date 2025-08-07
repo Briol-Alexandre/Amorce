@@ -51,6 +51,7 @@ export default function Detente() {
                     <h4>Personnes éligibles</h4>
                     <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow" />
                 </div>
+                <p className="font-bold py-5">Ici se trouvent les personnes éligibles à la prochaine détente. Veuillez cocher les personnes que vous souhaitez ajouter au tirage de la détente. </p>
                 <div className="w-full overflow-x-auto mt-4">
                     <table className="border-collapse border border-gray-300 mx-auto w-3/4 text-center mb-20">
                         <thead>

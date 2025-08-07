@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -18,6 +17,7 @@ return new class extends Migration
             $table->date('date');
             $table->string('communication');
             $table->foreignId('fund_id')->constrained('funds')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('donator_id')->nullable()->constrained('donators')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
         });
     }
