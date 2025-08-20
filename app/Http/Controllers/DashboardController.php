@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Detente;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use function Termwind\render;
@@ -14,8 +16,14 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
+        $events = Event::all();
+        $detenteParticipants = Detente::all();
 
-        return Inertia::render('Dashboard', ['user' => $user]);
+        return Inertia::render('Dashboard', [
+            'user' => $user,
+            'events' => $events,
+            'detenteParticipants' => $detenteParticipants
+        ]);
     }
 
     /**

@@ -6,9 +6,14 @@ import { usePage } from "@inertiajs/react";
 export default function EventDisplay() {
     const { events = [] } = usePage().props;
 
-    const [isRotated, setIsRotated] = useState(true);
-    const toggleRotation = () => {
-        setIsRotated(!isRotated);
+    const [isRotated1, setIsRotated1] = useState(true);
+    const toggleRotation1 = () => {
+        setIsRotated1(!isRotated1);
+    };
+
+    const [isRotated2, setIsRotated2] = useState(true);
+    const toggleRotation2 = () => {
+        setIsRotated2(!isRotated2);
     };
 
     const today = new Date();
@@ -31,17 +36,17 @@ export default function EventDisplay() {
     return (
         <>
             <section>
-                <div className='flex items-center gap-4 hover:cursor-pointer' onClick={toggleRotation}>
+                <div className='flex items-center gap-4 hover:cursor-pointer' onClick={toggleRotation1}>
                     <h3 className='small-title-style'>Evénements à venir</h3>
                     <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow"></span>
                     <div
-                        className={isRotated ? 'rotate-0 transition duration-100' : 'rotate-180 transition duration-100'}
+                        className={isRotated1 ? 'rotate-0 transition duration-100' : 'rotate-180 transition duration-100'}
                     >
                         <DropIcon />
                     </div>
                 </div>
                 <div
-                    className={`overflow-hidden transition-all duration-500 ease-in-out ${isRotated
+                    className={`overflow-hidden transition-all duration-500 ease-in-out ${isRotated1
                         ? 'max-h-[1000px] opacity-100 mt-4'
                         : 'max-h-0 opacity-0 mt-0'
                         }`}
@@ -57,17 +62,17 @@ export default function EventDisplay() {
                 </div>
             </section>
             <section className="mt-5">
-                <div className='flex items-center gap-4 hover:cursor-pointer' onClick={toggleRotation}>
+                <div className='flex items-center gap-4 hover:cursor-pointer' onClick={toggleRotation2}>
                     <h3 className='small-title-style'>Evénements passés</h3>
                     <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow"></span>
                     <div
-                        className={isRotated ? 'rotate-0 transition duration-100' : 'rotate-180 transition duration-100'}
+                        className={isRotated2 ? 'rotate-0 transition duration-100' : 'rotate-180 transition duration-100'}
                     >
                         <DropIcon />
                     </div>
                 </div>
                 <div
-                    className={`overflow-hidden transition-all duration-500 ease-in-out ${isRotated
+                    className={`overflow-hidden transition-all duration-500 ease-in-out ${isRotated2
                         ? 'max-h-[1000px] opacity-100 mt-4'
                         : 'max-h-0 opacity-0 mt-0'
                         }`}
