@@ -26,6 +26,6 @@ class PasswordController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return Inertia::render('Compte');
+        return back()->with('status', 'password-updated');
     }
 }

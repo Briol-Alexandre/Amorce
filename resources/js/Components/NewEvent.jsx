@@ -2,14 +2,14 @@ import React from "react";
 import TextAndLabel from "@/Components/TextAndLabel.jsx";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
 import InputError from "@/Components/InputError.jsx";
-import { router, useForm, usePage } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import { route } from "ziggy-js";
 
 export default function NewEvent({ onClose }) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const { users = [] } = usePage().props;
 
-    const { data, setData, errors } = useForm({
+    const { data, setData, errors, post } = useForm({
         title: '',
         description: '',
         date: '',
@@ -19,13 +19,14 @@ export default function NewEvent({ onClose }) {
     const customErrors = {
         ...errors,
         title: errors.title ? "Le titre est obligatoire" : null,
+        description: errors.description ? "La description est obligatoire" : null,
         date: errors.date ? "La date est obligatoire" : null,
         participants: errors.participants ? "Au moins un participant est requis" : null,
     };
 
     function submit(e) {
         e.preventDefault();
-        router.post(route('event.store'), data, {
+        post(route('event.store'), {
             onSuccess: () => {
                 onClose();
             },
@@ -47,41 +48,50 @@ export default function NewEvent({ onClose }) {
                 <legend className="text-lg font-semibold">Créer un nouvel événement</legend>
                 <input type="hidden" name="_token" value={csrfToken} />
 
-                <TextAndLabel
-                    type="text"
-                    value={data.title}
-                    idAndFor="title"
-                    errors={errors?.title}
-                    labelName="Titre"
-                    inputName="title"
-                    containerClassName="flex items-center gap-4 justify-between"
-                    labelClassName="text-sm"
-                    onChange={handleChange}
-                />
+                <div>
+                    <TextAndLabel
+                        type="text"
+                        value={data.title}
+                        idAndFor="title"
+                        errors={errors?.title}
+                        labelName="Titre"
+                        inputName="title"
+                        containerClassName="flex items-center gap-4 justify-between"
+                        labelClassName="text-sm"
+                        onChange={handleChange}
+                    />
+                    <InputError message={customErrors.title} />
+                </div>
 
-                <TextAndLabel
-                    type="text"
-                    value={data.description}
-                    idAndFor="description"
-                    errors={errors?.description}
-                    labelName="Description"
-                    inputName="description"
-                    containerClassName="flex items-center gap-4 justify-between"
-                    labelClassName="text-sm"
-                    onChange={handleChange}
-                />
+                <div>
+                    <TextAndLabel
+                        type="text"
+                        value={data.description}
+                        idAndFor="description"
+                        errors={errors?.description}
+                        labelName="Description"
+                        inputName="description"
+                        containerClassName="flex items-center gap-4 justify-between"
+                        labelClassName="text-sm"
+                        onChange={handleChange}
+                    />
+                    <InputError message={customErrors.description} />
+                </div>
 
-                <TextAndLabel
-                    type="date"
-                    value={data.date}
-                    idAndFor="date"
-                    errors={errors?.date}
-                    labelName="Date"
-                    inputName="date"
-                    containerClassName="flex items-center gap-4 justify-between"
-                    labelClassName="text-sm"
-                    onChange={handleChange}
-                />
+                <div>
+                    <TextAndLabel
+                        type="date"
+                        value={data.date}
+                        idAndFor="date"
+                        errors={errors?.date}
+                        labelName="Date"
+                        inputName="date"
+                        containerClassName="flex items-center gap-4 justify-between"
+                        labelClassName="text-sm"
+                        onChange={handleChange}
+                    />
+                    <InputError message={customErrors.date} />
+                </div>
 
                 <div className="flex flex-col gap-2">
                     <label className="text-sm">Participants</label>
@@ -110,10 +120,6 @@ export default function NewEvent({ onClose }) {
                     </div>
                     <InputError message={errors.participants} />
                 </div>
-
-                <InputError message={customErrors.title} />
-                <InputError message={customErrors.date} />
-                <InputError message={errors.description} />
 
                 <div className="flex justify-end">
                     <PrimaryButton children="Créer l'événement" className="normal-case text-sm" />

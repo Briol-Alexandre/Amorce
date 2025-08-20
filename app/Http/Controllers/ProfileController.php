@@ -42,7 +42,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Inertia::render('Profile/Add');
+        return back()->with('status', 'profile-updated');
     }
 
     /**

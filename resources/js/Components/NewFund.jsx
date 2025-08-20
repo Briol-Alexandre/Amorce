@@ -1,14 +1,15 @@
 import React from "react";
 import TextAndLabel from "@/Components/TextAndLabel.jsx";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
-import { router, useForm } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 import InputError from "@/Components/InputError.jsx";
+import { route } from "ziggy-js";
 
 export default function NewFund({ onClose }) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 
-    const { data, setData, errors } = useForm({
+    const { data, setData, errors, post } = useForm({
         name: '',
         description: '',
         permanent: false,
@@ -19,11 +20,12 @@ export default function NewFund({ onClose }) {
     const customErrors = {
         ...errors,
         name: errors.name ? "Le nom est obligatoire et doit comporter au moins 3 caractères" : null,
+        description: errors.description ? "La description est obligatoire et doit comporter au moins 3 caractères" : null,
     }
 
     function submit(e) {
         e.preventDefault();
-        router.post(route('fond.store'), data, {
+        post(route('fond.store'), {
             onSuccess: () => {
                 console.log("Succès !");
                 onClose();
@@ -42,41 +44,48 @@ export default function NewFund({ onClose }) {
                 <legend className="text-lg font-semibold">Créer un nouveau fond</legend>
                 <input type="hidden" name="_token" value={csrfToken} />
 
-                <TextAndLabel
-                    type="text"
-                    value={data.name}
-                    idAndFor="name"
-                    errors={errors?.name}
-                    labelName="Nom du fond"
-                    inputName="name"
-                    containerClassName="flex items-center gap-4 justify-between"
-                    labelClassName="text-sm"
-                    onChange={handleChange}
-                />
-
-                <TextAndLabel
-                    type="text"
-                    value={data.description}
-                    idAndFor="description"
-                    errors={errors?.description}
-                    labelName="Description du&nbsp;fond"
-                    inputName="description"
-                    containerClassName="flex items-center gap-4 justify-between"
-                    labelClassName="text-sm"
-                    onChange={handleChange}
-                />
-                <TextAndLabel
-                    type="text"
-                    value={data.iban}
-                    idAndFor="iban"
-                    errors={errors?.iban}
-                    labelName="IBAN du fond"
-                    inputName="iban"
-                    containerClassName="flex items-center gap-4 justify-between"
-                    labelClassName="text-sm"
-                    onChange={handleChange}
-                />
-
+                <div>
+                    <TextAndLabel
+                        type="text"
+                        value={data.name}
+                        idAndFor="name"
+                        errors={errors?.name}
+                        labelName="Nom du fond"
+                        inputName="name"
+                        containerClassName="flex items-center gap-4 justify-between"
+                        labelClassName="text-sm"
+                        onChange={handleChange}
+                    />
+                    <InputError message={customErrors.name} />
+                </div>
+                <div>
+                    <TextAndLabel
+                        type="text"
+                        value={data.description}
+                        idAndFor="description"
+                        errors={errors?.description}
+                        labelName="Description du&nbsp;fond"
+                        inputName="description"
+                        containerClassName="flex items-center gap-4 justify-between"
+                        labelClassName="text-sm"
+                        onChange={handleChange}
+                    />
+                    <InputError message={customErrors.description} />
+                </div>
+                <div>
+                    <TextAndLabel
+                        type="text"
+                        value={data.iban}
+                        idAndFor="iban"
+                        errors={errors?.iban}
+                        labelName="IBAN du fond"
+                        inputName="iban"
+                        containerClassName="flex items-center gap-4 justify-between"
+                        labelClassName="text-sm"
+                        onChange={handleChange}
+                    />
+                    <InputError message={customErrors.iban} />
+                </div>
 
                 <fieldset className='flex gap-4 items-center'>
                     <input type="checkbox" name='permanent' id='permanent'
@@ -91,11 +100,6 @@ export default function NewFund({ onClose }) {
                     name="amount"
                     value={data.amount}
                 />
-
-                <InputError message={customErrors.name} />
-                <InputError message={customErrors.description} />
-                <InputError message={errors.iban} />
-
                 <div className="flex justify-end">
                     <PrimaryButton children="Créer le fond" className="normal-case text-sm" />
                 </div>
