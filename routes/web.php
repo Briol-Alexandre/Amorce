@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FondController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EventController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,7 +14,7 @@ use Inertia\Inertia;
 Route::middleware('auth')->group(function () {
     Route::inertia('/', 'Auth/Login')->name('auth/login');
 
-    Route::inertia('/evenement', 'Evenement')->name('meetup.index');
+    Route::get('/evenement', [EventController::class, 'index'])->name('meetup.index');
 
     Route::post('/fonds', [FondController::class, 'store'])->name('fond.store');
 
@@ -47,3 +48,4 @@ require __DIR__ . '/fund.php';
 require __DIR__ . '/transaction.php';
 require __DIR__ . '/detente.php';
 require __DIR__ . '/compte.php';
+require __DIR__ . '/event.php';

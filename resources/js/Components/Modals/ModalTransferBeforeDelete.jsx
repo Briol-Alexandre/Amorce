@@ -22,14 +22,14 @@ export function ModalTransferBeforeDelete({ closeModal, handleTransferAndDelete,
 
     // Fonction pour gérer les changements dans un transfert spécifique
     const handleTransferChange = (transferId, field, value) => {
-        setTransfers(prevTransfers => 
-            prevTransfers.map(transfer => 
-                transfer.id === transferId 
+        setTransfers(prevTransfers =>
+            prevTransfers.map(transfer =>
+                transfer.id === transferId
                     ? { ...transfer, [field]: value }
                     : transfer
             )
         );
-        
+
         // Effacer l'erreur pour ce champ spécifique
         setErrors(prevErrors => ({
             ...prevErrors,
@@ -75,7 +75,7 @@ export function ModalTransferBeforeDelete({ closeModal, handleTransferAndDelete,
         // Valider chaque transfert
         transfers.forEach(transfer => {
             const amount = parseFloat(transfer.amount);
-            
+
             if (!transfer.amount || isNaN(amount) || amount <= 0) {
                 formErrors[`${transfer.id}_amount`] = "Le montant est requis et doit être un nombre valide supérieur à 0.";
             } else {
@@ -119,7 +119,7 @@ export function ModalTransferBeforeDelete({ closeModal, handleTransferAndDelete,
                 communication: transfer.communication,
                 date: transfer.date,
             }));
-            
+
             handleTransferAndDelete(transfersData);
         }
     };
@@ -144,11 +144,11 @@ export function ModalTransferBeforeDelete({ closeModal, handleTransferAndDelete,
                     </span>
                 </p>
             </div>
-            
+
             <form onSubmit={onSubmit}>
                 {/* Erreurs globales */}
-                {errors.totalAmount && <InputError message={errors.totalAmount}/>}
-                
+                {errors.totalAmount && <InputError message={errors.totalAmount} />}
+
                 {/* Liste des transferts */}
                 <div className="space-y-6">
                     {transfers.map((transfer, index) => (
@@ -165,7 +165,7 @@ export function ModalTransferBeforeDelete({ closeModal, handleTransferAndDelete,
                                     </button>
                                 )}
                             </div>
-                            
+
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Montant</label>
@@ -179,9 +179,9 @@ export function ModalTransferBeforeDelete({ closeModal, handleTransferAndDelete,
                                         placeholder="0.00"
                                         onChange={(e) => handleTransferChange(transfer.id, 'amount', e.target.value)}
                                     />
-                                    {errors[`${transfer.id}_amount`] && <InputError message={errors[`${transfer.id}_amount`]}/>}
+                                    {errors[`${transfer.id}_amount`] && <InputError message={errors[`${transfer.id}_amount`]} />}
                                 </div>
-                                
+
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Vers quel fond</label>
                                     <select
@@ -198,9 +198,9 @@ export function ModalTransferBeforeDelete({ closeModal, handleTransferAndDelete,
                                                 </option>
                                             ))}
                                     </select>
-                                    {errors[`${transfer.id}_destinationFundId`] && <InputError message={errors[`${transfer.id}_destinationFundId`]}/>}
+                                    {errors[`${transfer.id}_destinationFundId`] && <InputError message={errors[`${transfer.id}_destinationFundId`]} />}
                                 </div>
-                                
+
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Transacteur</label>
                                     <input
@@ -210,9 +210,9 @@ export function ModalTransferBeforeDelete({ closeModal, handleTransferAndDelete,
                                         placeholder="Mr. Doe"
                                         onChange={(e) => handleTransferChange(transfer.id, 'transactor', e.target.value)}
                                     />
-                                    {errors[`${transfer.id}_transactor`] && <InputError message={errors[`${transfer.id}_transactor`]}/>}
+                                    {errors[`${transfer.id}_transactor`] && <InputError message={errors[`${transfer.id}_transactor`]} />}
                                 </div>
-                                
+
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Communication</label>
                                     <input
@@ -222,13 +222,13 @@ export function ModalTransferBeforeDelete({ closeModal, handleTransferAndDelete,
                                         placeholder="Communication"
                                         onChange={(e) => handleTransferChange(transfer.id, 'communication', e.target.value)}
                                     />
-                                    {errors[`${transfer.id}_communication`] && <InputError message={errors[`${transfer.id}_communication`]}/>}
+                                    {errors[`${transfer.id}_communication`] && <InputError message={errors[`${transfer.id}_communication`]} />}
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
-                
+
                 {/* Bouton pour ajouter un transfert */}
                 <div className="mt-4">
                     <button

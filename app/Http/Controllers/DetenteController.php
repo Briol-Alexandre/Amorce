@@ -150,7 +150,7 @@ class DetenteController extends Controller
             Detente::create([
                 'name' => $participant->name,
                 'donator_id' => $participant->donator_id,
-
+                'participation' => 1
             ]);
         }
 
@@ -202,7 +202,6 @@ class DetenteController extends Controller
     public function removeAll()
     {
         Draw::truncate();
-        Detente::truncate();
         Potentials::truncate();
         return back()->with('success', 'Tous les participants ont été supprimés.');
     }

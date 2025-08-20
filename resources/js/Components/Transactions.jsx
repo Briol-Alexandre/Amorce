@@ -6,7 +6,7 @@ export function Transactions({ toggleRotation, isRotated, fund, transactions }) 
     return (
         <section>
             <div className='flex items-center gap-4 hover:cursor-pointer' onClick={toggleRotation}>
-                <h4 className='text-sm lg:text-base'>Historique des transactions</h4>
+                <h3 className='text-sm lg:text-base'>Historique des transactions</h3>
                 <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow"></span>
                 <div
 
@@ -16,11 +16,10 @@ export function Transactions({ toggleRotation, isRotated, fund, transactions }) 
                 </div>
             </div>
             <div
-                className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                    isRotated
-                        ? 'max-h-screen opacity-100'
-                        : 'max-h-0 opacity-0'
-                }`}
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${isRotated
+                    ? 'max-h-screen opacity-100'
+                    : 'max-h-0 opacity-0'
+                    }`}
             >
                 <TransactionsTable transactions={transactions} />
             </div>
