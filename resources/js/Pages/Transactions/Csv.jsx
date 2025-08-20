@@ -58,9 +58,9 @@ export default function Csv() {
                             </div>
                         </div>
                     </div>
-                    {isModalOpen && (<Modal onClose={closeModal}>
+                    <Modal show={isModalOpen} onClose={closeModal}>
                         <ModalCsv closeModal={closeModal} onSubmit={onSubmit} />
-                    </Modal>)}
+                    </Modal>
                 </div>
             </MainStructure>
         </>

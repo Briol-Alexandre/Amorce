@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Event extends Model
 {
     use HasFactory;
-    
+
     /**
      * Les attributs qui sont mass assignable.
      *
@@ -19,6 +20,8 @@ class Event extends Model
         'title',
         'description',
         'date',
+        'time',
+        'user_id',
     ];
 
     /**
@@ -28,6 +31,7 @@ class Event extends Model
      */
     protected $casts = [
         'date' => 'date',
+        'time' => 'datetime:H:i',
     ];
 
     /**
@@ -37,5 +41,13 @@ class Event extends Model
     {
         return $this->belongsToMany(User::class, 'event_user')
             ->withTimestamps();
+    }
+    
+    /**
+     * L'utilisateur qui a créé cet événement.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

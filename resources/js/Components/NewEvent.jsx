@@ -13,6 +13,7 @@ export default function NewEvent({ onClose }) {
         title: '',
         description: '',
         date: '',
+        time: '',
         participants: [],
     });
 
@@ -21,6 +22,7 @@ export default function NewEvent({ onClose }) {
         title: errors.title ? "Le titre est obligatoire" : null,
         description: errors.description ? "La description est obligatoire" : null,
         date: errors.date ? "La date est obligatoire" : null,
+        time: errors.time ? "L'heure est obligatoire" : null,
         participants: errors.participants ? "Au moins un participant est requis" : null,
     };
 
@@ -91,6 +93,21 @@ export default function NewEvent({ onClose }) {
                         onChange={handleChange}
                     />
                     <InputError message={customErrors.date} />
+                </div>
+
+                <div>
+                    <TextAndLabel
+                        type="time"
+                        value={data.time}
+                        idAndFor="time"
+                        errors={errors?.time}
+                        labelName="Heure"
+                        inputName="time"
+                        containerClassName="flex items-center gap-4 justify-between"
+                        labelClassName="text-sm"
+                        onChange={handleChange}
+                    />
+                    <InputError message={customErrors.time} />
                 </div>
 
                 <div className="flex flex-col gap-2">

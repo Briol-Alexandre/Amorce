@@ -53,11 +53,9 @@ export default function TitleAndSpan({ title, onClick }) {
             )}
         </div>
         <span className="block h-0.5 bg-gray-300 mt-1.5"></span>
-        {isModalOpen && (
-            <Modal onClose={closeModal}>
-                {title.includes('Fonds') && <NewFund onClose={closeModal} />}
-                {title === 'Événements' && <NewEvent onClose={closeModal} />}
-            </Modal>
-        )}
+        <Modal show={isModalOpen} onClose={closeModal}>
+            {title.includes('Fonds') && <NewFund onClose={closeModal} />}
+            {title === 'Événements' && <NewEvent onClose={closeModal} />}
+        </Modal>
     </>);
 }

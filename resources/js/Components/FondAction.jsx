@@ -176,46 +176,34 @@ export default function FondAction({ fund, funds }) {
                 )}
             </div>
 
-            {isDeleteModalOpen && (
-                <Modal onClose={closeModal}>
-                    <ModalDelete closeModal={closeModal} handleDelete={handleDelete} />
-                </Modal>
-            )}
+            <Modal show={isDeleteModalOpen} onClose={closeModal}>
+                <ModalDelete closeModal={closeModal} handleDelete={handleDelete} />
+            </Modal>
 
-            {isTransferBeforeDeleteModalOpen && (
-                <Modal onClose={closeModal}>
-                    <ModalTransferBeforeDelete
-                        closeModal={closeModal}
-                        handleTransferAndDelete={handleTransferAndDelete}
-                        fund={fund}
-                        funds={funds}
-                    />
-                </Modal>
-            )}
+            <Modal show={isTransferBeforeDeleteModalOpen} onClose={closeModal}>
+                <ModalTransferBeforeDelete
+                    closeModal={closeModal}
+                    handleTransferAndDelete={handleTransferAndDelete}
+                    fund={fund}
+                    funds={funds}
+                />
+            </Modal>
 
-            {isAddModalOpen && (
-                <Modal onClose={closeModal}>
-                    <ModalAdd closeModal={closeModal} handleAdd={handleAdd} fund={fund} />
-                </Modal>
-            )}
+            <Modal show={isAddModalOpen} onClose={closeModal}>
+                <ModalAdd closeModal={closeModal} handleAdd={handleAdd} fund={fund} />
+            </Modal>
 
-            {isTransferModalOpen && (
-                <Modal onClose={closeModal}>
-                    <ModalTransfer closeModal={closeModal} handleTransfer={handleTransfer} funds={funds} fund={fund} />
-                </Modal>
-            )}
+            <Modal show={isTransferModalOpen} onClose={closeModal}>
+                <ModalTransfer closeModal={closeModal} handleTransfer={handleTransfer} funds={funds} fund={fund} />
+            </Modal>
 
-            {isReceiveModalOpen && (
-                <Modal onClose={closeModal}>
-                    <ModalReceive closeModal={closeModal} handleReceive={handleReceive} funds={funds} fund={fund} />
-                </Modal>
-            )}
+            <Modal show={isReceiveModalOpen} onClose={closeModal}>
+                <ModalReceive closeModal={closeModal} handleReceive={handleReceive} funds={funds} fund={fund} />
+            </Modal>
 
-            {isEditModalOpen && (
-                <Modal onClose={closeModal}>
-                    <ModalEdit closeModal={closeModal} handleEdit={handleEdit} fund={fund} />
-                </Modal>
-            )}
+            <Modal show={isEditModalOpen} onClose={closeModal}>
+                <ModalEdit closeModal={closeModal} handleEdit={handleEdit} fund={fund} />
+            </Modal>
         </section>
     );
 }

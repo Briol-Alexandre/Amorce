@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\User;
+use App\Http\Requests\EventStoreRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -30,7 +31,7 @@ class EventController extends Controller
     public function create()
     {
         $users = User::all();
-        
+
         return Inertia::render('Event/Create', [
             'users' => $users
         ]);
@@ -39,20 +40,16 @@ class EventController extends Controller
     /**
      * Enregistrer un nouvel événement.
      */
-    public function store(Request $request)
+    public function store(EventStoreRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'date' => 'required|date',
-            'participants' => 'sometimes|array',
-            'participants.*' => 'exists:users,id'
-        ]);
+        $validated = $request->validated();
 
         $event = Event::create([
             'title' => $validated['title'],
             'description' => $validated['description'],
             'date' => $validated['date'],
+            'time' => $validated['time'],
+            'user_id' => Auth::id(),
         ]);
 
         if (isset($validated['participants'])) {
@@ -69,9 +66,9 @@ class EventController extends Controller
     public function show(Event $event)
     {
         $event->load('participants');
-        
+
         return Inertia::render('Event/Show', [
-            'event' => $event
+            'event' => $event,
         ]);
     }
 
@@ -82,7 +79,7 @@ class EventController extends Controller
     {
         $event->load('participants');
         $users = User::all();
-        
+
         return Inertia::render('Event/Edit', [
             'event' => $event,
             'users' => $users,
@@ -99,6 +96,7 @@ class EventController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'date' => 'required|date',
+            'time' => 'required|date_format:H:i',
             'participants' => 'sometimes|array',
             'participants.*' => 'exists:users,id'
         ]);
@@ -107,6 +105,7 @@ class EventController extends Controller
             'title' => $validated['title'],
             'description' => $validated['description'],
             'date' => $validated['date'],
+            'time' => $validated['time'],
         ]);
 
         if (isset($validated['participants'])) {
