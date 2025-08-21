@@ -10,4 +10,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('event.edit');
     Route::put('/events/{event}', [EventController::class, 'update'])->name('event.update');
     Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('event.destroy');
+    Route::post('/events/{event}/report', [EventController::class, 'addReport'])->name('event.add-report');
+    
+    // Routes pour la gestion des participants
+    Route::post('/events/{event}/participants', [EventController::class, 'addParticipant'])->name('event.add-participant');
+    Route::delete('/events/{event}/participants', [EventController::class, 'removeParticipant'])->name('event.remove-participant');
 });

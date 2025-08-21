@@ -22,6 +22,7 @@ class Event extends Model
         'date',
         'time',
         'user_id',
+        'file',
     ];
 
     /**
@@ -49,5 +50,29 @@ class Event extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+    
+    /**
+     * Détermine si l'événement est passé
+     */
+    public function isPast(): bool
+    {
+        return $this->date < now()->startOfDay();
+    }
+    
+    /**
+     * Détermine si l'utilisateur est le créateur de l'événement
+     */
+    public function isCreatedBy($user): bool
+    {
+        return $this->user_id === $user->id;
+    }
+    
+    /**
+     * Détermine si un compte rendu peut être ajouté
+     */
+    public function canAddReport($user): bool
+    {
+        return $this->isPast() && $this->isCreatedBy($user);
     }
 }

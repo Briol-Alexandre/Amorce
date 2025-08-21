@@ -1,6 +1,4 @@
 import React from "react";
-import TextAndLabel from "@/Components/TextAndLabel.jsx";
-import PrimaryButton from "@/Components/PrimaryButton.jsx";
 import InputError from "@/Components/InputError.jsx";
 import { useForm, usePage } from "@inertiajs/react";
 import { route } from "ziggy-js";
@@ -46,74 +44,69 @@ export default function NewEvent({ onClose, selectedDate }) {
     }
 
     return (
-        <div className="flex flex-col items-center">
-            <form className="grid grid-row-[1fr_1fr] gap-6 w-full max-w-sm" onSubmit={submit}>
-                <legend className="text-lg font-semibold">Créer un nouvel événement</legend>
+        <div>
+            <h2 className="text-xl mb-4">Créer un nouvel événement</h2>
+            <p className="text-gray-400">Remplissez les informations pour créer un événement.</p>
+            <form onSubmit={submit}>
                 <input type="hidden" name="_token" value={csrfToken} />
 
-                <div>
-                    <TextAndLabel
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
+                    <label htmlFor="title">Titre</label>
+                    <input
                         type="text"
+                        name="title"
+                        id="title"
+                        className="rounded-md ml-3"
                         value={data.title}
-                        idAndFor="title"
-                        errors={errors?.title}
-                        labelName="Titre"
-                        inputName="title"
-                        containerClassName="flex items-center gap-4 justify-between"
-                        labelClassName="text-sm"
+                        placeholder="Titre de l'événement"
                         onChange={handleChange}
                     />
-                    <InputError message={customErrors.title} />
-                </div>
+                </fieldset>
+                {customErrors.title && <InputError message={customErrors.title} />}
 
-                <div>
-                    <TextAndLabel
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
+                    <label htmlFor="description">Description</label>
+                    <input
                         type="text"
+                        name="description"
+                        id="description"
+                        className="rounded-md ml-3"
                         value={data.description}
-                        idAndFor="description"
-                        errors={errors?.description}
-                        labelName="Description"
-                        inputName="description"
-                        containerClassName="flex items-center gap-4 justify-between"
-                        labelClassName="text-sm"
+                        placeholder="Description de l'événement"
                         onChange={handleChange}
                     />
-                    <InputError message={customErrors.description} />
-                </div>
+                </fieldset>
+                {customErrors.description && <InputError message={customErrors.description} />}
 
-                <div>
-                    <TextAndLabel
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
+                    <label htmlFor="date">Date</label>
+                    <input
                         type="date"
+                        name="date"
+                        id="date"
+                        className="rounded-md ml-3"
                         value={data.date}
-                        idAndFor="date"
-                        errors={errors?.date}
-                        labelName="Date"
-                        inputName="date"
-                        containerClassName="flex items-center gap-4 justify-between"
-                        labelClassName="text-sm"
                         onChange={handleChange}
                     />
-                    <InputError message={customErrors.date} />
-                </div>
+                </fieldset>
+                {customErrors.date && <InputError message={customErrors.date} />}
 
-                <div>
-                    <TextAndLabel
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
+                    <label htmlFor="time">Heure</label>
+                    <input
                         type="time"
+                        name="time"
+                        id="time"
+                        className="rounded-md ml-3"
                         value={data.time}
-                        idAndFor="time"
-                        errors={errors?.time}
-                        labelName="Heure"
-                        inputName="time"
-                        containerClassName="flex items-center gap-4 justify-between"
-                        labelClassName="text-sm"
                         onChange={handleChange}
                     />
-                    <InputError message={customErrors.time} />
-                </div>
+                </fieldset>
+                {customErrors.time && <InputError message={customErrors.time} />}
 
-                <div className="flex flex-col gap-2">
-                    <label className="text-sm">Participants</label>
-                    <div className="border rounded p-2 max-h-40 overflow-y-auto">
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-start">
+                    <label htmlFor="participants">Participants</label>
+                    <div className="ml-3 border rounded p-2 max-h-40 overflow-y-auto">
                         {users.map((user) => (
                             <div key={user.id} className="flex items-center gap-2 mb-1">
                                 <input
@@ -136,11 +129,23 @@ export default function NewEvent({ onClose, selectedDate }) {
                             </div>
                         ))}
                     </div>
-                    <InputError message={errors.participants} />
-                </div>
+                </fieldset>
+                {customErrors.participants && <InputError message={customErrors.participants} />}
 
-                <div className="flex justify-end">
-                    <PrimaryButton children="Créer l'événement" className="normal-case text-sm" />
+                <div className="flex justify-end mt-8 gap-4">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="bg-white text-black px-4 py-2 rounded-md border border-1 hover:bg-gray-100"
+                    >
+                        Annuler
+                    </button>
+                    <button
+                        type="submit"
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-white hover:text-blue-500 border border-1 border-blue-500"
+                    >
+                        Créer l'événement
+                    </button>
                 </div>
             </form>
         </div>

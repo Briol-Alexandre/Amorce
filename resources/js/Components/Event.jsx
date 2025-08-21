@@ -1,7 +1,9 @@
 import { useState } from "react";
 import EventModal from "@/Components/EventModal";
+import { usePage } from "@inertiajs/react";
 
 export default function Event({ event }) {
+    const { users } = usePage().props;
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const dateObj = event?.date ? new Date(event.date) : null;
@@ -41,6 +43,7 @@ export default function Event({ event }) {
                 event={event}
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
+                users={users}
             />
         </>
     );

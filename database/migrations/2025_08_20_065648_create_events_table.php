@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->text('description');
             $table->date('date');
             $table->time('time')->nullable();
+            $table->string('file')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });

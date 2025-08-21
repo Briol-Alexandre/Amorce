@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Detente;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use function Termwind\render;
 
@@ -16,7 +17,17 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $events = Event::all();
+        $userId = Auth::id();
+        
+        // Récupérer uniquement les événements créés par l'utilisateur ou auxquels il participe
+        $events = Event::with('participants')
+            ->where('user_id', $userId) // Événements créés par l'utilisateur
+            ->orWhereHas('participants', function ($query) use ($userId) {
+                $query->where('users.id', $userId); // Événements auxquels l'utilisateur participe
+            })
+            ->orderBy('date', 'asc')
+            ->get();
+            
         $detenteParticipants = Detente::all();
 
         return Inertia::render('Dashboard', [

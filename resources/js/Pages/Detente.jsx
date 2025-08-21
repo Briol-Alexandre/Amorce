@@ -47,7 +47,7 @@ export default function Detente() {
                     <TitleAndSpan title="Détente" />
                 </section>
 
-                <div className="flex items-center gap-4 w-full justify-center mt-4">
+                <div className="flex items-center gap-4 w-full justify-center mt-4 pl-4">
                     <h4>Personnes éligibles</h4>
                     <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow" />
                 </div>
