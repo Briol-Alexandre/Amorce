@@ -4,15 +4,16 @@ import PrimaryButton from "@/Components/PrimaryButton.jsx";
 import InputError from "@/Components/InputError.jsx";
 import { useForm, usePage } from "@inertiajs/react";
 import { route } from "ziggy-js";
+import format from 'date-fns/format';
 
-export default function NewEvent({ onClose }) {
+export default function NewEvent({ onClose, selectedDate }) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const { users = [] } = usePage().props;
 
     const { data, setData, errors, post } = useForm({
         title: '',
         description: '',
-        date: '',
+        date: selectedDate ? format(new Date(selectedDate), 'yyyy-MM-dd') : '',
         time: '',
         participants: [],
     });

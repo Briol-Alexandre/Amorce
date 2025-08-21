@@ -48,9 +48,7 @@ export default function DetenteDisplay() {
                                 >
                                     <div>
                                         <p className="font-medium">{participant.name}</p>
-                                    </div>
-                                    <div className="bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center">
-                                        {participant.participation}/3
+                                        <p className="text-sm">{participant.participation} {participant.participation > 1 ? 'participations' : 'participation'}</p>
                                     </div>
                                 </div>
                             ))}
