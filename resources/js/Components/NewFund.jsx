@@ -1,6 +1,4 @@
 import React from "react";
-import TextAndLabel from "@/Components/TextAndLabel.jsx";
-import PrimaryButton from "@/Components/PrimaryButton.jsx";
 import { useForm } from "@inertiajs/react";
 import InputError from "@/Components/InputError.jsx";
 import { route } from "ziggy-js";
@@ -39,60 +37,64 @@ export default function NewFund({ onClose }) {
     }
 
     return (
-        <div className="flex flex-col items-center">
-            <form className="grid grid-row-[1fr_1fr] gap-8 w-full max-w-sm" onSubmit={submit}>
-                <legend className="text-lg font-semibold">Créer un nouveau fond</legend>
+        <div>
+            <h2 className="text-xl mb-4">Créer un nouveau fond</h2>
+            <p className="text-gray-400">Remplissez les informations pour créer un nouveau fond.</p>
+            
+            <form onSubmit={submit}>
                 <input type="hidden" name="_token" value={csrfToken} />
 
-                <div>
-                    <TextAndLabel
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
+                    <label htmlFor="name">Nom du fond</label>
+                    <input
                         type="text"
+                        name="name"
+                        id="name"
+                        className="rounded-md ml-3"
                         value={data.name}
-                        idAndFor="name"
-                        errors={errors?.name}
-                        labelName="Nom du fond"
-                        inputName="name"
-                        containerClassName="flex items-center gap-4 justify-between"
-                        labelClassName="text-sm"
                         onChange={handleChange}
                     />
-                    <InputError message={customErrors.name} />
-                </div>
-                <div>
-                    <TextAndLabel
-                        type="text"
-                        value={data.description}
-                        idAndFor="description"
-                        errors={errors?.description}
-                        labelName="Description du&nbsp;fond"
-                        inputName="description"
-                        containerClassName="flex items-center gap-4 justify-between"
-                        labelClassName="text-sm"
-                        onChange={handleChange}
-                    />
-                    <InputError message={customErrors.description} />
-                </div>
-                <div>
-                    <TextAndLabel
-                        type="text"
-                        value={data.iban}
-                        idAndFor="iban"
-                        errors={errors?.iban}
-                        labelName="IBAN du fond"
-                        inputName="iban"
-                        containerClassName="flex items-center gap-4 justify-between"
-                        labelClassName="text-sm"
-                        onChange={handleChange}
-                    />
-                    <InputError message={customErrors.iban} />
-                </div>
+                </fieldset>
+                {customErrors.name && <InputError message={customErrors.name} />}
 
-                <fieldset className='flex gap-4 items-center'>
-                    <input type="checkbox" name='permanent' id='permanent'
-                        checked={data.permanent}
-                        onChange={(e) => setData('permanent', e.target.checked || false)
-                        } />
-                    <label htmlFor="permanent">Ce fond est-il permanent&nbsp;?</label>
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
+                    <label htmlFor="description">Description</label>
+                    <input
+                        type="text"
+                        name="description"
+                        id="description"
+                        className="rounded-md ml-3"
+                        value={data.description}
+                        onChange={handleChange}
+                    />
+                </fieldset>
+                {customErrors.description && <InputError message={customErrors.description} />}
+
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
+                    <label htmlFor="iban">IBAN du fond</label>
+                    <input
+                        type="text"
+                        name="iban"
+                        id="iban"
+                        className="rounded-md ml-3"
+                        value={data.iban}
+                        onChange={handleChange}
+                    />
+                </fieldset>
+                {errors.iban && <InputError message={errors.iban} />}
+
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
+                    <label htmlFor="permanent">Fond permanent</label>
+                    <div className="ml-3">
+                        <input 
+                            type="checkbox" 
+                            name="permanent" 
+                            id="permanent"
+                            checked={data.permanent}
+                            onChange={(e) => setData('permanent', e.target.checked || false)}
+                        />
+                        <label htmlFor="permanent" className="ml-2">Ce fond est-il permanent ?</label>
+                    </div>
                 </fieldset>
 
                 <input
@@ -100,8 +102,21 @@ export default function NewFund({ onClose }) {
                     name="amount"
                     value={data.amount}
                 />
-                <div className="flex justify-end">
-                    <PrimaryButton children="Créer le fond" className="normal-case text-sm" />
+                
+                <div className="flex justify-end mt-8 gap-4">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="bg-white text-black px-4 py-2 rounded-md border border-1 hover:bg-gray-100"
+                    >
+                        Annuler
+                    </button>
+                    <button
+                        type="submit"
+                        className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-white hover:text-green-500 border border-1 border-green-500"
+                    >
+                        Créer le fond
+                    </button>
                 </div>
             </form>
         </div>
