@@ -3,6 +3,7 @@ import AmorceLogo from "@/Components/icons/AmorceLogo.jsx";
 import FondIcon from "@/Components/icons/FondIcon.jsx";
 import DetenteIcon from "@/Components/icons/DetenteIcon.jsx";
 import EventIcon from "@/Components/icons/EventIcon.jsx";
+import ProjectIcon from "@/Components/icons/ProjetIcon.jsx";
 import UserIcon from "@/Components/icons/UserIcon.jsx";
 import LogoutIcon from "@/Components/icons/LogoutIcon.jsx";
 import DashboardIcon from "@/Components/icons/DashboardIcon.jsx";
@@ -47,6 +48,11 @@ function NavBar({ isOpened, isClosed, logOut }) {
                             <li className="mb-4">
                                 <Link href="/evenement">
                                     <EventIcon />
+                                </Link>
+                            </li>
+                            <li className="mb-4">
+                                <Link href="/projet">
+                                    <ProjectIcon />
                                 </Link>
                             </li>
                         </ul>

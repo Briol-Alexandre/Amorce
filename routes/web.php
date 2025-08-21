@@ -49,3 +49,4 @@ require __DIR__ . '/transaction.php';
 require __DIR__ . '/detente.php';
 require __DIR__ . '/compte.php';
 require __DIR__ . '/event.php';
+require __DIR__ . '/project.php';
