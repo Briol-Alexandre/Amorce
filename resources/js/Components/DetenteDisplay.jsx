@@ -14,7 +14,7 @@ export default function DetenteDisplay() {
     return (
         <section className="mt-8">
             <div className='flex items-center gap-4 hover:cursor-pointer' onClick={toggleRotation}>
-                <h3 className='small-title-style'>Détente actuelle</h3>
+                <h3 className='small-title-style-max-lg'>Détente actuelle</h3>
                 <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow"></span>
                 <div
                     className={isRotated ? 'rotate-0 transition duration-100' : 'rotate-180 transition duration-100'}
@@ -24,13 +24,13 @@ export default function DetenteDisplay() {
             </div>
             <div
                 className={`overflow-hidden transition-all duration-500 ease-in-out ${isRotated
-                    ? 'max-h-[1000px] opacity-100 mt-4'
+                    ? 'max-h-[1000px] opacity-100 lg:mt-4'
                     : 'max-h-0 opacity-0 mt-0'
                     }`}
             >
-                <div className="bg-white rounded-lg shadow-md p-4">
+                <div className="bg-white rounded-lg shadow-md lg:p-4">
                     {!detenteParticipants || detenteParticipants.length === 0 ? (
-                        <div className="text-center py-4">
+                        <div className="text-center py-4 max-lg:text-sm">
                             <p className="text-gray-500">Aucun participant dans la détente actuellement.</p>
                             <Link
                                 href={route('detente.index')}
@@ -44,11 +44,11 @@ export default function DetenteDisplay() {
                             {detenteParticipants.map((participant) => (
                                 <div
                                     key={participant.id}
-                                    className="bg-gray-50 rounded-lg p-3 flex items-center justify-between"
+                                    className="bg-gray-50 rounded-lg lg:p-3 p-2 flex items-center justify-between"
                                 >
                                     <div>
-                                        <p className="font-medium">{participant.name}</p>
-                                        <p className="text-sm">{participant.participation} {participant.participation > 1 ? 'participations' : 'participation'}</p>
+                                        <p className="font-medium max-lg:text-sm">{participant.name}</p>
+                                        <p className="text-xs lg:text-sm">{participant.participation} {participant.participation > 1 ? 'participations' : 'participation'}</p>
                                     </div>
                                 </div>
                             ))}

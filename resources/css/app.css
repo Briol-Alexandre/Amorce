@@ -4,10 +4,13 @@
 
 @layer utilities {
     .title-style {
-        @apply font-bold text-xl lg:text-3xl ml-3;
+        @apply font-bold text-xl lg:text-3xl lg:ml-3;
     }
     .small-title-style {
-        @apply font-bold  text-xl ;
+        @apply font-bold text-lg lg:text-xl ;
+    }
+    .small-title-style-max-lg {
+        @apply lg:font-bold lg:text-xl max-lg:my-2 lg:m-4;
     }
     .small-style {
         @apply ml-4 mt-3;

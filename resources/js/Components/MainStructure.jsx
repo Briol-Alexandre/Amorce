@@ -1,6 +1,6 @@
-import {Head, router} from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import NavBar from "@/Components/NavBar.jsx";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 
 // Fonctions utilitaires pour les cookies
 const getCookie = (name) => {
@@ -16,7 +16,7 @@ const setCookie = (name, value, days = 30) => {
     document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
 };
 
-export default function MainStructure({children, pageTitle}) {
+export default function MainStructure({ children, pageTitle }) {
     // false = menu ouvert, true = menu fermé (selon la logique existante)
     const [navVisibility, setNavVisibility] = useState(false);
 
@@ -43,15 +43,15 @@ export default function MainStructure({children, pageTitle}) {
 
     return (
         <div className={'flex w-full overflow-x-hidden'}>
-            <Head title={pageTitle}/>
-            <div>
+            <Head title={pageTitle} />
+            <div className="md:static absolute">
                 <NavBar
                     isOpened={navVisibility}
                     isClosed={toggleNavOppening}
                     logOut={handleLogout}
                 />
             </div>
-            <div className="w-full overflow-x-hidden">
+            <div className="w-full overflow-x-hidden pl-12 md:pl-0">
                 {children}
             </div>
         </div>
