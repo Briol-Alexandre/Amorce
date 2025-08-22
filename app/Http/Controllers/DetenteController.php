@@ -29,9 +29,9 @@ class DetenteController extends Controller
 
             $hasRecentDonations = $lastThreeMonths->every(
                 fn($date) =>
-                Transaction::where('donator_id', $donator->id)
-                    ->whereMonth('date', $date->month)
-                    ->whereYear('date', $date->year)
+                $donator->periods()
+                    ->where('month', $date->month)
+                    ->where('year', $date->year)
                     ->exists()
             );
 
@@ -217,9 +217,9 @@ class DetenteController extends Controller
                 return false;
 
             $donatedAllThreeMonths = $lastThreeMonths->every(function ($date) use ($donator) {
-                return Transaction::where('donator_id', $donator->id)
-                    ->whereMonth('date', $date->month)
-                    ->whereYear('date', $date->year)
+                return $donator->periods()
+                    ->where('month', $date->month)
+                    ->where('year', $date->year)
                     ->exists();
             });
 

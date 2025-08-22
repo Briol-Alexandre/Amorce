@@ -3,14 +3,10 @@
 namespace Tests\Unit;
 
 use App\Http\Controllers\DetenteController;
-use App\Models\Detente;
-use App\Models\Donators;
-use App\Models\Fund;
-use App\Models\Participations;
-use App\Models\Transaction;
-use Carbon\Carbon;
+use App\Models\{Detente, DonatorPeriod, Donators, Draw, Fund, Participations, Potentials, Transaction};
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use ReflectionClass;
 
 class DetenteControllerTest extends TestCase
 {
@@ -23,6 +19,69 @@ class DetenteControllerTest extends TestCase
         parent::setUp();
         $this->detenteController = new DetenteController();
     }
+    
+    /**
+     * Appelle la méthode privée getPotentialsDetenteParticipants du contrôleur
+     */
+    protected function callGetPotentialsDetenteParticipants($excludedDonatorId = null, $forceRefresh = false)
+    {
+        // Vérifier l'état avant l'appel
+        $donatorsCount = Donators::count();
+        $periodsCount = DonatorPeriod::count();
+        $detenteCount = Detente::count();
+        $participationsCount = Participations::count();
+        
+        echo "\nDébogage avant appel:\n";
+        echo "Donateurs: $donatorsCount, Périodes: $periodsCount, Détente: $detenteCount, Participations: $participationsCount\n";
+        
+        $reflection = new ReflectionClass($this->detenteController);
+        $method = $reflection->getMethod('getPotentialsDetenteParticipants');
+        $method->setAccessible(true);
+        $method->invoke($this->detenteController, $excludedDonatorId, $forceRefresh);
+        
+        // Vérifier les donateurs éligibles manuellement
+        $lastThreeMonths = collect(range(0, 2))->map(fn($i) => now()->subMonths($i));
+        echo "\nVérification manuelle des donateurs éligibles:\n";
+        
+        $donators = Donators::all();
+        foreach ($donators as $donator) {
+            $inDraw = Draw::where('donator_id', $donator->id)->exists();
+            $inDetente = Detente::where('donator_id', $donator->id)->exists();
+            $recentParticipation = Participations::where('user_id', $donator->id)
+                ->where('last_detente', '>', now()->subYear())->exists();
+            
+            $donatedAllThreeMonths = true;
+            echo "  Vérification des périodes pour {$donator->name}:\n";
+            foreach ($lastThreeMonths as $date) {
+                $periods = $donator->periods()
+                    ->where('month', $date->month)
+                    ->where('year', $date->year)
+                    ->get();
+                
+                $hasDonation = $periods->count() > 0;
+                echo "  - Mois {$date->month}/{$date->year}: " . ($hasDonation ? 'OUI' : 'NON') . " (" . $periods->count() . " périodes)\n";
+                
+                if (!$hasDonation) {
+                    $donatedAllThreeMonths = false;
+                }
+            }
+            
+            // Vérifier toutes les périodes existantes
+            $allPeriods = DonatorPeriod::where('donator_id', $donator->id)->get();
+            echo "  Total périodes pour ce donateur: " . $allPeriods->count() . "\n";
+            foreach ($allPeriods as $period) {
+                echo "  - Période {$period->month}/{$period->year}\n";
+            }
+            
+            echo "Donateur {$donator->id} ({$donator->name}): ";
+            echo "inDraw=$inDraw, inDetente=$inDetente, recentParticipation=$recentParticipation, donatedAllThreeMonths=$donatedAllThreeMonths\n";
+            
+            $isEligible = !$inDraw && !$inDetente && !$recentParticipation && $donatedAllThreeMonths;
+            echo "Éligible: " . ($isEligible ? 'OUI' : 'NON') . "\n";
+        }
+        
+        return Potentials::all();
+    }
 
     /**
      * Test qu'un donateur ayant fait des dons dans les 3 derniers mois est éligible
@@ -31,28 +90,41 @@ class DetenteControllerTest extends TestCase
     {
         // Créer un donateur
         $donator = Donators::factory()->create([
-            'name' => 'Donateur Test'
+            'name' => 'Donateur Test',
+            'email' => 'test@example.com'
         ]);
         
         // Créer un fond pour les transactions
         $fund = Fund::factory()->create();
 
-        // Créer des transactions pour les 3 derniers mois
-        for ($i = 1; $i <= 3; $i++) {
-            Transaction::factory()->create([
+        // Créer des périodes de don pour les 3 derniers mois (0, 1, 2 mois en arrière)
+        for ($i = 0; $i <= 2; $i++) {
+            $date = now()->subMonths($i);
+            
+            // Créer la période de don
+            DonatorPeriod::create([
+                'donator_id' => $donator->id,
+                'month' => $date->month,
+                'year' => $date->year
+            ]);
+            
+            // Créer une transaction associée
+            Transaction::create([
                 'fund_id' => $fund->id,
-                'transactor' => $donator->name,
-                'date' => now()->subMonths($i)->format('Y-m-d'),
-                'amount' => 100
+                'month' => $date->month,
+                'year' => $date->year,
+                'date' => $date->format('Y-m-d'),
+                'amount' => 100,
+                'communication' => 'Test donation ' . $i
             ]);
         }
 
-        // Exécuter la méthode à tester
-        $result = $this->detenteController->getPotentialsDetenteParticipants();
+        // Appeler la méthode privée avec forceRefresh = true
+        $potentials = $this->callGetPotentialsDetenteParticipants(null, true);
 
-        // Vérifier que le donateur est dans les résultats
-        $this->assertCount(1, $result);
-        $this->assertEquals($donator->id, $result[0]['donator_id']);
+        // Vérifier que le donateur est dans les potentiels
+        $this->assertCount(1, $potentials);
+        $this->assertEquals($donator->id, $potentials->first()->donator_id);
     }
 
     /**
@@ -62,32 +134,52 @@ class DetenteControllerTest extends TestCase
     {
         // Créer un donateur
         $donator = Donators::factory()->create([
-            'name' => 'Donateur Incomplet'
+            'name' => 'Donateur Incomplet',
+            'email' => 'incomplet@example.com'
         ]);
         
         // Créer un fond pour les transactions
         $fund = Fund::factory()->create();
 
-        // Créer des transactions pour seulement 2 des 3 derniers mois
-        Transaction::factory()->create([
-            'fund_id' => $fund->id,
-            'transactor' => $donator->name,
-            'date' => now()->subMonths(1)->format('Y-m-d'),
-            'amount' => 100
+        // Créer des périodes de don pour seulement 2 des 3 derniers mois
+        $date1 = now()->subMonths(1);
+        DonatorPeriod::create([
+            'donator_id' => $donator->id,
+            'month' => $date1->month,
+            'year' => $date1->year
         ]);
         
-        Transaction::factory()->create([
+        Transaction::create([
             'fund_id' => $fund->id,
-            'transactor' => $donator->name,
-            'date' => now()->subMonths(3)->format('Y-m-d'),
-            'amount' => 100
+            'month' => $date1->month,
+            'year' => $date1->year,
+            'date' => $date1->format('Y-m-d'),
+            'amount' => 100,
+            'communication' => 'Test donation 1'
+        ]);
+        
+        $date2 = now()->subMonths(3);
+        DonatorPeriod::create([
+            'donator_id' => $donator->id,
+            'month' => $date2->month,
+            'year' => $date2->year
+        ]);
+        
+        Transaction::create([
+            'fund_id' => $fund->id,
+            'month' => $date2->month,
+            'year' => $date2->year,
+            'date' => $date2->format('Y-m-d'),
+            'amount' => 100,
+            'communication' => 'Test donation 3'
         ]);
 
-        // Exécuter la méthode à tester
-        $result = $this->detenteController->getPotentialsDetenteParticipants();
+        // Forcer le rafraîchissement des potentiels participants
+        $this->detenteController->index(new \Illuminate\Http\Request(['refresh' => true]));
 
-        // Vérifier que le donateur n'est pas dans les résultats
-        $this->assertCount(0, $result);
+        // Vérifier que le donateur n'est pas dans les potentiels
+        $potentials = \App\Models\Potentials::where('donator_id', $donator->id)->get();
+        $this->assertCount(0, $potentials);
     }
 
     /**
@@ -97,33 +189,48 @@ class DetenteControllerTest extends TestCase
     {
         // Créer un donateur
         $donator = Donators::factory()->create([
-            'name' => 'Donateur En Détente'
+            'name' => 'Donateur En Détente',
+            'email' => 'detente@example.com'
         ]);
         
         // Créer un fond pour les transactions
         $fund = Fund::factory()->create();
 
-        // Créer des transactions pour les 3 derniers mois
-        for ($i = 1; $i <= 3; $i++) {
-            Transaction::factory()->create([
+        // Créer des périodes de don pour les 3 derniers mois (0, 1, 2 mois en arrière)
+        for ($i = 0; $i <= 2; $i++) {
+            $date = now()->subMonths($i);
+            
+            // Créer la période de don
+            DonatorPeriod::create([
+                'donator_id' => $donator->id,
+                'month' => $date->month,
+                'year' => $date->year
+            ]);
+            
+            // Créer une transaction associée
+            Transaction::create([
                 'fund_id' => $fund->id,
-                'transactor' => $donator->name,
-                'date' => now()->subMonths($i)->format('Y-m-d'),
-                'amount' => 100
+                'month' => $date->month,
+                'year' => $date->year,
+                'date' => $date->format('Y-m-d'),
+                'amount' => 100,
+                'communication' => 'Test donation ' . $i
             ]);
         }
 
         // Ajouter le donateur à la détente actuelle
-        Detente::factory()->create([
+        Detente::create([
             'donator_id' => $donator->id,
-            'name' => $donator->name
+            'name' => $donator->name,
+            'participation' => 1
         ]);
 
-        // Exécuter la méthode à tester
-        $result = $this->detenteController->getPotentialsDetenteParticipants();
+        // Forcer le rafraîchissement des potentiels participants
+        $this->detenteController->index(new \Illuminate\Http\Request(['refresh' => true]));
 
-        // Vérifier que le donateur n'est pas dans les résultats
-        $this->assertCount(0, $result);
+        // Vérifier que le donateur n'est pas dans les potentiels
+        $potentials = \App\Models\Potentials::where('donator_id', $donator->id)->get();
+        $this->assertCount(0, $potentials);
     }
 
     /**
@@ -133,34 +240,48 @@ class DetenteControllerTest extends TestCase
     {
         // Créer un donateur
         $donator = Donators::factory()->create([
-            'name' => 'Donateur Récent'
+            'name' => 'Donateur Récent',
+            'email' => 'recent@example.com'
         ]);
         
         // Créer un fond pour les transactions
         $fund = Fund::factory()->create();
 
-        // Créer des transactions pour les 3 derniers mois
-        for ($i = 1; $i <= 3; $i++) {
-            Transaction::factory()->create([
+        // Créer des périodes de don pour les 3 derniers mois (0, 1, 2 mois en arrière)
+        for ($i = 0; $i <= 2; $i++) {
+            $date = now()->subMonths($i);
+            
+            // Créer la période de don
+            DonatorPeriod::create([
+                'donator_id' => $donator->id,
+                'month' => $date->month,
+                'year' => $date->year
+            ]);
+            
+            // Créer une transaction associée
+            Transaction::create([
                 'fund_id' => $fund->id,
-                'transactor' => $donator->name,
-                'date' => now()->subMonths($i)->format('Y-m-d'),
-                'amount' => 100
+                'month' => $date->month,
+                'year' => $date->year,
+                'date' => $date->format('Y-m-d'),
+                'amount' => 100,
+                'communication' => 'Test donation ' . $i
             ]);
         }
 
         // Ajouter une participation récente (moins d'un an)
-        Participations::factory()->create([
+        Participations::create([
             'user_id' => $donator->id,
             'name' => $donator->name,
             'last_detente' => now()->subMonths(6)->format('Y-m-d')
         ]);
 
-        // Exécuter la méthode à tester
-        $result = $this->detenteController->getPotentialsDetenteParticipants();
+        // Forcer le rafraîchissement des potentiels participants
+        $this->detenteController->index(new \Illuminate\Http\Request(['refresh' => true]));
 
-        // Vérifier que le donateur n'est pas dans les résultats
-        $this->assertCount(0, $result);
+        // Vérifier que le donateur n'est pas dans les potentiels
+        $potentials = \App\Models\Potentials::where('donator_id', $donator->id)->get();
+        $this->assertCount(0, $potentials);
     }
 
     /**
@@ -170,35 +291,48 @@ class DetenteControllerTest extends TestCase
     {
         // Créer un donateur
         $donator = Donators::factory()->create([
-            'name' => 'Donateur Ancien'
+            'name' => 'Donateur Ancien',
+            'email' => 'ancien@example.com'
         ]);
         
         // Créer un fond pour les transactions
         $fund = Fund::factory()->create();
 
-        // Créer des transactions pour les 3 derniers mois
-        for ($i = 1; $i <= 3; $i++) {
-            Transaction::factory()->create([
+        // Créer des périodes de don pour les 3 derniers mois (0, 1, 2 mois en arrière)
+        for ($i = 0; $i <= 2; $i++) {
+            $date = now()->subMonths($i);
+            
+            // Créer la période de don
+            DonatorPeriod::create([
+                'donator_id' => $donator->id,
+                'month' => $date->month,
+                'year' => $date->year
+            ]);
+            
+            // Créer une transaction associée
+            Transaction::create([
                 'fund_id' => $fund->id,
-                'transactor' => $donator->name,
-                'date' => now()->subMonths($i)->format('Y-m-d'),
-                'amount' => 100
+                'month' => $date->month,
+                'year' => $date->year,
+                'date' => $date->format('Y-m-d'),
+                'amount' => 100,
+                'communication' => 'Test donation ' . $i
             ]);
         }
 
         // Ajouter une participation ancienne (plus d'un an)
-        Participations::factory()->create([
+        Participations::create([
             'user_id' => $donator->id,
             'name' => $donator->name,
             'last_detente' => now()->subMonths(13)->format('Y-m-d')
         ]);
 
-        // Exécuter la méthode à tester
-        $result = $this->detenteController->getPotentialsDetenteParticipants();
+        // Appeler la méthode privée avec forceRefresh = true
+        $potentials = $this->callGetPotentialsDetenteParticipants(null, true);
 
-        // Vérifier que le donateur est dans les résultats
-        $this->assertCount(1, $result);
-        $this->assertEquals($donator->id, $result[0]['donator_id']);
+        // Vérifier que le donateur est dans les potentiels
+        $this->assertCount(1, $potentials);
+        $this->assertEquals($donator->id, $potentials->first()->donator_id);
     }
 
     /**
@@ -210,61 +344,129 @@ class DetenteControllerTest extends TestCase
         $fund = Fund::factory()->create();
         
         // 1. Donateur éligible (dons dans les 3 derniers mois, pas dans la détente actuelle, pas de participation récente)
-        $eligibleDonator = Donators::factory()->create(['name' => 'Éligible']);
-        for ($i = 1; $i <= 3; $i++) {
-            Transaction::factory()->create([
+        $eligibleDonator = Donators::factory()->create([
+            'name' => 'Éligible',
+            'email' => 'eligible@example.com'
+        ]);
+        
+        // Créer des périodes de don pour les 3 derniers mois (0, 1, 2 mois en arrière)
+        for ($i = 0; $i <= 2; $i++) {
+            $date = now()->subMonths($i);
+            
+            // Créer la période de don
+            DonatorPeriod::create([
+                'donator_id' => $eligibleDonator->id,
+                'month' => $date->month,
+                'year' => $date->year
+            ]);
+            
+            // Créer une transaction associée
+            Transaction::create([
                 'fund_id' => $fund->id,
-                'transactor' => $eligibleDonator->name,
-                'date' => now()->subMonths($i)->format('Y-m-d'),
-                'amount' => 100
+                'month' => $date->month,
+                'year' => $date->year,
+                'date' => $date->format('Y-m-d'),
+                'amount' => 100,
+                'communication' => 'Test donation eligible ' . $i
             ]);
         }
 
         // 2. Donateur avec dons incomplets
-        $incompleteDonator = Donators::factory()->create(['name' => 'Incomplet']);
-        Transaction::factory()->create([
+        $incompleteDonator = Donators::factory()->create([
+            'name' => 'Incomplet',
+            'email' => 'incomplet2@example.com'
+        ]);
+        
+        // Créer une seule période de don
+        $date = now()->subMonths(1);
+        DonatorPeriod::create([
+            'donator_id' => $incompleteDonator->id,
+            'month' => $date->month,
+            'year' => $date->year
+        ]);
+        
+        Transaction::create([
             'fund_id' => $fund->id,
-            'transactor' => $incompleteDonator->name,
-            'date' => now()->subMonths(1)->format('Y-m-d'),
-            'amount' => 100
+            'month' => $date->month,
+            'year' => $date->year,
+            'date' => $date->format('Y-m-d'),
+            'amount' => 100,
+            'communication' => 'Test donation incomplet'
         ]);
 
         // 3. Donateur déjà dans la détente
-        $inDetenteDonator = Donators::factory()->create(['name' => 'En Détente']);
-        for ($i = 1; $i <= 3; $i++) {
-            Transaction::factory()->create([
+        $inDetenteDonator = Donators::factory()->create([
+            'name' => 'En Détente',
+            'email' => 'detente2@example.com'
+        ]);
+        
+        // Créer des périodes de don pour les 3 derniers mois (0, 1, 2 mois en arrière)
+        for ($i = 0; $i <= 2; $i++) {
+            $date = now()->subMonths($i);
+            
+            // Créer la période de don
+            DonatorPeriod::create([
+                'donator_id' => $inDetenteDonator->id,
+                'month' => $date->month,
+                'year' => $date->year
+            ]);
+            
+            // Créer une transaction associée
+            Transaction::create([
                 'fund_id' => $fund->id,
-                'transactor' => $inDetenteDonator->name,
-                'date' => now()->subMonths($i)->format('Y-m-d'),
-                'amount' => 100
+                'month' => $date->month,
+                'year' => $date->year,
+                'date' => $date->format('Y-m-d'),
+                'amount' => 100,
+                'communication' => 'Test donation detente ' . $i
             ]);
         }
-        Detente::factory()->create([
+        
+        Detente::create([
             'donator_id' => $inDetenteDonator->id,
-            'name' => $inDetenteDonator->name
+            'name' => $inDetenteDonator->name,
+            'participation' => 1
         ]);
 
         // 4. Donateur avec participation récente
-        $recentParticipantDonator = Donators::factory()->create(['name' => 'Récent Participant']);
-        for ($i = 1; $i <= 3; $i++) {
-            Transaction::factory()->create([
+        $recentParticipantDonator = Donators::factory()->create([
+            'name' => 'Récent Participant',
+            'email' => 'recent2@example.com'
+        ]);
+        
+        // Créer des périodes de don pour les 3 derniers mois (0, 1, 2 mois en arrière)
+        for ($i = 0; $i <= 2; $i++) {
+            $date = now()->subMonths($i);
+            
+            // Créer la période de don
+            DonatorPeriod::create([
+                'donator_id' => $recentParticipantDonator->id,
+                'month' => $date->month,
+                'year' => $date->year
+            ]);
+            
+            // Créer une transaction associée
+            Transaction::create([
                 'fund_id' => $fund->id,
-                'transactor' => $recentParticipantDonator->name,
-                'date' => now()->subMonths($i)->format('Y-m-d'),
-                'amount' => 100
+                'month' => $date->month,
+                'year' => $date->year,
+                'date' => $date->format('Y-m-d'),
+                'amount' => 100,
+                'communication' => 'Test donation recent ' . $i
             ]);
         }
-        Participations::factory()->create([
+        
+        Participations::create([
             'user_id' => $recentParticipantDonator->id,
             'name' => $recentParticipantDonator->name,
             'last_detente' => now()->subMonths(6)->format('Y-m-d')
         ]);
 
-        // Exécuter la méthode à tester
-        $result = $this->detenteController->getPotentialsDetenteParticipants();
+        // Appeler la méthode privée avec forceRefresh = true
+        $potentials = $this->callGetPotentialsDetenteParticipants(null, true);
 
-        // Vérifier que seul le donateur éligible est dans les résultats
-        $this->assertCount(1, $result);
-        $this->assertEquals($eligibleDonator->id, $result[0]['donator_id']);
+        // Vérifier que seul le donateur éligible est dans les potentiels
+        $this->assertCount(1, $potentials);
+        $this->assertEquals($eligibleDonator->id, $potentials->first()->donator_id);
     }
 }

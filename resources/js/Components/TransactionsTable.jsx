@@ -1,7 +1,7 @@
-import React, {useState} from "react";
-import {format} from "date-fns";
+import React, { useState } from "react";
+import { format } from "date-fns";
 
-export function TransactionsTable({transactions}) {
+export function TransactionsTable({ transactions }) {
     const itemsPerPage = 5;
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -53,18 +53,17 @@ export function TransactionsTable({transactions}) {
             ) : (
                 <div className="px-6 mt-4">
                     <ul>
-                        <li className="grid grid-cols-4 items-center mb-6 border-b-2 border-gray-400 pb-4">
+                        <li className="grid grid-cols-3 items-center mb-6 border-b-2 border-gray-400 pb-4">
                             <span className="font-bold">Date</span>
                             <span className="text-center font-bold">Montant</span>
-                            <span className="text-center font-bold">N° Compte</span>
                             <span className="text-right font-bold">Communication</span>
                         </li>
                         {currentTransactions.map((transaction) => (
                             <li
                                 key={transaction.id}
-                                className="grid grid-cols-4 items-center border-b-2 border-gray-200 mb-4 pb-4 last-of-type:border-none"
+                                className="grid grid-cols-3 items-center border-b-2 border-gray-200 mb-4 pb-4 last-of-type:border-none"
                             >
-                                <span>{format(new Date(transaction.date), "MM-yyyy")}</span>
+                                <span>{`${transaction.month.toString().padStart(2, '0')}-${transaction.year}`}</span>
                                 <span
                                     className={
                                         transaction.amount > 0
@@ -74,7 +73,6 @@ export function TransactionsTable({transactions}) {
                                 >
                                     {transaction.amount}&nbsp;€
                                 </span>
-                                <span className="text-center font-mono">{transaction.transactor}</span>
                                 <span className="text-right">{transaction.communication}</span>
                             </li>
                         ))}
@@ -83,9 +81,8 @@ export function TransactionsTable({transactions}) {
                     {/* Pagination */}
                     <div className="flex justify-between items-center mt-4 space-x-2">
                         <button
-                            className={`px-4 py-2 bg-gray-200 rounded ${
-                                currentPage === 1 && "opacity-50 cursor-not-allowed"
-                            }`}
+                            className={`px-4 py-2 bg-gray-200 rounded ${currentPage === 1 && "opacity-50 cursor-not-allowed"
+                                }`}
                             onClick={() => handlePageChange(currentPage - 1)}
                             disabled={currentPage === 1}
                         >
@@ -95,11 +92,10 @@ export function TransactionsTable({transactions}) {
                             {getPages().map((page, index) => (
                                 <button
                                     key={index}
-                                    className={`px-4 py-2 bg-gray-200 rounded ${
-                                        page === currentPage
-                                            ? "bg-gray-900 text-white"
-                                            : "text-gray-700"
-                                    }`}
+                                    className={`px-4 py-2 bg-gray-200 rounded ${page === currentPage
+                                        ? "bg-gray-900 text-white"
+                                        : "text-gray-700"
+                                        }`}
                                     onClick={() => {
                                         if (page !== '...') {
                                             handlePageChange(page);
@@ -112,9 +108,8 @@ export function TransactionsTable({transactions}) {
                             ))}
                         </div>
                         <button
-                            className={`px-4 py-2 bg-gray-200 rounded ${
-                                currentPage === totalPages && "opacity-50 cursor-not-allowed"
-                            }`}
+                            className={`px-4 py-2 bg-gray-200 rounded ${currentPage === totalPages && "opacity-50 cursor-not-allowed"
+                                }`}
                             onClick={() => handlePageChange(currentPage + 1)}
                             disabled={currentPage === totalPages}
                         >

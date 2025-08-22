@@ -76,7 +76,7 @@ export default function CsvList() {
                                         <p className="py-2">{transaction.date}</p>
                                         <p className="py-2">{transaction.amount}</p>
                                         <p className="py-2 truncate">{transaction.communication}</p>
-                                        <p className='hidden'>{transaction.transactor}</p>
+                                        <p className='hidden'>{transaction.donator_name || transaction.transactor}</p>
                                         <div className="py-2 relative">
                                             <select
                                                 className={`border p-2 rounded w-full ${transaction.fund_id

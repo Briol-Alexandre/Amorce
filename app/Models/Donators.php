@@ -12,13 +12,15 @@ class Donators extends Model
     
     protected $fillable = [
         'name',
+        'email',
+        'phone',
     ];
     
     /**
-     * Obtenir les transactions associées à ce donateur.
+     * Obtenir les périodes associées à ce donateur.
      */
-    public function transactions()
+    public function periods()
     {
-        return $this->hasMany(Transaction::class, 'donator_id');
+        return $this->hasMany(DonatorPeriod::class, 'donator_id');
     }
 }

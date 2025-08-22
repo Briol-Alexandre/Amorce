@@ -13,20 +13,13 @@ class Transaction extends Model
     use HasFactory, Notifiable;
     protected $fillable = [
         'fund_id',
-        'transactor',
         'amount',
-        'date',
+        'month',
+        'year',
         'communication',
-        'donator_id',
     ];
     
-    /**
-     * Obtenir le donateur associé à cette transaction.
-     */
-    public function donator()
-    {
-        return $this->belongsTo(Donators::class, 'donator_id');
-    }
+    // La relation avec le donateur est maintenant gérée via la table donator_periods
 
     function fund(): BelongsTo
     {

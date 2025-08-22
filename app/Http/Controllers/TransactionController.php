@@ -51,18 +51,21 @@ class TransactionController extends Controller
             if (empty(trim($donatorName))) {
                 $donatorName = 'Transacteur anonyme';
             }
-
-            $donator = Donators::firstOrCreate(
-                ['name' => $donatorName],
-                ['name' => $donatorName]
-            );
-
+            
+            // Extraire le mois et l'année de la date
+            $date = Carbon::parse($transaction['date']);
+            $month = $date->month;
+            $year = $date->year;
+            
             return [
                 'fund_id' => $transaction['fund_id'],
                 'amount' => (float) $this->parseAmount($transaction['amount']),
                 'communication' => $transaction['communication'] ?? 'Aucune communication',
-                'transactor' => $transaction['transactor'] ?? 'Transacteur anonyme',
-                'date' => Carbon::parse($transaction['date']),
+                'month' => $month,
+                'year' => $year,
+                'donator_name' => $donatorName,
+                'email' => $transaction['email'] ?? null,
+                'phone' => $transaction['phone'] ?? null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -81,29 +84,40 @@ class TransactionController extends Controller
         }
 
         foreach ($uniqueTransactions as $transaction) {
-            $donatorName = collect($request->input('transactions'))
-                ->firstWhere('transactor', $transaction['transactor'])['donator_name'] ?? 'Transacteur anonyme';
+            $donatorName = $transaction['donator_name'];
 
-            if (empty(trim($donatorName))) {
-                $donatorName = 'Transacteur anonyme';
-            }
+            // Créer ou récupérer le donateur
+            $donator = Donators::firstOrCreate(
+                ['name' => $donatorName],
+                [
+                    'name' => $donatorName,
+                    'email' => $transaction['email'] ?? null,
+                    'phone' => $transaction['phone'] ?? null
+                ]
+            );
 
-            $donator = Donators::firstOrCreate(['name' => $donatorName]);
+            // Créer ou récupérer la période pour ce donateur
+            $donatorPeriod = $donator->periods()->firstOrCreate([
+                'month' => $transaction['month'],
+                'year' => $transaction['year']
+            ]);
 
+            // Créer la transaction
             $newTransaction = Transaction::create([
                 'fund_id' => $transaction['fund_id'],
                 'amount' => $transaction['amount'],
-                'date' => $transaction['date'],
-                'communication' => $transaction['communication'],
-                'transactor' => $transaction['transactor'],
-                'donator_id' => $donator->id
+                'month' => $transaction['month'],
+                'year' => $transaction['year'],
+                'communication' => $transaction['communication']
             ]);
 
-            \Log::info('Transaction created and linked to donator:', [
+            \Log::info('Transaction created and linked to donator period:', [
                 'transaction_id' => $newTransaction->id,
                 'donator_id' => $donator->id,
                 'donator_name' => $donator->name,
-                'transactor' => $transaction['transactor']
+                'period_id' => $donatorPeriod->id,
+                'month' => $transaction['month'],
+                'year' => $transaction['year']
             ]);
 
             $fund = Fund::find($transaction['fund_id']);
@@ -160,12 +174,17 @@ class TransactionController extends Controller
 
     private function create(Fund $fund, float $amount, TransactionStoreRequest $request)
     {
+        // Extraire le mois et l'année de la date
+        $date = Carbon::parse($request->input('date'));
+        $month = $date->month;
+        $year = $date->year;
+        
         Transaction::create([
             'fund_id' => $fund->id,
             'amount' => $amount,
             'communication' => $request->input('communication'),
-            'transactor' => $request->input('transactor'),
-            'date' => $request->input('date'),
+            'month' => $month,
+            'year' => $year,
         ]);
     }
 
@@ -175,16 +194,35 @@ class TransactionController extends Controller
 
         $donatorName = $validated['transactor'];
 
+        // Créer ou récupérer le donateur
         $donator = Donators::firstOrCreate(
             ['name' => $donatorName],
-            ['name' => $donatorName]
+            [
+                'name' => $donatorName,
+                'email' => $validated['email'] ?? null,
+                'phone' => $validated['phone'] ?? null
+            ]
         );
 
-        $validated['transactor'] = "Don d'argent en liquide";
+        // Extraire le mois et l'année de la date
+        $date = Carbon::parse($validated['date']);
+        $month = $date->month;
+        $year = $date->year;
+        
+        // Créer ou récupérer la période pour ce donateur
+        $donatorPeriod = $donator->periods()->firstOrCreate([
+            'month' => $month,
+            'year' => $year
+        ]);
 
-        $validated['donator_id'] = $donator->id;
-
-        $transaction = Transaction::create($validated);
+        // Créer la transaction
+        $transaction = Transaction::create([
+            'fund_id' => $validated['fund_id'],
+            'amount' => $validated['amount'],
+            'month' => $month,
+            'year' => $year,
+            'communication' => $validated['communication'] ?? 'Don manuel'
+        ]);
 
         $fund->amount += $transaction->amount;
         $fund->save();
@@ -193,7 +231,9 @@ class TransactionController extends Controller
             'transaction_id' => $transaction->id,
             'donator_id' => $donator->id,
             'donator_name' => $donator->name,
-            'transactor' => $transaction->transactor,
+            'period_id' => $donatorPeriod->id,
+            'month' => $month,
+            'year' => $year,
             'amount' => $transaction->amount
         ]);
 
@@ -239,8 +279,8 @@ class TransactionController extends Controller
      * Une transaction est considérée comme un doublon si elle a :
      * - Le même fund_id
      * - Le même montant
-     * - La même date
-     * - Le même transacteur
+     * - Le même mois et année
+     * - La même communication
      */
     private function filterDuplicateTransactions($transactions)
     {
@@ -250,16 +290,18 @@ class TransactionController extends Controller
             $existingTransaction = Transaction::where([
                 'fund_id' => $transaction['fund_id'],
                 'amount' => $transaction['amount'],
-                'date' => $transaction['date'],
-                'transactor' => $transaction['transactor'],
+                'month' => $transaction['month'],
+                'year' => $transaction['year'],
+                'communication' => $transaction['communication'],
             ])->first();
 
             if (!$existingTransaction) {
                 $isDuplicateInBatch = $uniqueTransactions->contains(function ($uniqueTransaction) use ($transaction) {
                     return $uniqueTransaction['fund_id'] == $transaction['fund_id'] &&
                         $uniqueTransaction['amount'] == $transaction['amount'] &&
-                        $uniqueTransaction['date'] == $transaction['date'] &&
-                        $uniqueTransaction['transactor'] == $transaction['transactor'];
+                        $uniqueTransaction['month'] == $transaction['month'] &&
+                        $uniqueTransaction['year'] == $transaction['year'] &&
+                        $uniqueTransaction['communication'] == $transaction['communication'];
                 });
 
                 if (!$isDuplicateInBatch) {
@@ -289,34 +331,37 @@ class TransactionController extends Controller
         foreach ($transactions as $index => $transaction) {
             $fundId = $transaction['fund_id'] ?? $funds[0]->id;
             $amount = (float) $this->parseAmount($transaction['amount']);
-
-            $donatorName = $transaction['transactor'] ?? 'Transacteur anonyme';
-            if (empty(trim($donatorName))) {
-                $donatorName = 'Transacteur anonyme';
-            }
-            $transactor = $donatorName;
             $communication = $transaction['communication'] ?? 'Aucune communication';
 
             try {
                 $date = Carbon::parse($transaction['date']);
+                $month = $date->month;
+                $year = $date->year;
             } catch (\Exception $e) {
                 \Log::warning('Date parsing failed', ['date' => $transaction['date'], 'error' => $e->getMessage()]);
                 continue;
+            }
+
+            $donatorName = $transaction['donator_name'] ?? 'Transacteur anonyme';
+            if (empty(trim($donatorName))) {
+                $donatorName = 'Transacteur anonyme';
             }
 
             \Log::debug('Checking transaction', [
                 'index' => $index + 1,
                 'fund_id' => $fundId,
                 'amount' => $amount,
-                'date' => $date->format('Y-m-d'),
-                'transactor' => $transactor
+                'month' => $month,
+                'year' => $year,
+                'donator_name' => $donatorName
             ]);
 
             $existingTransaction = Transaction::where([
                 'fund_id' => $fundId,
                 'amount' => $amount,
-                'date' => $date,
-                'transactor' => $transactor,
+                'month' => $month,
+                'year' => $year,
+                'communication' => $communication,
             ])->first();
 
             if ($existingTransaction) {
@@ -324,14 +369,16 @@ class TransactionController extends Controller
                     'csv_index' => $index + 1,
                     'existing_id' => $existingTransaction->id,
                     'amount' => $amount,
-                    'date' => $date->format('Y-m-d')
+                    'month' => $month,
+                    'year' => $year
                 ]);
 
                 $duplicates[] = [
                     'index' => $index + 1,
-                    'date' => $transaction['date'],
+                    'month' => $month,
+                    'year' => $year,
                     'amount' => $transaction['amount'],
-                    'transactor' => $transactor,
+                    'donator_name' => $donatorName,
                     'communication' => $communication,
                     'existing_id' => $existingTransaction->id,
                     'fund_id' => $fundId,
@@ -351,4 +398,12 @@ class TransactionController extends Controller
         ];
     }
 
+    /**
+     * Récupère la liste des donateurs pour le sélecteur
+     */
+    public function getDonators()
+    {
+        $donators = Donators::orderBy('name')->get(['id', 'name', 'email', 'phone']);
+        return response()->json($donators);
+    }
 }

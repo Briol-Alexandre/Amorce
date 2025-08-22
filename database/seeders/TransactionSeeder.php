@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Donators;
+use App\Models\DonatorPeriod;
 use App\Models\Fund;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -84,6 +85,7 @@ class TransactionSeeder extends Seeder
         // Générer des transactions pour chaque donateur
         foreach ($donators as $donator) {
             // Pour le mois actuel et les 2 mois précédents (0 = mois actuel, 1 = mois précédent, 2 = il y a 2 mois)
+            // Ces mois correspondent exactement à ceux vérifiés par getPotentialsDetenteParticipants
             for ($monthsAgo = 0; $monthsAgo < 3; $monthsAgo++) {
                 $month = Carbon::now()->subMonths($monthsAgo);
                 
@@ -107,15 +109,20 @@ class TransactionSeeder extends Seeder
                                     substr(str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT), 0, 4) . ' ' . 
                                     substr(str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT), 0, 4);
                     
-                    // Créer la transaction avec le numéro de compte comme transactor
-                    // et l'associer directement au donateur via donator_id
+                    // Créer la transaction sans référence au donateur
                     Transaction::create([
                         'fund_id' => $fund->id,
-                        'transactor' => $accountNumber, // Numéro de compte
                         'amount' => $amount,
-                        'date' => $date,
                         'communication' => "Don de {$donator->name} - " . $date->format('m/Y'),
-                        'donator_id' => $donator->id, // Association directe au donateur
+                        'month' => $month->month,
+                        'year' => $month->year
+                    ]);
+                    
+                    // Créer ou mettre à jour la période de don pour ce donateur et ce mois
+                    DonatorPeriod::firstOrCreate([
+                        'donator_id' => $donator->id,
+                        'month' => $month->month,
+                        'year' => $month->year
                     ]);
                     
                     // Mettre à jour le montant du fond

@@ -51,7 +51,7 @@ function NavBar({ isOpened, isClosed, logOut }) {
                                 </Link>
                             </li>
                             <li className="mb-4">
-                                <Link href="/projet">
+                                <Link href="/project">
                                     <ProjectIcon />
                                 </Link>
                             </li>
@@ -83,7 +83,7 @@ function NavBar({ isOpened, isClosed, logOut }) {
                     </li>
                     <li>
                         <Link href="/dashboard"
-                            className="flex mb-4 items-center gap-2">
+                            className="flex mb-3 items-center gap-2">
                             <DashboardIcon />
                             <p>
                                 Dashboard
@@ -92,7 +92,7 @@ function NavBar({ isOpened, isClosed, logOut }) {
                     </li>
                     <li>
                         <Link href="/fonds"
-                            className="flex mb-4 items-center gap-2">
+                            className="flex mb-3 items-center gap-2">
                             <FondIcon />
                             <p>
                                 Fonds
@@ -101,7 +101,7 @@ function NavBar({ isOpened, isClosed, logOut }) {
                     </li>
                     <li>
                         <Link href="/detente"
-                            className="flex mb-4 items-center gap-2">
+                            className="flex mb-3 items-center gap-2">
                             <DetenteIcon />
                             <p>
                                 Détente
@@ -110,17 +110,26 @@ function NavBar({ isOpened, isClosed, logOut }) {
                     </li>
                     <li>
                         <Link href="/evenement"
-                            className="flex mb-4 items-center gap-2">
+                            className="flex mb-3 items-center gap-2">
                             <EventIcon />
                             <p>
                                 Évenements
                             </p>
                         </Link>
                     </li>
+                    <li>
+                        <Link href="/project"
+                            className="flex mb-3 items-center gap-2">
+                            <ProjectIcon />
+                            <p>
+                                Projets
+                            </p>
+                        </Link>
+                    </li>
                 </ul>
                 <ul>
                     <li>
-                        <Link href='/compte' className="flex mb-4 items-center gap-2">
+                        <Link href='/compte' className="flex mb-3 items-center gap-2">
                             <UserIcon />
                             <p>Utilisateurs</p>
                         </Link>

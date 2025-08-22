@@ -4,7 +4,7 @@ import MainStructure from "@/Components/MainStructure.jsx";
 import React from "react";
 
 export default function Draw() {
-    const { drawParticipants, detenteParticipants, flash } = usePage().props;
+    const { drawParticipants, detenteParticipants } = usePage().props;
 
     function removeParticipant(donatorId, name, source) {
         router.post(route('detente.remove'), {
@@ -12,10 +12,6 @@ export default function Draw() {
             name: name,
             source: source
         });
-    }
-
-    function handleParticipationUpdate() {
-        router.post(route('detente.participation-update'));
     }
 
     function performDraw() {
@@ -30,9 +26,6 @@ export default function Draw() {
         <MainStructure pageTitle={'Tirage Détente'}>
             <section className={"flex-grow p-3"}>
                 <TitleAndSpan onClick={() => router.visit(route('detente.draw'))} title={'Tirage'} />
-
-
-                {/* Navigation */}
                 <div className="flex justify-between items-center mt-4 mx-8 mb-6">
                     <div className="text-gray-700">
                         <span className="font-medium">{drawParticipants.length}</span> participant(s) dans le tirage |
@@ -54,8 +47,6 @@ export default function Draw() {
                         </Link>
                     </div>
                 </div>
-
-                {/* Section des participants au tirage */}
                 <section className="mb-8 mx-8">
                     <div className="flex justify-between">
                         <h2 className="text-xl font-semibold mb-4">Liste des participants au tirage</h2>
@@ -66,7 +57,6 @@ export default function Draw() {
                             Retirer tous les participants
                         </button>
                     </div>
-
 
                     {drawParticipants.length > 0 ? (
                         <div className='flex flex-col'>
@@ -100,8 +90,6 @@ export default function Draw() {
                         <p className="text-gray-500">Aucun participant dans le tirage. Ajoutez des participants depuis la page Détente.</p>
                     )}
                 </section>
-
-                {/* Section des participants actuels de la détente */}
                 <section className="mb-8 mx-8">
                     <h2 className="text-xl font-semibold mb-4">Participants actuels de la détente</h2>
                     {detenteParticipants.length > 0 ? (

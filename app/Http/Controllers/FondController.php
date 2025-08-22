@@ -30,7 +30,8 @@ class FondController extends Controller
         $funds = Fund::all();
         $transactions = $fund->transactions()
             ->orderBy('created_at', 'desc')
-            ->orderBy('date', 'desc')
+            ->orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
             ->get();
         return Inertia::render('Fund', [
             'fund' => $fund,

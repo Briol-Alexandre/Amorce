@@ -18,6 +18,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/csv/submit', [TransactionController::class, 'storeCsvTransactions'])->name('transaction.store-csv-transactions');
 
+    // Route pour récupérer la liste des donateurs
+    Route::get('/donators', [TransactionController::class, 'getDonators'])->name('transaction.donators');
 
     Route::get('/csv', [TransactionController::class, 'index'])->name('transaction.index');
     Route::get('/csv/list', [TransactionController::class, 'csvList'])->name('transaction.csv-list');
