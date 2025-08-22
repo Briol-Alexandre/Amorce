@@ -51,48 +51,49 @@ export function TransactionsTable({ transactions }) {
                     Ce fond n'a pas encore de transactions.
                 </p>
             ) : (
-                <div className="px-6 mt-4">
+                <div className="lg:px-6 px-2 mt-4">
                     <ul>
-                        <li className="grid grid-cols-3 items-center mb-6 border-b-2 border-gray-400 pb-4">
-                            <span className="font-bold">Date</span>
-                            <span className="text-center font-bold">Montant</span>
-                            <span className="text-right font-bold">Communication</span>
+                        <li className="grid grid-cols-12 items-center mb-6 border-b-2 border-gray-400 pb-4">
+                            <span className="font-bold max-lg:text-sm text-left col-span-3">Date</span>
+                            <span className="font-bold max-lg:text-sm text-center col-span-4">Montant</span>
+                            <span className="font-bold max-lg:text-sm text-right col-span-5">Communication</span>
                         </li>
                         {currentTransactions.map((transaction) => (
                             <li
                                 key={transaction.id}
-                                className="grid grid-cols-3 items-center border-b-2 border-gray-200 mb-4 pb-4 last-of-type:border-none"
+                                className="grid grid-cols-12 items-center border-b-2 border-gray-200 mb-4 pb-4 last-of-type:border-none"
                             >
-                                <span>{`${transaction.month.toString().padStart(2, '0')}-${transaction.year}`}</span>
+                                <span className="max-lg:text-xs text-left col-span-3">{`${transaction.month.toString().padStart(2, '0')}-${transaction.year}`}</span>
                                 <span
                                     className={
                                         transaction.amount > 0
-                                            ? "text-green-600 text-center"
-                                            : "text-red-600 text-center"
+                                            ? "text-green-600 max-lg:text-xs text-center col-span-4"
+                                            : "text-red-600 max-lg:text-xs text-center col-span-4"
                                     }
                                 >
                                     {transaction.amount}&nbsp;€
                                 </span>
-                                <span className="text-right">{transaction.communication}</span>
+                                <span className="max-lg:text-xs text-right col-span-5">{transaction.communication}</span>
                             </li>
                         ))}
                     </ul>
 
                     {/* Pagination */}
-                    <div className="flex justify-between items-center mt-4 space-x-2">
+                    <div className="flex justify-between items-center mt-4 max-lg:gap-1 lg:space-x-2">
                         <button
-                            className={`px-4 py-2 bg-gray-200 rounded ${currentPage === 1 && "opacity-50 cursor-not-allowed"
+                            className={`lg:px-4 lg:py-2 max-lg:px-2 max-lg:py-1 max-lg:text-xs bg-gray-200 rounded ${currentPage === 1 && "opacity-50 cursor-not-allowed"}
                                 }`}
                             onClick={() => handlePageChange(currentPage - 1)}
                             disabled={currentPage === 1}
                         >
-                            Précédent
+                            <span className="max-lg:hidden">Précédent</span>
+                            <span className="lg:hidden">&lt;</span>
                         </button>
-                        <div className="flex gap-2">
+                        <div className="flex max-lg:gap-1 lg:gap-2">
                             {getPages().map((page, index) => (
                                 <button
                                     key={index}
-                                    className={`px-4 py-2 bg-gray-200 rounded ${page === currentPage
+                                    className={`lg:px-4 lg:py-2 max-lg:px-2 max-lg:py-1 max-lg:text-xs bg-gray-200 rounded ${page === currentPage
                                         ? "bg-gray-900 text-white"
                                         : "text-gray-700"
                                         }`}
@@ -108,12 +109,13 @@ export function TransactionsTable({ transactions }) {
                             ))}
                         </div>
                         <button
-                            className={`px-4 py-2 bg-gray-200 rounded ${currentPage === totalPages && "opacity-50 cursor-not-allowed"
+                            className={`lg:px-4 lg:py-2 max-lg:px-2 max-lg:py-1 max-lg:text-xs bg-gray-200 rounded ${currentPage === totalPages && "opacity-50 cursor-not-allowed"}
                                 }`}
                             onClick={() => handlePageChange(currentPage + 1)}
                             disabled={currentPage === totalPages}
                         >
-                            Suivant
+                            <span className="max-lg:hidden">Suivant</span>
+                            <span className="lg:hidden">&gt;</span>
                         </button>
                     </div>
                 </div>

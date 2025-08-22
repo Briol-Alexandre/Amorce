@@ -8,7 +8,7 @@ export default function Evenement() {
             <section className={"flex-grow p-3"}>
                 <TitleAndSpan title={'Événements'} />
             </section>
-            <section className="px-6 mt-5">
+            <section className="lg:px-6 lg:mt-5">
                 <EventManager />
             </section>
         </MainStructure>

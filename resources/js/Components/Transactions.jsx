@@ -6,7 +6,7 @@ export function Transactions({ toggleRotation, isRotated, fund, transactions }) 
     return (
         <section>
             <div className='flex items-center gap-4 hover:cursor-pointer' onClick={toggleRotation}>
-                <h3 className='text-sm lg:text-base'>Historique des transactions</h3>
+                <h3 className='text-sm lg:text-base max-lg:font-bold'>Historique des transactions</h3>
                 <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow"></span>
                 <div
 

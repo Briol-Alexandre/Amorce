@@ -42,27 +42,27 @@ export default function Detente() {
 
     return (
         <MainStructure pageTitle={'Détente'}>
-            <div className="flex-grow p-3 flex flex-col items-center">
+            <div className="flex-grow lg:p-3 py-2 flex flex-col items-center">
                 <section className="w-full">
                     <TitleAndSpan title="Détente" />
                 </section>
 
-                <div className="flex items-center gap-4 w-full justify-center mt-4 pl-4">
+                <div className="flex items-center gap-4 w-full justify-center mt-4 lg:pl-4">
                     <h4>Personnes éligibles</h4>
                     <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow" />
                 </div>
-                <p className="font-bold py-5">Ici se trouvent les personnes éligibles à la prochaine détente. Veuillez cocher les personnes que vous souhaitez ajouter au tirage de la détente. </p>
+                <p className="lg:font-bold py-5 max-lg:text-xs">Ici se trouvent les personnes éligibles à la prochaine détente. Veuillez cocher les personnes que vous souhaitez ajouter au tirage de la détente. </p>
                 <div className="w-full overflow-x-auto mt-4">
-                    <table className="border-collapse border border-gray-300 mx-auto w-3/4 text-center mb-20">
+                    <table className="border-collapse border border-gray-300 mx-auto lg:w-3/4 w-full text-center mb-20 max-lg:text-xs">
                         <thead>
                             <tr>
-                                <th className="border border-gray-400 p-2 w-1/5">Personnes</th>
-                                <th className="border border-gray-400 p-2 w-1/5">Dons les 3 derniers mois</th>
-                                <th className="border border-gray-400 p-2 w-1/5">Ne fait pas partie de l'actuelle détente</th>
-                                <th className="border border-gray-400 p-2 w-1/5">Dernière détente + de 1 an</th>
-                                <th className="border border-gray-400 p-2 w-1/5">
-                                    <span className="flex items-center justify-center">
-                                        Ajouter au tirage ? <input type="checkbox" className="w-5 h-5 ml-4 text-blue-600 rounded focus:ring-blue-500" onChange={(e) => e.target.checked ? setSelectedDonators(transactions.map(transaction => ({ id: transaction.donator_id, name: transaction.name }))) : setSelectedDonators([])} />
+                                <th className="border border-gray-400 lg:p-2 p-1 w-1/5">Personnes</th>
+                                <th className="border border-gray-400 lg:p-2 p-1 w-1/5 max-lg:whitespace-normal">Dons les 3 derniers mois</th>
+                                <th className="border border-gray-400 lg:p-2 p-1 w-1/5 max-lg:whitespace-normal">Ne fait pas partie de l'actuelle détente</th>
+                                <th className="border border-gray-400 lg:p-2 p-1 w-1/5 max-lg:whitespace-normal">Dernière détente + de 1 an</th>
+                                <th className="border border-gray-400 lg:p-2 p-1 w-1/5">
+                                    <span className="flex items-center justify-center max-lg:flex-col max-lg:gap-1">
+                                        <span className="max-lg:whitespace-normal">Ajouter au tirage ?</span> <input type="checkbox" className="lg:w-5 lg:h-5 w-4 h-4 lg:ml-4 text-blue-600 rounded focus:ring-blue-500" onChange={(e) => e.target.checked ? setSelectedDonators(transactions.map(transaction => ({ id: transaction.donator_id, name: transaction.name }))) : setSelectedDonators([])} />
                                     </span>
                                 </th>
                             </tr>
@@ -70,28 +70,28 @@ export default function Detente() {
                         <tbody>
                             {transactions.map((transaction, index) => (
                                 <tr key={index}>
-                                    <td className="border border-gray-400 p-2">{transaction.name}</td>
-                                    <td className={`border border-gray-400 p-2 ${transaction.has_recent_donations ? 'bg-green-300/20' : 'bg-red-300/20'}`}>
-                                        <span className="inline-block px-2 py-1 font-medium">
+                                    <td className="border border-gray-400 lg:p-2 p-1">{transaction.name}</td>
+                                    <td className={`border border-gray-400 lg:p-2 p-1 ${transaction.has_recent_donations ? 'bg-green-300/20' : 'bg-red-300/20'}`}>
+                                        <span className="inline-block lg:px-2 lg:py-1 px-1 py-0.5 font-medium">
                                             {transaction.has_recent_donations ? "Oui" : "Non"}
                                         </span>
                                     </td>
-                                    <td className={`border border-gray-400 p-2 ${transaction.not_in_detente ? 'bg-green-300/20' : 'bg-red-300/20'}`}>
-                                        <span className="inline-block px-2 py-1 font-medium">
+                                    <td className={`border border-gray-400 lg:p-2 p-1 ${transaction.not_in_detente ? 'bg-green-300/20' : 'bg-red-300/20'}`}>
+                                        <span className="inline-block lg:px-2 lg:py-1 px-1 py-0.5 font-medium">
                                             {transaction.not_in_detente ? "Oui" : "Non"}
                                         </span>
                                     </td>
-                                    <td className={`border border-gray-400 p-2 ${transaction.last_detente_over_year ? 'bg-green-300/20' : 'bg-red-300/20'}`}>
-                                        <span className="inline-block px-2 py-1 font-medium">
+                                    <td className={`border border-gray-400 lg:p-2 p-1 ${transaction.last_detente_over_year ? 'bg-green-300/20' : 'bg-red-300/20'}`}>
+                                        <span className="inline-block lg:px-2 lg:py-1 px-1 py-0.5 font-medium">
                                             {transaction.last_detente_over_year ? "Oui" : "Non"}
                                         </span>
                                     </td>
-                                    <td className="border border-gray-400 p-2">
+                                    <td className="border border-gray-400 lg:p-2 p-1">
                                         <div className="flex justify-center items-center">
                                             <input
                                                 type="checkbox"
                                                 id={`donator-${transaction.donator_id}`}
-                                                className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
+                                                className="lg:w-5 lg:h-5 w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                                                 onChange={(e) => handleCheckboxChange(transaction.donator_id, transaction.name, e.target.checked)}
                                                 checked={selectedDonators.some(donator => donator.id === transaction.donator_id)}
                                             />

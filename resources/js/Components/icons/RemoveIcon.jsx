@@ -2,11 +2,11 @@ export function RemoveIcon({ color, animate = false }) {
     const iconColor = color;
     return (
         <svg
-            width="20"
-            height="20"
+            width="18"
+            height="18"
             viewBox="0 0 24 24"
             fill="none"
-            className={animate ? 'animate-remove-icon' : ''}
+            className={`${animate ? 'animate-remove-icon' : ''} w-[20px] h-[20px]`}
         >
             <style type="text/css">
                 {`

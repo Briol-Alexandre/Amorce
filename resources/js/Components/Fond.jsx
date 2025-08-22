@@ -4,11 +4,11 @@ import React from "react";
 export default function Fond({ foundName, foundAmount, fond, isActive = false, isLast = false }) {
     // Classes conditionnelles : mise en évidence du fond actif
     const articleClasses = [
-        'lg:border-none border-b-2 lg:pb-2 pb-4 w-full',
+        'lg:border-none last:border-none border-b-2 lg:pb-2 pb-4 w-full',
         'transition-all duration-300 ease-in-out',
         'flex justify-center items-center',
         'lg:flex-1',  // Prend une part égale de l'espace disponible
-        'rounded-lg py-2 mx-2 border', // Arrondi et padding vertical pour tous les fonds
+        'py-2 mx-2', // Arrondi et padding vertical pour tous les fonds
         isActive ? 'bg-gray-100 opacity-100' : 'opacity-70 hover:opacity-90'
     ].join(' ');
 
@@ -19,13 +19,13 @@ export default function Fond({ foundName, foundAmount, fond, isActive = false, i
 
     const titleClasses = [
         isActive ? 'font-bold' : 'font-medium',
-        isActive ? 'text-lg' : 'text-base'
+        isActive ? 'lg:text-lg line-clamp-1' : 'lg:text-base line-clamp-1'
     ].join(' ');
 
     return (
         <>
             <article className={articleClasses}>
-                <Link href={route('fond.show', fond)} className={`${linkClasses} text-center`}>
+                <Link href={route('fond.show', fond)} className={`${linkClasses} lg:text-center`}>
                     <span className='flex items-center gap-2'>
                         <h4 className={titleClasses}>
                             {isActive ? '→ ' : ''}{foundName}

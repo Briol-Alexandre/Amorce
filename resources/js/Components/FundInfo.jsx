@@ -10,16 +10,16 @@ export function FundInfo({ fund, funds, transactions }) {
     };
 
     return (
-        <section>
-            <span className='flex flex-col items-start lg:items-center ml-3 mt-6 gap-2 lg:flex-row justify-between'>
+        <section className="max-lg:px-2">
+            <span className='flex flex-col items-start lg:items-center lg:ml-3 mt-6 gap-2 lg:flex-row justify-between'>
                 <div className="flex flex-col items-start">
                     <h3 className='small-title-style text-left'>{fund.name}</h3>
                 </div>
                 <FondAction fund={fund} funds={funds} />
             </span>
-            {fund.permanent ? <p className='small-style'><span className="font-bold">Type de fond : </span>Permanent</p> : null}
-            <p className="small-style mb-10 text-xs lg:text-base"><span className="font-bold">Description : </span>{fund.description}</p>
-            <section className="p-6 mt-10">
+            {fund.permanent ? <p className='small-style text-sm lg:text-base'><span className="font-bold ">Type de fond : </span>Permanent</p> : null}
+            <p className="small-style mb-10 text-sm lg:text-base"><span className="font-bold">Description : </span>{fund.description}</p>
+            <section className="lg:p-6 lg:mt-10">
                 <div>
                     <Transactions
                         toggleRotation={toggleRotation}

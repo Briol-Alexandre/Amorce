@@ -4,7 +4,7 @@
 
 @layer utilities {
     .title-style {
-        @apply font-bold text-xl lg:text-3xl lg:ml-3;
+        @apply font-bold text-lg md:text-xl lg:text-3xl lg:ml-3;
     }
     .small-title-style {
         @apply font-bold text-lg lg:text-xl ;
@@ -13,7 +13,7 @@
         @apply lg:font-bold lg:text-xl max-lg:my-2 lg:m-4;
     }
     .small-style {
-        @apply ml-4 mt-3;
+        @apply lg:ml-4 mt-3;
     }
     .found-name-style {
         @apply font-bold text-3xl;

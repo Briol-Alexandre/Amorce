@@ -2,12 +2,12 @@ export function TransferIcon({ color, animate = false }) {
     return (
         <svg
             fill={color}
-            height="20"
-            width="20"
+            height="18"
+            width="18"
             version="1.1"
             id="Icons"
             viewBox="0 0 32 32"
-            className={animate ? 'animate-send-icon' : ''}
+            className={`${animate ? 'animate-send-icon' : ''} w-[20px] h-[20px]`}
         >
             <style type="text/css">
                 {`

@@ -164,9 +164,9 @@ export default function FondAction({ fund, funds }) {
     }
 
     return (
-        <section>
+        <section className="max-lg:w-full">
             <h3 className="sr-only">Fond Principal</h3>
-            <div className='flex flex-col lg:flex-row lg:justify-center lg:flex-wrap'>
+            <div className='flex flex-row justify-between lg:justify-center flex-wrap '>
                 <ActionButton name="Ajouter de l'argent" color={'blue'} onClick={openAddModal} />
                 <ActionButton name="Recevoir depuis un autre fond" color={'purple'} onClick={openReceiveModal} />
                 <ActionButton name="Transferer vers un autre fond" color={'green'} onClick={openTransferModal} />

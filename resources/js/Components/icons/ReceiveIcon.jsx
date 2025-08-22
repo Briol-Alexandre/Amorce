@@ -1,12 +1,12 @@
 export function ReceiveIcon({ color = "white", animate = false }) {
     return (
         <svg
-            width="20"
-            height="20"
+            width="18"
+            height="18"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className={animate ? 'animate-receive-icon' : ''}
+            className={`${animate ? 'animate-receive-icon' : ''} w-[20px] h-[20px]`}
         >
             <style type="text/css">
                 {`

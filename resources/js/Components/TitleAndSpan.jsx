@@ -20,23 +20,23 @@ export default function TitleAndSpan({ title, onClick }) {
             <h2 className="title-style hover:cursor-pointer"
                 onClick={onClick}>{title}</h2>
             {title === 'Compte' && (
-                <Link href='/addUser' className="bg-black text-white p-1 lg:p-2 rounded hover:bg-white hover:text-black border border-black
+                <Link href='/addUser' className="bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black
                                    text-xs lg:text-base">
                     Ajouter un nouvel utilisateur
                 </Link>
             )
             }
             {title.includes('Fonds') && (
-                <button onClick={openModal} className="bg-black text-white p-1 lg:p-2 rounded hover:bg-white hover:text-black border border-black
+                <button onClick={openModal} className="bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black
                                    text-xs lg:text-base">
-                    Ajouter un nouveau fond
+                    Ajouter un fond
                 </button>
             )
             }
             {title === 'Détente' && (
                 <Link
                     href={route('detente.index') + '?refresh=true'}
-                    className="bg-black text-white p-1 lg:p-2 rounded hover:bg-white hover:text-black border border-black
+                    className="bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black
                                    text-xs lg:text-base"
                 >
                     Rafraîchir la liste des éligibles
@@ -45,19 +45,19 @@ export default function TitleAndSpan({ title, onClick }) {
             {title === 'Événements' && (
                 <button
                     onClick={openModal}
-                    className="bg-black text-white p-1 lg:p-2 rounded hover:bg-white hover:text-black border border-black
+                    className="bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black
                                    text-xs lg:text-base"
                 >
-                    Créer un nouvel événement
+                    Créer un événement
                 </button>
             )}
             {title === 'Projets' && (
                 <button
                     onClick={openModal}
-                    className="bg-black text-white p-1 lg:p-2 rounded hover:bg-white hover:text-black border border-black
+                    className="bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black
                                    text-xs lg:text-base"
                 >
-                    Ajouter un nouveau projet
+                    Ajouter un projet
                 </button>
             )}
         </div>

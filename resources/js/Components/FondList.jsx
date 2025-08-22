@@ -1,38 +1,70 @@
 import Fond from "@/Components/Fond.jsx";
-import { AddIcon } from "@/Components/icons/AddIcon.jsx";
-import React, { useState, useRef, useEffect } from "react";
-import Modal from "@/Components/Modal.jsx";
-import NewFund from "@/Components/NewFund.jsx";
+import React, { useState, useEffect } from "react";
+
 
 export function FondList({ fonds, activeFundId = null }) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentSlide, setCurrentSlide] = useState(0);
-    const sliderRef = useRef(null);
+    const [isMobile, setIsMobile] = useState(false);
+
+    // Détecter si on est sur mobile
+    useEffect(() => {
+        const checkIfMobile = () => {
+            const newIsMobile = window.innerWidth < 768;
+            if (newIsMobile !== isMobile) {
+                setIsMobile(newIsMobile);
+                // Réinitialiser le slide actuel quand on change de mode (mobile/desktop)
+                setCurrentSlide(0);
+            }
+        };
+
+        // Vérifier au chargement
+        checkIfMobile();
+
+        // Mettre à jour lors du redimensionnement
+        window.addEventListener('resize', checkIfMobile);
+
+        return () => {
+            window.removeEventListener('resize', checkIfMobile);
+        };
+    }, [isMobile]);
 
     const hasSlider = fonds.length > 3;
-    const itemsPerSlide = 3;
+    const itemsPerSlide = isMobile ? 1 : 3;
     const totalSlides = hasSlider ? Math.ceil(fonds.length / itemsPerSlide) : 1;
 
     const nextSlide = () => {
         if (currentSlide < totalSlides - 1) {
-            setCurrentSlide(currentSlide + 1);
+            // Avancer d'un seul slide à la fois
+            setCurrentSlide(prev => prev + 1);
         }
     };
 
     const prevSlide = () => {
         if (currentSlide > 0) {
-            setCurrentSlide(currentSlide - 1);
+            // Reculer d'un seul slide à la fois
+            setCurrentSlide(prev => prev - 1);
         }
     };
 
+    // Réinitialiser le slide actuel quand le nombre de slides change
+    useEffect(() => {
+        // S'assurer que le slide actuel est valide
+        if (currentSlide >= totalSlides) {
+            setCurrentSlide(Math.max(0, totalSlides - 1));
+        }
+    }, [totalSlides, currentSlide]);
+
     const getCurrentFonds = () => {
         if (!hasSlider) return fonds;
+
+        // Calcul précis de l'index de début et de fin en fonction du mode
         const start = currentSlide * itemsPerSlide;
-        const end = start + itemsPerSlide;
+        const end = Math.min(start + itemsPerSlide, fonds.length);
+
+        // S'assurer que nous ne dépassons pas les limites du tableau
         return fonds.slice(start, end);
     };
 
-    // Positionner automatiquement le slider sur la slide contenant le fond actif
     useEffect(() => {
         if (hasSlider && activeFundId) {
             const activeFundIndex = fonds.findIndex(fond => fond.id === activeFundId);
@@ -41,7 +73,7 @@ export function FondList({ fonds, activeFundId = null }) {
                 setCurrentSlide(targetSlide);
             }
         }
-    }, [activeFundId, hasSlider, fonds, itemsPerSlide]);
+    }, [activeFundId, itemsPerSlide, hasSlider]);
 
     return (
         <>
@@ -65,7 +97,7 @@ export function FondList({ fonds, activeFundId = null }) {
                         </div>
 
                         {/* Navigation avec flèches et dots */}
-                        <div className="flex justify-center items-center mt-4 space-x-4">
+                        <div className="flex justify-center items-center lg:mt-4 space-x-4">
                             {/* Bouton précédent */}
                             <button
                                 onClick={prevSlide}
@@ -119,7 +151,7 @@ export function FondList({ fonds, activeFundId = null }) {
                     </div>
                 )}
             </section>
-            <span className="block h-0.5 bg-gray-300 mt-4"></span>
+            <span className="block h-0.5 bg-gray-300 lg:mt-4"></span>
         </>
     );
 }
