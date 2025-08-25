@@ -43,7 +43,7 @@ class TransactionController extends Controller
 
     public function storeCsvTransactions(Request $request)
     {
-        \Log::info('CSV Transactions received:', $request->input('transactions'));
+        \Log::info('CSV Transactions received:', ['count' => count($request->input('transactions'))]);
 
         $transactions = collect($request->input('transactions'))->map(function ($transaction) {
             $donatorName = $transaction['donator_name'] ?? 'Transacteur anonyme';
@@ -70,62 +70,71 @@ class TransactionController extends Controller
             ];
         });
 
-        \Log::info('Processed transactions:', $transactions->toArray());
+        \Log::info('Processed transactions:', ['count' => $transactions->count()]);
 
         $uniqueTransactions = $this->filterDuplicateTransactions($transactions);
         \Log::info('Unique transactions after duplicate check:', ['original_count' => $transactions->count(), 'unique_count' => $uniqueTransactions->count()]);
 
         if ($uniqueTransactions->isEmpty()) {
             return redirect()->route('fond.index')->with([
-                'error' => 'Toutes les transactions sont des doublons. Aucune transaction n\'a été ajoutée.',
+                'error' => 'Toutes les transactions sont des doublons. Aucune transaction \'a été ajoutée.',
                 'funds' => Fund::all(),
             ]);
         }
 
-        foreach ($uniqueTransactions as $transaction) {
-            $donatorName = $transaction['donator_name'];
+        // Traitement par lots pour éviter les timeouts
+        $chunkSize = 10; // Taille du lot
+        $processedCount = 0;
+        $totalCount = $uniqueTransactions->count();
+        
+        // Traiter les transactions par lots
+        $uniqueTransactions->chunk($chunkSize)->each(function ($chunk) use (&$processedCount, $totalCount) {
+            \Log::info('Processing chunk', ['chunk_size' => $chunk->count(), 'processed' => $processedCount, 'total' => $totalCount]);
+            
+            foreach ($chunk as $transaction) {
+                $donatorName = $transaction['donator_name'];
 
-            $donator = Donators::firstOrCreate(
-                ['name' => $donatorName],
-                [
-                    'name' => $donatorName,
-                    'email' => $transaction['email'] ?? null,
-                    'phone' => $transaction['phone'] ?? null
-                ]
-            );
+                $donator = Donators::firstOrCreate(
+                    ['name' => $donatorName],
+                    [
+                        'name' => $donatorName,
+                        'email' => $transaction['email'] ?? null,
+                        'phone' => $transaction['phone'] ?? null
+                    ]
+                );
 
-            $donatorPeriod = $donator->periods()->firstOrCreate([
-                'month' => $transaction['month'],
-                'year' => $transaction['year']
-            ]);
+                $donatorPeriod = $donator->periods()->firstOrCreate([
+                    'month' => $transaction['month'],
+                    'year' => $transaction['year']
+                ]);
 
-            $newTransaction = Transaction::create([
-                'fund_id' => $transaction['fund_id'],
-                'amount' => $transaction['amount'],
-                'month' => $transaction['month'],
-                'year' => $transaction['year'],
-                'communication' => $transaction['communication']
-            ]);
+                $newTransaction = Transaction::create([
+                    'fund_id' => $transaction['fund_id'],
+                    'amount' => $transaction['amount'],
+                    'month' => $transaction['month'],
+                    'year' => $transaction['year'],
+                    'communication' => $transaction['communication']
+                ]);
 
-            \Log::info('Transaction created and linked to donator period:', [
-                'transaction_id' => $newTransaction->id,
-                'donator_id' => $donator->id,
-                'donator_name' => $donator->name,
-                'period_id' => $donatorPeriod->id,
-                'month' => $transaction['month'],
-                'year' => $transaction['year']
-            ]);
+                \Log::debug('Transaction created', [
+                    'transaction_id' => $newTransaction->id,
+                    'donator_id' => $donator->id,
+                    'donator_name' => $donator->name
+                ]);
 
-            $fund = Fund::find($transaction['fund_id']);
-            if ($fund) {
-                $oldAmount = $fund->amount;
-                $fund->amount += $transaction['amount'];
-                $fund->save();
-                \Log::info('Fund updated:', ['fund_id' => $fund->id, 'old_amount' => $oldAmount, 'new_amount' => $fund->amount, 'added' => $transaction['amount']]);
-            } else {
-                \Log::error('Fund not found:', ['fund_id' => $transaction['fund_id']]);
+                $fund = Fund::find($transaction['fund_id']);
+                if ($fund) {
+                    $oldAmount = $fund->amount;
+                    $fund->amount += $transaction['amount'];
+                    $fund->save();
+                    \Log::debug('Fund updated', ['fund_id' => $fund->id, 'added' => $transaction['amount']]);
+                } else {
+                    \Log::error('Fund not found', ['fund_id' => $transaction['fund_id']]);
+                }
+                
+                $processedCount++;
             }
-        }
+        });
 
         $duplicatesCount = $transactions->count() - $uniqueTransactions->count();
 
@@ -256,10 +265,11 @@ class TransactionController extends Controller
         $amount = trim($amount);
 
         if (strpos($amount, '.') !== false && strpos($amount, ',') !== false) {
-
-
+            // Format européen avec points pour les milliers et virgules pour les décimales
+            $amount = str_replace('.', '', $amount); // Supprimer points (milliers)
+            $amount = str_replace(',', '.', $amount); // Virgule -> point (décimales)
         } elseif (strpos($amount, ',') !== false) {
-            $amount = str_replace(',', '.', $amount);
+            $amount = str_replace(',', '.', $amount); // Simple virgule -> point
         }
 
         return $amount;
@@ -318,7 +328,12 @@ class TransactionController extends Controller
         $duplicateCount = 0;
 
         \Log::info('Starting duplicate check', ['transaction_count' => count($transactions), 'funds_count' => $funds->count()]);
-
+        
+        // Préparer les données pour une vérification en masse
+        $transactionsToCheck = [];
+        $transactionMap = [];
+        
+        // Première passe : préparer les données
         foreach ($transactions as $index => $transaction) {
             $fundId = $transaction['fund_id'] ?? $funds[0]->id;
             $amount = (float) $this->parseAmount($transaction['amount']);
@@ -337,46 +352,88 @@ class TransactionController extends Controller
             if (empty(trim($donatorName))) {
                 $donatorName = 'Transacteur anonyme';
             }
-
-            \Log::debug('Checking transaction', [
-                'index' => $index + 1,
-                'fund_id' => $fundId,
-                'amount' => $amount,
-                'month' => $month,
-                'year' => $year,
-                'donator_name' => $donatorName
-            ]);
-
-            $existingTransaction = Transaction::where([
+            
+            // Créer une clé unique pour cette transaction
+            $key = "$fundId-$amount-$month-$year-$communication";
+            
+            $transactionsToCheck[] = [
                 'fund_id' => $fundId,
                 'amount' => $amount,
                 'month' => $month,
                 'year' => $year,
                 'communication' => $communication,
-            ])->first();
-
-            if ($existingTransaction) {
-                \Log::info('Duplicate found', [
-                    'csv_index' => $index + 1,
-                    'existing_id' => $existingTransaction->id,
-                    'amount' => $amount,
-                    'month' => $month,
-                    'year' => $year
-                ]);
-
-                $duplicates[] = [
-                    'index' => $index + 1,
-                    'month' => $month,
-                    'year' => $year,
-                    'amount' => $transaction['amount'],
-                    'donator_name' => $donatorName,
-                    'communication' => $communication,
-                    'existing_id' => $existingTransaction->id,
-                    'fund_id' => $fundId,
+                'index' => $index,
+                'original' => $transaction,
+                'donator_name' => $donatorName,
+                'key' => $key
+            ];
+            
+            // Mapper la clé à l'index pour retrouver facilement la transaction
+            $transactionMap[$key] = $index;
+        }
+        
+        // Traiter par lots pour éviter les timeouts
+        $chunkSize = 50;
+        $chunks = array_chunk($transactionsToCheck, $chunkSize);
+        
+        foreach ($chunks as $chunkIndex => $chunk) {
+            \Log::info('Processing duplicate check chunk', ['chunk' => $chunkIndex + 1, 'size' => count($chunk)]);
+            
+            // Extraire les critères pour la requête
+            $conditions = [];
+            foreach ($chunk as $item) {
+                $conditions[] = [
+                    'fund_id' => $item['fund_id'],
+                    'amount' => $item['amount'],
+                    'month' => $item['month'],
+                    'year' => $item['year'],
+                    'communication' => $item['communication']
                 ];
-                $duplicateCount++;
-            } else {
-                \Log::debug('No duplicate found for transaction', ['index' => $index + 1]);
+            }
+            
+            // Vérifier les doublons en une seule requête avec orWhere
+            $query = Transaction::where(function($query) use ($conditions) {
+                foreach ($conditions as $index => $condition) {
+                    if ($index === 0) {
+                        $query->where($condition);
+                    } else {
+                        $query->orWhere(function($q) use ($condition) {
+                            foreach ($condition as $field => $value) {
+                                $q->where($field, $value);
+                            }
+                        });
+                    }
+                }
+            });
+            
+            // Exécuter la requête et récupérer les doublons
+            $existingTransactions = $query->get();
+            
+            // Traiter les résultats
+            foreach ($existingTransactions as $existing) {
+                $key = "{$existing->fund_id}-{$existing->amount}-{$existing->month}-{$existing->year}-{$existing->communication}";
+                
+                if (isset($transactionMap[$key])) {
+                    $originalIndex = $transactionMap[$key];
+                    $transaction = $transactionsToCheck[array_search($originalIndex, array_column($transactionsToCheck, 'index'))];
+                    
+                    $duplicates[] = [
+                        'index' => $transaction['index'] + 1,
+                        'month' => $transaction['month'],
+                        'year' => $transaction['year'],
+                        'amount' => $transaction['original']['amount'],
+                        'donator_name' => $transaction['donator_name'],
+                        'communication' => $transaction['communication'],
+                        'existing_id' => $existing->id,
+                        'fund_id' => $transaction['fund_id'],
+                    ];
+                    $duplicateCount++;
+                    
+                    \Log::info('Duplicate found', [
+                        'csv_index' => $transaction['index'] + 1,
+                        'existing_id' => $existing->id
+                    ]);
+                }
             }
         }
 
