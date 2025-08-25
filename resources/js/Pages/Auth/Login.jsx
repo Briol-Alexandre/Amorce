@@ -9,7 +9,7 @@ import AmorceLogo from "@/Components/icons/AmorceLogo.jsx";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
+        login: '',
         password: '',
         remember: false,
     });
@@ -34,20 +34,21 @@ export default function Login({ status, canResetPassword }) {
 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="login" value="Email ou Nom" />
 
                     <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
+                        id="login"
+                        type="text"
+                        name="login"
+                        value={data.login}
                         className="mt-1 block w-full"
                         autoComplete="username"
                         isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
+                        onChange={(e) => setData('login', e.target.value)}
+                        placeholder="Votre email ou nom complet"
                     />
 
-                    <InputError message={errors.email} className="mt-2" />
+                    <InputError message={errors.login} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
@@ -83,12 +84,12 @@ export default function Login({ status, canResetPassword }) {
 
                 <div className="mt-8 flex items-center justify-between">
 
-                        <Link
-                            href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Mot de passe oublié ?
-                        </Link>
+                    <Link
+                        href={route('password.request')}
+                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                        Mot de passe oublié ?
+                    </Link>
 
                     <PrimaryButton className="'flex justify-center hover:rotate-3 hover:scale-110 focus:rotate-3 focus:scale-110'" disabled={processing}>
                         Se connecter
