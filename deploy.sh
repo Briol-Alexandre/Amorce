@@ -36,4 +36,16 @@ php artisan view:clear
 echo "Verifying deployment..."
 php verify-deployment.php
 
+echo "Setting up queue workers..."
+# Redémarrer les workers de queue pour s'assurer qu'ils utilisent le code le plus récent
+if [ -f "/etc/supervisor/conf.d/laravel-worker.conf" ]; then
+    echo "Restarting supervisor workers..."
+    sudo supervisorctl restart all
+else
+    echo "Starting queue worker as a background process..."
+    # Démarrer un worker de queue en arrière-plan avec nohup
+    nohup php artisan queue:work --tries=3 --timeout=600 > storage/logs/worker.log 2>&1 &
+    echo "Queue worker started with PID: $!"
+fi
+
 echo "Deployment completed successfully!"

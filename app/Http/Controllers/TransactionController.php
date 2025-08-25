@@ -20,21 +20,15 @@ class TransactionController extends Controller
         $request->validate([
             'csv' => 'required|file|mimes:csv,txt',
         ]);
-
         $path = $request->file('csv')->getPathname();
         $transactions = (new Transaction)->seedCsvTransaction($path);
-
         $duplicateCheck = $this->checkForDuplicatesInCsv($transactions, $funds);
-
         if ($duplicateCheck['hasDuplicates']) {
             return Inertia::render('Transactions/CsvError', [
-                'error' => 'Doublons détectés dans le CSV',
-                'message' => "Ce CSV contient {$duplicateCheck['duplicateCount']} transactions qui existent déjà en base de données. Import bloqué pour éviter la duplication d'argent.",
                 'duplicates' => $duplicateCheck['duplicates'],
-                'totalTransactions' => count($transactions),
+                'funds' => $funds,
             ]);
         }
-
         session(['csv_transactions' => $transactions]);
 
         return redirect()->route('transaction.csv-list');
@@ -44,105 +38,16 @@ class TransactionController extends Controller
     public function storeCsvTransactions(Request $request)
     {
         \Log::info('CSV Transactions received:', ['count' => count($request->input('transactions'))]);
-
-        $transactions = collect($request->input('transactions'))->map(function ($transaction) {
-            $donatorName = $transaction['donator_name'] ?? 'Transacteur anonyme';
-
-            if (empty(trim($donatorName))) {
-                $donatorName = 'Transacteur anonyme';
-            }
-
-            $date = Carbon::parse($transaction['date']);
-            $month = $date->month;
-            $year = $date->year;
-
-            return [
-                'fund_id' => $transaction['fund_id'],
-                'amount' => (float) $this->parseAmount($transaction['amount']),
-                'communication' => $transaction['communication'] ?? 'Aucune communication',
-                'month' => $month,
-                'year' => $year,
-                'donator_name' => $donatorName,
-                'email' => $transaction['email'] ?? null,
-                'phone' => $transaction['phone'] ?? null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        });
-
-        \Log::info('Processed transactions:', ['count' => $transactions->count()]);
-
-        $uniqueTransactions = $this->filterDuplicateTransactions($transactions);
-        \Log::info('Unique transactions after duplicate check:', ['original_count' => $transactions->count(), 'unique_count' => $uniqueTransactions->count()]);
-
-        if ($uniqueTransactions->isEmpty()) {
-            return redirect()->route('fond.index')->with([
-                'error' => 'Toutes les transactions sont des doublons. Aucune transaction \'a été ajoutée.',
-                'funds' => Fund::all(),
-            ]);
-        }
-
-        // Traitement par lots pour éviter les timeouts
-        $chunkSize = 10; // Taille du lot
-        $processedCount = 0;
-        $totalCount = $uniqueTransactions->count();
         
-        // Traiter les transactions par lots
-        $uniqueTransactions->chunk($chunkSize)->each(function ($chunk) use (&$processedCount, $totalCount) {
-            \Log::info('Processing chunk', ['chunk_size' => $chunk->count(), 'processed' => $processedCount, 'total' => $totalCount]);
-            
-            foreach ($chunk as $transaction) {
-                $donatorName = $transaction['donator_name'];
-
-                $donator = Donators::firstOrCreate(
-                    ['name' => $donatorName],
-                    [
-                        'name' => $donatorName,
-                        'email' => $transaction['email'] ?? null,
-                        'phone' => $transaction['phone'] ?? null
-                    ]
-                );
-
-                $donatorPeriod = $donator->periods()->firstOrCreate([
-                    'month' => $transaction['month'],
-                    'year' => $transaction['year']
-                ]);
-
-                $newTransaction = Transaction::create([
-                    'fund_id' => $transaction['fund_id'],
-                    'amount' => $transaction['amount'],
-                    'month' => $transaction['month'],
-                    'year' => $transaction['year'],
-                    'communication' => $transaction['communication']
-                ]);
-
-                \Log::debug('Transaction created', [
-                    'transaction_id' => $newTransaction->id,
-                    'donator_id' => $donator->id,
-                    'donator_name' => $donator->name
-                ]);
-
-                $fund = Fund::find($transaction['fund_id']);
-                if ($fund) {
-                    $oldAmount = $fund->amount;
-                    $fund->amount += $transaction['amount'];
-                    $fund->save();
-                    \Log::debug('Fund updated', ['fund_id' => $fund->id, 'added' => $transaction['amount']]);
-                } else {
-                    \Log::error('Fund not found', ['fund_id' => $transaction['fund_id']]);
-                }
-                
-                $processedCount++;
-            }
-        });
-
-        $duplicatesCount = $transactions->count() - $uniqueTransactions->count();
-
+        // Dispatch le job pour traiter les transactions en arrière-plan
+        \App\Jobs\ProcessCsvTransactions::dispatch(
+            $request->input('transactions'),
+            auth()->id()
+        );
+        
+        // Rediriger immédiatement l'utilisateur avec un message de confirmation
         return redirect()->route('fond.index')->with([
-            'success' => $duplicatesCount > 0
-                ? "Import réussi ! {$uniqueTransactions->count()} transactions ajoutées, {$duplicatesCount} doublons ignorés."
-                : "Import réussi ! {$uniqueTransactions->count()} transactions ajoutées.",
-            'transactions' => $uniqueTransactions,
+            'success' => 'Votre fichier CSV est en cours de traitement. Les transactions seront ajoutées en arrière-plan.',
             'funds' => Fund::all(),
         ]);
     }
