@@ -31,24 +31,21 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $user = $request->user();
-        
+
         if ($user) {
-            // Charger les permissions de l'utilisateur
             $user->load('permissions');
-            
-            // Extraire les slugs des permissions pour les envoyer au frontend
+
             $permissionSlugs = $user->permissions->pluck('slug')->toArray();
-            
-            // Ajouter les slugs des permissions à l'objet utilisateur
+
             $user = array_merge($user->toArray(), ['permissions' => $permissionSlugs]);
         }
-        
+
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $user,
             ],
-            'ziggy' => fn () => [
+            'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],

@@ -13,14 +13,14 @@ class DetenteController extends Controller
 {
     public function index(Request $request)
     {
-        // Rafraîchir la liste des éligibles si demandé
+
         if ($request->has('refresh')) {
             $this->refreshPotentials();
             return redirect()->route('detente.index')
                 ->with('success', 'La liste des donateurs éligibles a été mise à jour.');
         }
 
-        // Préparer les données pour la vue
+
         $this->ensurePotentialsExist();
         $transactions = $this->getPotentialsWithEligibilityInfo();
 
@@ -43,7 +43,7 @@ class DetenteController extends Controller
     {
         $data = $request->validated();
 
-        // Vérifier si déjà dans le tirage ou dans la détente
+
         if (Draw::where('donator_id', $data['donator_id'])->exists()) {
             return back()->with('error', "$data[name] est déjà dans la liste des participants au tirage.");
         }
@@ -52,7 +52,7 @@ class DetenteController extends Controller
             return back()->with('error', "$data[name] fait déjà partie de la détente actuelle.");
         }
 
-        // Ajouter au tirage et retirer des éligibles
+
         Draw::create($data);
         $deleted = Potentials::where('donator_id', $data['donator_id'])->delete();
 
@@ -67,14 +67,14 @@ class DetenteController extends Controller
         $data = $request->validated();
 
         if ($data['source'] === 'draw') {
-            // Retirer du tirage
+
             if (Draw::where('donator_id', $data['donator_id'])->exists()) {
                 Potentials::create(['name' => $data['name'], 'donator_id' => $data['donator_id']]);
                 Draw::where('donator_id', $data['donator_id'])->delete();
                 return back()->with('success', "$data[name] a été retiré(e) du tirage et remis(e) parmi les éligibles.");
             }
         } else {
-            // Retirer de la détente
+
             Detente::where('donator_id', $data['donator_id'])->delete();
             return back()->with('success', "$data[name] a été retiré(e) de la détente.");
         }
@@ -84,7 +84,7 @@ class DetenteController extends Controller
 
     public function destroy(Request $request)
     {
-        // Normaliser les données de la requête
+
         $data = $request->only(['donator_id', 'name', 'source']);
         if (!$data['donator_id'] || !$data['name'] || !$data['source']) {
             $json = $request->json();
@@ -104,16 +104,16 @@ class DetenteController extends Controller
             return back()->with('error', 'Aucun participant disponible dans le tirage.');
         }
 
-        // Incrémenter les participations et gérer les sorties
+
         $removedCount = $this->handleParticipationIncrement();
 
-        // Vérifier les places disponibles
+
         $availableSpots = 9 - Detente::count();
         if ($availableSpots <= 0) {
             return back()->with('error', 'La détente est toujours complète après rotation. Aucun nouveau participant ne peut être ajouté.');
         }
 
-        // Sélectionner et ajouter les nouveaux participants
+
         $participantsToSelect = min(3, $availableSpots, Draw::count());
         $selected = Draw::inRandomOrder()->take($participantsToSelect)->get();
 
@@ -128,19 +128,19 @@ class DetenteController extends Controller
                 'email' => null,
                 'password' => bcrypt('password'),
             ]);
-            
-            // Attribuer les permissions de base
+
+
             $basicPermissions = Permission::whereIn('slug', ['access-funds', 'access-meetings', 'access-detente', 'access-projects'])->get();
             $user->permissions()->sync($basicPermissions->pluck('id')->toArray());
         }
 
-        // Remettre les non-sélectionnés dans les éligibles
+
         $this->returnRemainingToEligibles($selected);
 
-        // Vider la liste de tirage
+
         Draw::truncate();
 
-        // Préparer le message de succès
+
         $message = $selected->count() . ' participant(s) ajouté(s) à la détente. ';
         if ($removedCount > 0) {
             $message .= $removedCount . ' participant(s) ont quitté la détente après 3 participations. ';
@@ -172,7 +172,7 @@ class DetenteController extends Controller
         return back()->with('success', 'Tous les participants ont été supprimés.');
     }
 
-    // Méthodes privées pour simplifier le code
+
 
     private function refreshPotentials()
     {
@@ -252,20 +252,20 @@ class DetenteController extends Controller
         $lastThreeMonths = collect(range(0, 2))->map(fn($i) => now()->subMonths($i));
 
         $eligible = Donators::all()->filter(function ($donator) use ($lastThreeMonths) {
-            // Déjà dans le tirage
+
             if (Draw::where('donator_id', $donator->id)->exists())
                 return false;
 
-            // Vérifier les dons sur les 3 derniers mois
+
             $donatedAllThreeMonths = $this->hasRecentDonations($donator, $lastThreeMonths);
             if (!$donatedAllThreeMonths)
                 return false;
 
-            // Déjà dans la détente
+
             if (Detente::where('donator_id', $donator->id)->exists())
                 return false;
 
-            // A participé à la détente il y a moins d'un an
+
             return !Participations::where('user_id', $donator->id)
                 ->where('last_detente', '>', now()->subYear())->exists();
         });

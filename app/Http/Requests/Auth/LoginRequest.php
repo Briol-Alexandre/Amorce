@@ -26,11 +26,9 @@ class LoginRequest extends FormRequest
      */
     public function rules(): array
     {
-        // Si l'identifiant ressemble à un email, on utilise la validation d'email
-        // Sinon, on considère que c'est un nom d'utilisateur
         $loginField = $this->input('login');
         $isEmail = filter_var($loginField, FILTER_VALIDATE_EMAIL);
-        
+
         return [
             'login' => ['required', 'string'],
             'password' => ['required', 'string'],
@@ -45,17 +43,15 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-        
-        // Déterminer si l'identifiant est un email ou un nom
+
         $loginField = $this->input('login');
         $isEmail = filter_var($loginField, FILTER_VALIDATE_EMAIL);
-        
-        // Préparer les identifiants pour l'authentification
+
         $credentials = [
             $isEmail ? 'email' : 'name' => $loginField,
             'password' => $this->input('password')
         ];
-        
+
         if (!Auth::attempt($credentials, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 

@@ -10,14 +10,12 @@ use Inertia\Inertia;
 
 
 Route::middleware('auth')->group(function () {
-    // Routes accessibles avec la permission 'access-transactions'
-    Route::group(['middleware' => ['auth', 'can:access-transactions']], function () {
+    // Routes accessibles avec la permission 'manage-funds'
+    Route::group(['middleware' => ['auth', 'can:manage-funds']], function () {
         Route::get('/donators', [TransactionController::class, 'getDonators'])->name('transaction.donators');
         Route::get('/csv/list', [TransactionController::class, 'csvList'])->name('transaction.csv-list');
-    });
     
-    // Routes nécessitant la permission 'manage-transactions'
-    Route::group(['middleware' => ['auth', 'can:manage-transactions']], function () {
+        // Routes pour gérer les transactions
         Route::post('/fonds/csv', function () {
             return redirect('/fonds');
         });

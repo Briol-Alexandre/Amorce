@@ -10,6 +10,24 @@ export default function UpdateProfileInformation({
     status,
     className = '',
 }) {
+    // Fonction pour formater les slugs de permissions en texte lisible
+    const formatPermission = (slug) => {
+        const permissionMap = {
+            'access-funds': 'Peut accéder aux fonds',
+            'manage-funds': 'Peut agir sur les fonds',
+            'edit-delete-funds': 'Peut modifier / supprimer un fond',
+            'access-meetings': 'Peut accéder aux réunions',
+            'manage-meetings': 'Peut créer supprimer une réunion',
+            'access-detente': 'Peut accéder à la détente',
+            'manage-detente': 'Peut agir sur la détente',
+            'access-projects': 'Peut accéder aux projets',
+            'manage-projects': 'Peut agir sur les projets',
+            'create-users': 'Peut créer un utilisateur'
+        };
+        
+        return permissionMap[slug] || slug;
+    };
+
     const user = usePage().props.auth.user;
 
     const { data, setData, patch, errors, processing, recentlySuccessful } =
@@ -38,7 +56,7 @@ export default function UpdateProfileInformation({
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="Nom"/>
+                    <InputLabel htmlFor="name" value="Nom" />
 
                     <TextInput
                         id="name"
@@ -50,11 +68,11 @@ export default function UpdateProfileInformation({
                         autoComplete="name"
                     />
 
-                    <InputError className="mt-2" message={errors.name}/>
+                    <InputError className="mt-2" message={errors.name} />
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="email" value="E-mail"/>
+                    <InputLabel htmlFor="email" value="E-mail" />
 
                     <TextInput
                         id="email"
@@ -66,15 +84,15 @@ export default function UpdateProfileInformation({
                         autoComplete="username"
                     />
 
-                    <InputError className="mt-2" message={errors.email}/>
+                    <InputError className="mt-2" message={errors.email} />
                 </div>
 
                 <div>
                     <p className='text-gray-500 font-black text-small'>Permissions :</p>
                     <ul className='text-gray-500 text-sm mt-1 pl-4 list-disc'>
                         {user.permissions && user.permissions.length > 0 ? (
-                            user.permissions.map((permission) => (
-                                <li key={permission.id}>{permission.name}</li>
+                            user.permissions.map((permission, index) => (
+                                <li key={index}>{formatPermission(permission)}</li>
                             ))
                         ) : (
                             <li>Aucune permission</li>
