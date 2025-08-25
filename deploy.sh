@@ -33,6 +33,9 @@ php artisan route:cache
 echo "Clearing views cache..."
 php artisan view:clear
 
+echo "Creating storage symbolic link..."
+php artisan storage:link
+
 echo "Verifying deployment..."
 php verify-deployment.php
 
