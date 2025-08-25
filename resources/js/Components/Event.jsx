@@ -18,7 +18,7 @@ export default function Event({ event }) {
 
     return (
         <>
-            <article className="relative p-2 md:p-4 border rounded-lg mx-auto lg:w-1/3 md:w-1/2">
+            <article className="relative p-2 lg:p-4 border rounded-lg mx-auto lg:w-1/3 md:w-1/2 max-md:w-full max-md:mb-3">
                 <a href="#" onClick={openModal} className="absolute top-0 left-0 right-0 bottom-0"><span className="sr-only">Voir les détails de l'événement</span></a>
                 <div className="flex items-center justify-between">
                     <div>

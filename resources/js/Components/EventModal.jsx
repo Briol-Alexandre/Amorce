@@ -128,17 +128,17 @@ export default function EventModal({ event, isOpen, onClose, users }) {
     if (editMode) {
         return (
             <Modal show={isOpen} onClose={handleCancelEdit}>
-                <div className="p-6">
-                    <h2 className="text-xl mb-4">Modifier l'événement</h2>
-                    <p className="text-gray-400">Modifiez les informations de l'événement.</p>
+                <div className="lg:p-6 p-4">
+                    <h2 className="lg:text-xl text-lg mb-4">Modifier l'événement</h2>
+                    <p className="text-gray-400 max-lg:text-sm">Modifiez les informations de l'événement.</p>
 
                     <form onSubmit={handleEditSubmit}>
-                        <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
+                        <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center max-lg:gap-1">
                             <label htmlFor="title">Titre</label>
                             <input
                                 id="title"
                                 type="text"
-                                className="rounded-md ml-3"
+                                className="rounded-md lg:ml-3 max-lg:mt-1"
                                 value={editData.title}
                                 onChange={(e) => setEditData('title', e.target.value)}
                                 required
@@ -146,11 +146,11 @@ export default function EventModal({ event, isOpen, onClose, users }) {
                         </fieldset>
                         {editErrors.title && <InputError message={editErrors.title} />}
 
-                        <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
+                        <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center max-lg:gap-1">
                             <label htmlFor="description">Description</label>
                             <textarea
                                 id="description"
-                                className="rounded-md ml-3"
+                                className="rounded-md lg:ml-3 max-lg:mt-1"
                                 value={editData.description}
                                 onChange={(e) => setEditData('description', e.target.value)}
                                 rows={4}
@@ -159,12 +159,12 @@ export default function EventModal({ event, isOpen, onClose, users }) {
                         </fieldset>
                         {editErrors.description && <InputError message={editErrors.description} />}
 
-                        <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
+                        <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center max-lg:gap-1">
                             <label htmlFor="date">Date</label>
                             <input
                                 id="date"
                                 type="date"
-                                className="rounded-md ml-3"
+                                className="rounded-md lg:ml-3 max-lg:mt-1"
                                 value={editData.date}
                                 onChange={(e) => setEditData('date', e.target.value)}
                                 required
@@ -188,7 +188,7 @@ export default function EventModal({ event, isOpen, onClose, users }) {
                         {users && (
                             <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-start">
                                 <label htmlFor="participants">Participants</label>
-                                <div className="ml-3 border rounded p-2 max-h-40 overflow-y-auto">
+                                <div className="lg:ml-3 max-lg:mt-1 border rounded p-2 max-h-40 overflow-y-auto">
                                     {users.map((user) => (
                                         <div key={user.id} className="flex items-center gap-2 mb-1">
                                             <input

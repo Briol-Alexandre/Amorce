@@ -26,7 +26,7 @@ export default function Modal({ children, show = false, onClose }) {
 
 
             <div
-                className={`fixed top-1/2 left-1/2 transform transition-all duration-300 z-20 bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full ${isVisible
+                className={`fixed top-1/2 left-1/2 transform transition-all duration-300 z-20 bg-white rounded-lg shadow-lg lg:p-6 max-lg:p-4 max-w-xl lg:max-w-lg max-lg:w-[90%] ${isVisible
                     ? "-translate-x-1/2 -translate-y-1/2 scale-100 opacity-100"
                     : "-translate-x-1/2 -translate-y-1/2 scale-90 opacity-0 pointer-events-none"
                     }`}

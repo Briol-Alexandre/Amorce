@@ -16,7 +16,6 @@ class MultipleTransferController extends Controller
             'transfers' => 'required|array|min:1',
             'transfers.*.amount' => 'required|numeric|min:0.01',
             'transfers.*.destinationFundId' => 'required|exists:funds,id',
-            'transfers.*.transactor' => 'required|string|max:255',
             'transfers.*.communication' => 'required|string|max:255',
             'transfers.*.date' => 'required|date',
         ]);
@@ -40,19 +39,27 @@ class MultipleTransferController extends Controller
                 $amount = $transfer['amount'];
                 $destinationFund = Fund::findOrFail($transfer['destinationFundId']);
                 
-                // Créer le donateur s'il n'existe pas
+                // Créer ou récupérer le donateur avec le nom du fond source
+                // pour les transferts entre fonds, on utilise le nom du fond comme donateur
                 $donator = Donators::firstOrCreate(
-                    ['name' => $transfer['transactor']],
-                    ['name' => $transfer['transactor']]
+                    ['name' => $fund->name],
+                    ['name' => $fund->name]
                 );
+                
+                // Pour les transferts entre fonds, on n'ajoute pas d'entrée dans donator_periods
 
+                // Extraire le mois et l'année de la date
+                $date = new \DateTime($transfer['date']);
+                $month = $date->format('n'); // 1-12
+                $year = $date->format('Y');
+                
                 // Créer la transaction de débit (fond source)
                 Transaction::create([
                     'fund_id' => $fund->id,
                     'amount' => -$amount,
                     'communication' => $transfer['communication'],
-                    'transactor' => $transfer['transactor'],
-                    'date' => $transfer['date'],
+                    'month' => $month,
+                    'year' => $year,
                 ]);
 
                 // Créer la transaction de crédit (fond destinataire)
@@ -60,8 +67,8 @@ class MultipleTransferController extends Controller
                     'fund_id' => $destinationFund->id,
                     'amount' => $amount,
                     'communication' => $transfer['communication'],
-                    'transactor' => $transfer['transactor'],
-                    'date' => $transfer['date'],
+                    'month' => $month,
+                    'year' => $year,
                 ]);
 
                 // Mettre à jour les montants des fonds

@@ -28,12 +28,12 @@ export function ModalCsv({ closeModal, onSubmit }) {
     };
 
     return (
-        <div>
-            <h2 className="text-xl mb-4">Importer un CSV</h2>
-            <p className="text-gray-400">Déposez le fichier .csv</p>
+        <div className="max-lg:w-full">
+            <h2 className="lg:text-xl max-lg:text-lg max-lg:font-semibold max-lg:mt-2 mb-2 lg:mb-4">Importer un CSV</h2>
+            <p className="text-gray-400 max-lg:text-sm max-lg:mt-1">Déposez le fichier .csv</p>
             <form onSubmit={handleSubmit} encType="multipart/form-data">
-                <fieldset className="mt-5 self-end grid grid-row-[1fr_3fr] gap-2 items-center">
-                    <label htmlFor="csv">Fichier CSV</label>
+                <fieldset className="mt-3 lg:mt-3 self-end grid grid-row-[1fr_3fr] gap-2 items-center">
+                    <label htmlFor="csv" className="max-lg:text-sm">Fichier CSV</label>
                     <input
                         type="file"
                         name="csv"
@@ -43,17 +43,17 @@ export function ModalCsv({ closeModal, onSubmit }) {
                     />
                 </fieldset>
 
-                <div className="flex justify-end mt-8 gap-4">
+                <div className="flex justify-end mt-6 lg:mt-8 lg:gap-4 max-lg:gap-2">
                     <button
                         type="button"
                         onClick={closeModal}
-                        className="bg-white text-black px-4 py-2 rounded-md border border-1 hover:bg-gray-100"
+                        className="bg-white text-black lg:px-4 lg:py-2 max-lg:px-2 max-lg:py-1 max-lg:text-sm rounded-md border border-1 hover:bg-gray-100"
                     >
                         Annuler
                     </button>
                     <button
                         type="submit"
-                        className="bg-black text-white px-4 py-2 rounded-md hover:bg-white hover:text-black border border-1 border-black"
+                        className="bg-black text-white lg:px-4 lg:py-2 max-lg:px-2 max-lg:py-1 max-lg:text-sm rounded-md hover:bg-white hover:text-black border border-1 border-black"
                     >
                         Importer
                     </button>

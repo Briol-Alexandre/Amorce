@@ -69,20 +69,20 @@ export function ModalEdit({ closeModal, handleEdit, fund }) {
 
     return (
         <div>
-            <h2 className="text-xl">Modifier le fond</h2>
-            <p className="text-gray-400">
+            <h2 className="lg:text-xl max-lg:text-lg max-lg:font-semibold max-lg:mt-2">Modifier le fond</h2>
+            <p className="text-gray-400 max-lg:text-sm max-lg:mt-1">
                 {(fund.id === 1 || fund.id === 2)
                     ? "Seule la description peut être modifiée pour ce fond principal."
                     : "Modifiez les informations du fond."}
             </p>
             <form onSubmit={onSubmit}>
-                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
-                    <label htmlFor="name">Nom du fond</label>
+                <fieldset className="mt-3 self-end grid lg:grid-cols-[1fr_3fr] max-lg:grid-cols-1 max-lg:gap-1 items-center">
+                    <label htmlFor="name" className="max-lg:text-sm">Nom du fond</label>
                     <input
                         type="text"
                         name="name"
                         id="name"
-                        className={`rounded-md ml-3 ${(fund.id === 1 || fund.id === 2) ? 'bg-gray-100' : ''}`}
+                        className={`rounded-md lg:ml-3 max-lg:mt-1 ${(fund.id === 1 || fund.id === 2) ? 'bg-gray-100' : ''}`}
                         value={formData.name}
                         placeholder="Nom du fond"
                         onChange={handleInputChange}
@@ -92,12 +92,12 @@ export function ModalEdit({ closeModal, handleEdit, fund }) {
                 </fieldset>
                 {errors.name && <InputError message={errors.name} />}
 
-                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
-                    <label htmlFor="description">Description</label>
+                <fieldset className="mt-3 self-end grid lg:grid-cols-[1fr_3fr] max-lg:grid-cols-1 max-lg:gap-1 items-center">
+                    <label htmlFor="description" className="max-lg:text-sm">Description</label>
                     <textarea
                         name="description"
                         id="description"
-                        className="rounded-md ml-3"
+                        className="rounded-md lg:ml-3 max-lg:mt-1"
                         value={formData.description}
                         placeholder="Description du fond"
                         onChange={handleInputChange}
@@ -106,13 +106,13 @@ export function ModalEdit({ closeModal, handleEdit, fund }) {
                 </fieldset>
                 {errors.description && <InputError message={errors.description} />}
 
-                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
-                    <label htmlFor="iban">IBAN</label>
+                <fieldset className="mt-3 self-end grid lg:grid-cols-[1fr_3fr] max-lg:grid-cols-1 max-lg:gap-1 items-center">
+                    <label htmlFor="iban" className="max-lg:text-sm">IBAN</label>
                     <input
                         type="text"
                         name="iban"
                         id="iban"
-                        className={`rounded-md ml-3 ${(fund.id === 1 || fund.id === 2) ? 'bg-gray-100' : ''}`}
+                        className={`rounded-md lg:ml-3 max-lg:mt-1 ${(fund.id === 1 || fund.id === 2) ? 'bg-gray-100' : ''}`}
                         value={formData.iban}
                         placeholder="BE68 5390 0754 7034"
                         onChange={handleInputChange}
@@ -122,9 +122,9 @@ export function ModalEdit({ closeModal, handleEdit, fund }) {
                 </fieldset>
                 {errors.iban && <InputError message={errors.iban} />}
 
-                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
-                    <label htmlFor="permanent">Fond permanent</label>
-                    <div className="ml-3">
+                <fieldset className="mt-3 self-end grid lg:grid-cols-[1fr_3fr] max-lg:grid-cols-1 max-lg:gap-1 items-center">
+                    <label htmlFor="permanent" className="max-lg:text-sm">Fond permanent</label>
+                    <div className="lg:ml-3 max-lg:mt-1">
                         <input
                             type="checkbox"
                             name="permanent"
@@ -135,24 +135,24 @@ export function ModalEdit({ closeModal, handleEdit, fund }) {
                             disabled={fund.id === 1 || fund.id === 2}
                             title={(fund.id === 1 || fund.id === 2) ? "Le statut permanent d'un fond principal ne peut pas être modifié" : ""}
                         />
-                        <span className="ml-2 text-sm text-gray-600">
+                        <span className="ml-2 text-sm text-gray-600 max-lg:text-xs">
                             Ce fond ne peut pas être supprimé
                         </span>
                     </div>
                 </fieldset>
 
-                <div className="flex justify-end mt-8 gap-4">
+                <div className="flex justify-end mt-8 lg:gap-4 max-lg:gap-2">
                     <button
                         type="button"
                         onClick={closeModal}
-                        className="bg-white text-black px-4 py-2 rounded-md border border-1 hover:bg-gray-100"
+                        className="bg-white text-black lg:px-4 lg:py-2 max-lg:px-2 max-lg:py-1 max-lg:text-sm rounded-md border border-1 hover:bg-gray-100"
                     >
                         Annuler
                     </button>
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className={`px-4 py-2 rounded-md border border-1 transition-colors ${isSubmitting
+                        className={`lg:px-4 lg:py-2 max-lg:px-2 max-lg:py-1 max-lg:text-sm rounded-md border border-1 transition-colors ${isSubmitting
                             ? 'bg-gray-400 text-white cursor-not-allowed border-gray-400'
                             : 'bg-orange-500 text-white hover:bg-white hover:text-orange-500 border-orange-500'
                             }`}

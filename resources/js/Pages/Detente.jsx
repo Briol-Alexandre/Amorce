@@ -105,14 +105,14 @@ export default function Detente() {
             </div>
             {selectedDonators.length > 0 && (
                 <div className="fixed bottom-0 z-50 left-0 right-0 bg-white shadow-lg border-t border-gray-200 p-4 flex justify-center items-center">
-                    <div className="text-gray-800 font-medium flex-1 text-center">
+                    <div className="text-gray-800 font-medium flex-1 lg:text-center max-lg:text-xs">
                         <span className="mr-2">{selectedDonators.length}</span>
-                        {selectedDonators.length === 1 ? 'personne sélectionnée' : 'personnes sélectionnées'}
+                        {selectedDonators.length === 1 ? 'sélectionné' : 'sélectionnés'}
                     </div>
                     <div className="absolute right-4 space-x-4">
                         <button
                             onClick={handleSubmitSelected}
-                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm lg:text-base font-medium"
+                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-xs lg:text-base font-medium"
                         >
                             Ajouter et accéder au tirage
                         </button>

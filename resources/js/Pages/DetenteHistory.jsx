@@ -53,7 +53,7 @@ export default function DetenteHistory() {
 
     return (
         <MainStructure pageTitle={'Historique des participations'}>
-            <section className={"flex-grow p-3"}>
+            <section className={"flex-grow lg:p-3 py-3"}>
                 <TitleAndSpan onClick={() => router.visit(route('detente.history'))} title={'Historique des participations'} />
                 
                 {/* Messages flash */}
@@ -70,21 +70,21 @@ export default function DetenteHistory() {
                 )}
                 
                 {/* Navigation */}
-                <div className="flex justify-between items-center mt-4 mx-8 mb-6">
-                    <div className="text-gray-700">
+                <div className="flex lg:flex-row max-lg:flex-col max-lg:gap-4 justify-between items-center mt-4 lg:mx-8 max-lg:mx-2 mb-6">
+                    <div className="text-gray-700 max-lg:text-sm">
                         <span className="font-medium">{participationsHistory.length}</span> participant(s) dans l'historique
                     </div>
-                    <div className="space-x-4">
+                    <div className="lg:space-x-4 max-lg:flex max-lg:flex-col max-lg:gap-2 max-lg:w-full">
                         <Link 
                             href={route('detente.index')} 
-                            className='bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700'
+                            className='bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 max-lg:w-full max-lg:text-center max-lg:text-sm'
                         >
                             Page Détente
                         </Link>
                         
                         <Link 
                             href={route('detente.draw')} 
-                            className='bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700'
+                            className='bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 max-lg:w-full max-lg:text-center max-lg:text-sm'
                         >
                             Page Tirage
                         </Link>
@@ -92,20 +92,20 @@ export default function DetenteHistory() {
                 </div>
                 
                 {/* Section de l'historique des participations */}
-                <section className="mb-8 mx-8">
+                <section className="mb-8 lg:mx-8 max-lg:mx-2">
                     <div className='flex items-center gap-4'>
                         <h4 className='text-sm lg:text-base'>Historique des participations à la détente</h4>
                         <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow"></span>
                     </div>
                     
                     {participationsHistory.length === 0 ? (
-                        <p className="text-center m-4 font-bold">
+                        <p className="text-center m-4 font-bold max-lg:text-sm">
                             Aucun historique de participation disponible.
                         </p>
                     ) : (
                         <div className="px-6 mt-4">
                             <ul>
-                                <li className="grid grid-cols-3 items-center mb-6 border-b-2 border-gray-400 pb-4">
+                                <li className="grid grid-cols-3 items-center mb-6 border-b-2 border-gray-400 pb-4 max-lg:text-sm">
                                     <span className="font-bold">Nom</span>
                                     <span className="text-center font-bold">ID Donateur</span>
                                     <span className="text-right font-bold">Dernière détente</span>
@@ -113,7 +113,7 @@ export default function DetenteHistory() {
                                 {currentParticipations.map((participation) => (
                                     <li
                                         key={participation.id}
-                                        className="grid grid-cols-3 items-center border-b-2 border-gray-200 mb-4 pb-4 last-of-type:border-none"
+                                        className="grid grid-cols-3 items-center border-b-2 border-gray-200 mb-4 pb-4 last-of-type:border-none max-lg:text-xs"
                                     >
                                         <span>{participation.name}</span>
                                         <span className="text-center">{participation.user_id}</span>
@@ -125,9 +125,9 @@ export default function DetenteHistory() {
                             </ul>
 
                             {/* Pagination */}
-                            <div className="flex justify-between items-center mt-4 space-x-2">
+                            <div className="flex lg:flex-row max-lg:flex-col max-lg:gap-4 justify-between items-center mt-4 lg:space-x-2">
                                 <button
-                                    className={`px-4 py-2 bg-gray-200 rounded ${
+                                    className={`px-4 py-2 bg-gray-200 rounded max-lg:w-full max-lg:text-sm ${
                                         currentPage === 1 && "opacity-50 cursor-not-allowed"
                                     }`}
                                     onClick={() => handlePageChange(currentPage - 1)}
@@ -135,11 +135,11 @@ export default function DetenteHistory() {
                                 >
                                     Précédent
                                 </button>
-                                <div className="flex gap-2">
+                                <div className="flex flex-wrap gap-2 justify-center">
                                     {getPages().map((page, index) => (
                                         <button
                                             key={index}
-                                            className={`px-4 py-2 bg-gray-200 rounded ${
+                                            className={`px-4 py-2 bg-gray-200 rounded max-lg:text-xs ${
                                                 page === currentPage
                                                     ? "bg-gray-900 text-white"
                                                     : "text-gray-700"
@@ -156,7 +156,7 @@ export default function DetenteHistory() {
                                     ))}
                                 </div>
                                 <button
-                                    className={`px-4 py-2 bg-gray-200 rounded ${
+                                    className={`px-4 py-2 bg-gray-200 rounded max-lg:w-full max-lg:text-sm ${
                                         currentPage === totalPages && "opacity-50 cursor-not-allowed"
                                     }`}
                                     onClick={() => handlePageChange(currentPage + 1)}

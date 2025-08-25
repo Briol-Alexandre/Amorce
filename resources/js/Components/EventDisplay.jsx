@@ -37,7 +37,7 @@ export default function EventDisplay() {
         <>
             <section>
                 <div className='flex items-center gap-4 hover:cursor-pointer' onClick={toggleRotation1}>
-                    <h3 className='small-title-style-max-lg'>Evénements à venir</h3>
+                    <h3 className='lg:text-xl max-lg:text-lg max-lg:font-semibold'>Evénements à venir</h3>
                     <span className="block h-0.5 bg-gray-300 mt-1.5 lg:ml-2 flex-grow"></span>
                     <div
                         className={isRotated1 ? 'rotate-0 transition duration-100' : 'rotate-180 transition duration-100'}
@@ -63,7 +63,7 @@ export default function EventDisplay() {
             </section>
             <section className="mt-5">
                 <div className='flex items-center gap-4 hover:cursor-pointer' onClick={toggleRotation2}>
-                    <h3 className='small-title-style-max-lg'>Evénements passés</h3>
+                    <h3 className='lg:text-xl max-lg:text-lg max-lg:font-semibold'>Evénements passés</h3>
                     <span className="block h-0.5 bg-gray-300 mt-1.5 lg:ml-2 flex-grow"></span>
                     <div
                         className={isRotated2 ? 'rotate-0 transition duration-100' : 'rotate-180 transition duration-100'}

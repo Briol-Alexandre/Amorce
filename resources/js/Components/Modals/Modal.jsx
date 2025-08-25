@@ -24,14 +24,14 @@ export default function Modal({ children, onClose, isOpen }) {
                 onClick={handleClose}
             />
             <div
-                className={`fixed top-1/2 left-1/2 transform transition-all duration-300 z-20 bg-white rounded-lg shadow-lg p-6 ${show
+                className={`fixed top-1/2 left-1/2 transform transition-all duration-300 z-20 bg-white rounded-lg shadow-lg lg:p-6 max-lg:p-4 max-w-xl lg:max-w-lg max-lg:w-[90%] ${show
                     ? "-translate-x-1/2 -translate-y-1/2 scale-100 opacity-100"
                     : "-translate-x-1/2 -translate-y-1/2 scale-90 opacity-0 pointer-events-none"
                     }`}
             >
                 <div className="w-full flex justify-end">
                     <IoMdClose
-                        className="hover:cursor-pointer text-lg"
+                        className="hover:cursor-pointer text-lg max-lg:text-xl max-lg:p-1"
                         onClick={handleClose}
                     />
                 </div>
