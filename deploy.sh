@@ -13,14 +13,7 @@ else
 fi
 
 echo "Running database migrations..."
-if php artisan migrate --force; then
-    echo "✅ Migrations completed successfully"
-    
-    echo "Seeding database..."
-    php artisan db:seed --force
-else
-    echo "❌ Migrations failed - database may not be ready yet"
-fi
+
 
 echo "Clearing and caching configuration..."
 php artisan config:clear

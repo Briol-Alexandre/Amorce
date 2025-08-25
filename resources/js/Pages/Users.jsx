@@ -36,66 +36,74 @@ export default function Users({ users, permissions }) {
         <MainStructure pageTitle={'Gestion des utilisateurs'}>
             <div className="flex-grow lg:p-3 py-2 flex flex-col items-center">
                 <section className="w-full">
-                <div className="mb-6">
-                    <TitleAndSpan title={'Utilisateurs'} />
-                </div>
+                    <div className="mb-6">
+                        <TitleAndSpan title={'Utilisateurs'} />
+                    </div>
 
-                <div className="w-full overflow-x-auto mt-4">
-                    <table className="border-collapse border border-gray-300 mx-auto lg:w-3/4 w-full text-center mb-20 max-lg:text-xs">
-                        <thead className="bg-gray-100">
-                            <tr>
-                                <th className="border border-gray-400 lg:p-2 p-1 max-sm:hidden">Nom</th>
-                                <th className="border border-gray-400 lg:p-2 p-1">Utilisateur</th>
-                                <th className="border border-gray-400 lg:p-2 p-1 max-md:hidden">Permissions</th>
-                                <th className="border border-gray-400 lg:p-2 p-1">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map((user) => (
-                                <tr key={user.id}>
-                                    <td className="border border-gray-400 lg:p-2 p-1 max-sm:hidden">{user.name}</td>
-                                    <td className="border border-gray-400 lg:p-2 p-1">
-                                        <div className="flex flex-col items-center">
-                                            <span className="sm:hidden font-medium">{user.name}</span>
-                                            <span className="text-gray-600">{user.email}</span>
-                                        </div>
-                                    </td>
-                                    <td className="border border-gray-400 lg:p-2 p-1 max-md:hidden">
-                                        <div className="flex flex-wrap gap-1 justify-center">
-                                            {user.permissions.map((permission) => (
-                                                <span
-                                                    key={permission.id}
-                                                    className="inline-block lg:px-2 lg:py-1 px-1 py-0.5 font-medium bg-gray-100 text-gray-800 rounded m-0.5"
-                                                >
-                                                    {permission.name}
-                                                </span>
-                                            ))}
-                                            {user.permissions.length === 0 && (
-                                                <span className="text-gray-500 italic inline-block lg:px-2 lg:py-1 px-1 py-0.5">
-                                                    Aucune permission
-                                                </span>
-                                            )}
-                                        </div>
-                                    </td>
-                                    <td className="border border-gray-400 lg:p-2 p-1">
-                                        <div className="flex flex-col lg:flex-row justify-center gap-2">
-                                            <ActionButton
-                                                name="Modifier"
-                                                color="orange"
-                                                onClick={() => handleEditClick(user)}
-                                            />
-                                            <ActionButton
-                                                name="Supprimer"
-                                                color="red"
-                                                onClick={() => handleDeleteClick(user)}
-                                            />
-                                        </div>
-                                    </td>
+                    <div className="w-full overflow-x-auto mt-4">
+                        <table className="border-collapse border border-gray-300 mx-auto lg:w-3/4 w-full text-center mb-20 max-lg:text-xs">
+                            <thead className="bg-gray-100">
+                                <tr>
+                                    <th className="border border-gray-400 lg:p-2 p-1 max-sm:hidden">Nom</th>
+                                    <th className="border border-gray-400 lg:p-2 p-1">Utilisateur</th>
+                                    <th className="border border-gray-400 lg:p-2 p-1 max-md:hidden">Permissions</th>
+                                    <th className="border border-gray-400 lg:p-2 p-1">Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                {users.map((user) => (
+                                    <tr key={user.id}>
+                                        <td className="border border-gray-400 lg:p-2 p-1 max-sm:hidden">{user.name}</td>
+                                        <td className="border border-gray-400 lg:p-2 p-1">
+                                            <div className="flex flex-col items-center">
+                                                <span className="sm:hidden font-medium">{user.name}</span>
+                                                <span className="text-gray-600">{user.email}</span>
+                                            </div>
+                                        </td>
+                                        <td className="border border-gray-400 lg:p-2 p-1 max-md:hidden">
+                                            <div className="flex flex-wrap gap-1 justify-center">
+                                                {user.permissions.map((permission) => (
+                                                    <span
+                                                        key={permission.id}
+                                                        className="inline-block lg:px-2 lg:py-1 px-1 py-0.5 font-medium bg-gray-100 text-gray-800 rounded m-0.5"
+                                                    >
+                                                        {permission.name}
+                                                    </span>
+                                                ))}
+                                                {user.permissions.length === 0 && (
+                                                    <span className="text-gray-500 italic inline-block lg:px-2 lg:py-1 px-1 py-0.5">
+                                                        Aucune permission
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </td>
+                                        <td className="border border-gray-400 lg:p-2 p-1">
+                                            <div className="hidden lg:flex flex-col lg:flex-row justify-center gap-2">
+                                                <ActionButton
+                                                    name="Modifier"
+                                                    color="orange"
+                                                    onClick={() => handleEditClick(user)}
+                                                />
+                                                <ActionButton
+                                                    name="Supprimer"
+                                                    color="red"
+                                                    onClick={() => handleDeleteClick(user)}
+                                                />
+                                            </div>
+                                            <div className="lg:hidden flex flex-col lg:flex-row justify-center gap-2">
+                                                <button onClick={() => handleEditClick(user)} className="bg-orange-500 text-white p-2 rounded hover:bg-white hover:text-orange-500 border border-orange-500 text-xs lg:text-base">
+                                                    Modifier
+                                                </button>
+                                                <button onClick={() => handleDeleteClick(user)} className="bg-red-600 text-white p-2 rounded hover:bg-white hover:text-red-600 border border-red-600 text-xs lg:text-base">
+                                                    Supprimer
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </section>
             </div>
 
