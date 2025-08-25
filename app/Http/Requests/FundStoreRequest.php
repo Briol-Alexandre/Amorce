@@ -33,7 +33,7 @@ class FundStoreRequest extends FormRequest
 
 
         return [
-            'name' => 'required|string|between:3,255',
+            'name' => 'required|string|between:3,40',
             'iban' => 'nullable|string|min:15|max:34',
             'description' => 'required|string|between:3,255',
             'permanent' => 'boolean',

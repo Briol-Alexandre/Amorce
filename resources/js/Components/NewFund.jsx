@@ -17,8 +17,8 @@ export default function NewFund({ onClose }) {
 
     const customErrors = {
         ...errors,
-        name: errors.name ? "Le nom est obligatoire et doit comporter au moins 3 caractères" : null,
-        description: errors.description ? "La description est obligatoire et doit comporter au moins 3 caractères" : null,
+        name: errors.name ? "Le nom est obligatoire et doit comporter entre 3 et 40 caractères" : null,
+        description: errors.description ? "La description est obligatoire et doit comporter entre 3 et 255 caractères" : null,
     }
 
     function submit(e) {
@@ -40,7 +40,7 @@ export default function NewFund({ onClose }) {
         <div>
             <h2 className="text-xl mb-4">Créer un nouveau fond</h2>
             <p className="text-gray-400">Remplissez les informations pour créer un nouveau fond.</p>
-            
+
             <form onSubmit={submit}>
                 <input type="hidden" name="_token" value={csrfToken} />
 
@@ -86,9 +86,9 @@ export default function NewFund({ onClose }) {
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="permanent">Fond permanent</label>
                     <div className="ml-3">
-                        <input 
-                            type="checkbox" 
-                            name="permanent" 
+                        <input
+                            type="checkbox"
+                            name="permanent"
                             id="permanent"
                             checked={data.permanent}
                             onChange={(e) => setData('permanent', e.target.checked || false)}
@@ -102,7 +102,7 @@ export default function NewFund({ onClose }) {
                     name="amount"
                     value={data.amount}
                 />
-                
+
                 <div className="flex justify-end mt-8 gap-4">
                     <button
                         type="button"

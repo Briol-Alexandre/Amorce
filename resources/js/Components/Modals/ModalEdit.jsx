@@ -13,37 +13,93 @@ export function ModalEdit({ closeModal, handleEdit, fund }) {
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
+        const newFormData = {
+            ...formData,
             [name]: type === 'checkbox' ? checked : value
-        }));
+        };
+        setFormData(newFormData);
+
+        // Valider le champ modifié
+        validateField(name, type === 'checkbox' ? checked : value);
+    };
+
+    const validateField = (fieldName, value) => {
+        let newErrors = { ...errors };
+
+        // Validation spécifique au champ
+        switch (fieldName) {
+            case 'name':
+                if (!(fund.id === 1 || fund.id === 2)) {
+                    if (!value.trim()) {
+                        newErrors.name = "Le nom du fond est requis.";
+                    } else if (value.trim().length < 3 || value.trim().length > 40) {
+                        newErrors.name = "Le nom doit comporter entre 3 et 40 caractères.";
+                    } else {
+                        delete newErrors.name;
+                    }
+                }
+                break;
+
+            case 'description':
+                if (!value.trim()) {
+                    newErrors.description = "La description est requise.";
+                } else if (value.trim().length < 3 || value.trim().length > 255) {
+                    newErrors.description = "La description doit comporter entre 3 et 255 caractères.";
+                } else {
+                    delete newErrors.description;
+                }
+                break;
+
+            case 'iban':
+                if (!(fund.id === 1 || fund.id === 2) && value) {
+                    if (!/^[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}$/.test(value.replace(/\s/g, ''))) {
+                        newErrors.iban = "L'IBAN doit être au format valide. Ex: BE68 5390 0754 7034";
+                    } else {
+                        delete newErrors.iban;
+                    }
+                } else {
+                    delete newErrors.iban;
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        setErrors(newErrors);
     };
 
     const validateForm = () => {
-        let formErrors = {};
-
+        let newErrors = {};
+        
         // Si c'est un fond principal (ID 1 ou 2), on vérifie uniquement la description
         if (fund.id === 1 || fund.id === 2) {
             if (!formData.description.trim()) {
-                formErrors.description = "La description est requise.";
+                newErrors.description = "La description est requise.";
+            } else if (formData.description.trim().length < 3 || formData.description.trim().length > 255) {
+                newErrors.description = "La description doit comporter entre 3 et 255 caractères.";
             }
         } else {
             // Validation complète pour les autres fonds
             if (!formData.name.trim()) {
-                formErrors.name = "Le nom du fond est requis.";
+                newErrors.name = "Le nom du fond est requis.";
+            } else if (formData.name.trim().length < 3 || formData.name.trim().length > 40) {
+                newErrors.name = "Le nom doit comporter entre 3 et 40 caractères.";
             }
 
             if (!formData.description.trim()) {
-                formErrors.description = "La description est requise.";
+                newErrors.description = "La description est requise.";
+            } else if (formData.description.trim().length < 3 || formData.description.trim().length > 255) {
+                newErrors.description = "La description doit comporter entre 3 et 255 caractères.";
             }
 
             if (formData.iban && !/^[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}([A-Z0-9]?){0,16}$/.test(formData.iban.replace(/\s/g, ''))) {
-                formErrors.iban = "L'IBAN doit être au format valide. Ex: BE68 5390 0754 7034";
+                newErrors.iban = "L'IBAN doit être au format valide. Ex: BE68 5390 0754 7034";
             }
         }
-
-        setErrors(formErrors);
-        return Object.keys(formErrors).length === 0;
+        
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
     const onSubmit = (e) => {
@@ -123,7 +179,7 @@ export function ModalEdit({ closeModal, handleEdit, fund }) {
                 {errors.iban && <InputError message={errors.iban} />}
 
                 <fieldset className="mt-3 self-end grid lg:grid-cols-[1fr_3fr] max-lg:grid-cols-1 max-lg:gap-1 items-center">
-                    <label htmlFor="permanent" className="max-lg:text-sm">Fond permanent</label>
+                    <label htmlFor="permanent" className="max-lg:text-sm">Permanent ?</label>
                     <div className="lg:ml-3 max-lg:mt-1">
                         <input
                             type="checkbox"
