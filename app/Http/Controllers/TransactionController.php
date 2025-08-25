@@ -51,12 +51,11 @@ class TransactionController extends Controller
             if (empty(trim($donatorName))) {
                 $donatorName = 'Transacteur anonyme';
             }
-            
-            // Extraire le mois et l'année de la date
+
             $date = Carbon::parse($transaction['date']);
             $month = $date->month;
             $year = $date->year;
-            
+
             return [
                 'fund_id' => $transaction['fund_id'],
                 'amount' => (float) $this->parseAmount($transaction['amount']),
@@ -86,7 +85,6 @@ class TransactionController extends Controller
         foreach ($uniqueTransactions as $transaction) {
             $donatorName = $transaction['donator_name'];
 
-            // Créer ou récupérer le donateur
             $donator = Donators::firstOrCreate(
                 ['name' => $donatorName],
                 [
@@ -96,13 +94,11 @@ class TransactionController extends Controller
                 ]
             );
 
-            // Créer ou récupérer la période pour ce donateur
             $donatorPeriod = $donator->periods()->firstOrCreate([
                 'month' => $transaction['month'],
                 'year' => $transaction['year']
             ]);
 
-            // Créer la transaction
             $newTransaction = Transaction::create([
                 'fund_id' => $transaction['fund_id'],
                 'amount' => $transaction['amount'],
@@ -174,11 +170,10 @@ class TransactionController extends Controller
 
     private function create(Fund $fund, float $amount, TransactionStoreRequest $request)
     {
-        // Extraire le mois et l'année de la date
         $date = Carbon::parse($request->input('date'));
         $month = $date->month;
         $year = $date->year;
-        
+
         Transaction::create([
             'fund_id' => $fund->id,
             'amount' => $amount,
@@ -194,7 +189,6 @@ class TransactionController extends Controller
 
         $donatorName = $validated['transactor'];
 
-        // Créer ou récupérer le donateur
         $donator = Donators::firstOrCreate(
             ['name' => $donatorName],
             [
@@ -204,18 +198,15 @@ class TransactionController extends Controller
             ]
         );
 
-        // Extraire le mois et l'année de la date
         $date = Carbon::parse($validated['date']);
         $month = $date->month;
         $year = $date->year;
-        
-        // Créer ou récupérer la période pour ce donateur
+
         $donatorPeriod = $donator->periods()->firstOrCreate([
             'month' => $month,
             'year' => $year
         ]);
 
-        // Créer la transaction
         $transaction = Transaction::create([
             'fund_id' => $validated['fund_id'],
             'amount' => $validated['amount'],

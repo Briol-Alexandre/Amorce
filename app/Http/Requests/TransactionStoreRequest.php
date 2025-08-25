@@ -25,12 +25,12 @@ class TransactionStoreRequest extends FormRequest
         return [
             'amount' => 'required|numeric|min:0.01',
             'date' => 'required|date',
-            'transactor' => 'required|string|max:255', // Maintenu pour compatibilité, représente le nom du donateur
+            'transactor' => 'required|string|max:255',
             'communication' => 'nullable|string|max:255',
             'fund_id' => 'required|exists:funds,id',
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:20',
-            // Les champs month et year sont extraits de la date
+
         ];
     }
 }

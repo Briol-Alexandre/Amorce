@@ -18,16 +18,15 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         $userId = Auth::id();
-        
-        // Récupérer uniquement les événements créés par l'utilisateur ou auxquels il participe
+
         $events = Event::with('participants')
-            ->where('user_id', $userId) // Événements créés par l'utilisateur
+            ->where('user_id', $userId)
             ->orWhereHas('participants', function ($query) use ($userId) {
-                $query->where('users.id', $userId); // Événements auxquels l'utilisateur participe
+                $query->where('users.id', $userId);
             })
             ->orderBy('date', 'asc')
             ->get();
-            
+
         $detenteParticipants = Detente::all();
 
         return Inertia::render('Dashboard', [

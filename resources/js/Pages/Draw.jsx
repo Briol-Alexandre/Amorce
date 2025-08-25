@@ -38,7 +38,6 @@ export default function Draw() {
                         >
                             Ajouter des participants
                         </Link>
-
                         <Link
                             href={route('detente.history')}
                             className='bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 max-lg:w-full max-lg:text-center max-lg:text-sm'

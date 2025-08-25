@@ -42,12 +42,10 @@ class FondController extends Controller
 
     public function destroy(Fund $fund)
     {
-        // Protection des deux fonds principaux (ID 1 et 2)
         if ($fund->id === 1 || $fund->id === 2) {
             return redirect()->route('fond.index')->with('error', 'Impossible de supprimer ce fond principal');
         }
 
-        // Protection des fonds marqués comme permanents
         if ($fund->permanent) {
             return redirect()->route('fond.index')->with('error', 'Impossible de supprimer un fond permanent');
         }
@@ -58,9 +56,7 @@ class FondController extends Controller
 
     public function update(FundStoreRequest $request, Fund $fund)
     {
-        // Protection des deux fonds principaux (ID 1 et 2)
         if ($fund->id === 1 || $fund->id === 2) {
-            // Pour les fonds principaux, on ne permet que la modification de la description
             $fund->update([
                 'description' => $request->validated()['description']
             ]);
@@ -68,7 +64,6 @@ class FondController extends Controller
             return redirect()->back()->with('success', 'Description du fond principal modifiée avec succès');
         }
 
-        // Pour les autres fonds, modification normale
         $fund->update($request->validated());
 
         return redirect()->back()->with('success', 'Fond modifié avec succès');

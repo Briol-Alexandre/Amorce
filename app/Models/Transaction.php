@@ -18,8 +18,6 @@ class Transaction extends Model
         'year',
         'communication',
     ];
-    
-    // La relation avec le donateur est maintenant gérée via la table donator_periods
 
     function fund(): BelongsTo
     {

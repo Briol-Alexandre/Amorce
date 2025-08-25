@@ -23,19 +23,18 @@ class FundStoreRequest extends FormRequest
     public function rules(): array
     {
         $isUpdate = $this->isMethod('patch') || $this->isMethod('put');
-        
-        // Si c'est une mise à jour d'un fond principal (ID 1 ou 2)
+
         if ($isUpdate && ($this->route('fund')->id === 1 || $this->route('fund')->id === 2)) {
-            // Pour les fonds principaux, seule la description est requise
+
             return [
                 'description' => 'required|string|between:3,255',
             ];
         }
-        
-        // Règles normales pour les autres fonds
+
+
         return [
             'name' => 'required|string|between:3,255',
-            'iban' => 'nullable|string|min:15|max:34', // IBAN peut varier en longueur
+            'iban' => 'nullable|string|min:15|max:34',
             'description' => 'required|string|between:3,255',
             'permanent' => 'boolean',
             'amount' => $isUpdate ? 'nullable|numeric|min:0' : 'required|numeric|min:0',
