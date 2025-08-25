@@ -52,7 +52,7 @@ export default function TitleAndSpan({ title, onClick }) {
                     Accéder à la détente
                 </Link>
             )}
-            {title === 'Événements' && auth.user && auth.user.permissions && auth.user.permissions.includes('manage-events') && (
+            {title === 'Événements' && auth.user && auth.user.permissions && auth.user.permissions.includes('manage-meetings') && (
                 <button
                     onClick={openModal}
                     className="bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black
