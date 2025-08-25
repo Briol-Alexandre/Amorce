@@ -8,13 +8,38 @@ export default function NewEvent({ onClose, selectedDate }) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const { users = [] } = usePage().props;
 
-    const { data, setData, errors, post } = useForm({
+    // Fonction pour formater la date au format YYYY-MM-DD
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        
+        try {
+            const date = new Date(dateString);
+            
+            if (isNaN(date.getTime())) {
+                return '';
+            }
+            
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            
+            return `${year}-${month}-${day}`;
+        } catch (error) {
+            return '';
+        }
+    };
+    
+    // Utiliser useState pour stocker les valeurs du formulaire
+    // Cela garantit que le formulaire est réinitialisé à chaque rendu du composant
+    const initialFormState = {
         title: '',
         description: '',
-        date: selectedDate ? format(new Date(selectedDate), 'yyyy-MM-dd') : '',
+        date: selectedDate ? formatDate(selectedDate) : '',
         time: '',
         participants: [],
-    });
+    };
+    
+    const { data, setData, errors, post, reset } = useForm(initialFormState);
 
     const customErrors = {
         ...errors,
@@ -29,6 +54,7 @@ export default function NewEvent({ onClose, selectedDate }) {
         e.preventDefault();
         post(route('event.store'), {
             onSuccess: () => {
+                reset(); // Réinitialiser le formulaire après soumission réussie
                 onClose();
             },
         });

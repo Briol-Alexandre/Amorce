@@ -10,10 +10,41 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import { router } from '@inertiajs/react';
 
 export default function Edit({ event, users, selectedParticipants }) {
+    // Formater la date au format YYYY-MM-DD pour l'input HTML
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        
+        // Afficher la date pour débogage
+        console.log('Date reçue:', dateString);
+        
+        try {
+            // Créer un objet Date à partir de la chaîne
+            const date = new Date(dateString);
+            
+            // Vérifier si la date est valide
+            if (isNaN(date.getTime())) {
+                console.error('Date invalide:', dateString);
+                return '';
+            }
+            
+            // Formater la date au format YYYY-MM-DD
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            
+            const formattedDate = `${year}-${month}-${day}`;
+            console.log('Date formatée:', formattedDate);
+            return formattedDate;
+        } catch (error) {
+            console.error('Erreur lors du formatage de la date:', error);
+            return '';
+        }
+    };
+
     const { data, setData, put, processing, errors } = useForm({
         title: event.title || '',
         description: event.description || '',
-        date: event.date || '',
+        date: formatDate(event.date) || '',
         time: event.time || '',
         participants: selectedParticipants || [],
     });

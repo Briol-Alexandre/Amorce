@@ -11,9 +11,13 @@ import NewProject from "@/Components/NewProject.jsx";
 export default function TitleAndSpan({ title, onClick }) {
     const { funds } = usePage().props;
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalKey, setModalKey] = useState(0); // Clé pour forcer le rendu du composant modal
     const auth = usePage().props.auth;
 
-    const openModal = () => setIsModalOpen(true);
+    const openModal = () => {
+        setModalKey(prevKey => prevKey + 1); // Incrémenter la clé pour forcer un nouveau rendu
+        setIsModalOpen(true);
+    };
     const closeModal = () => setIsModalOpen(false);
 
     return (<>
@@ -72,9 +76,9 @@ export default function TitleAndSpan({ title, onClick }) {
             )}
         </div>
         <span className="block h-0.5 bg-gray-300 mt-1.5"></span>
-        <Modal show={isModalOpen} onClose={closeModal}>
+        <Modal key={modalKey} show={isModalOpen} onClose={closeModal}>
             {title.includes('Fonds') && auth.user && auth.user.permissions && auth.user.permissions.includes('manage-funds') && <NewFund onClose={closeModal} />}
-            {title === 'Événements' && auth.user && auth.user.permissions && auth.user.permissions.includes('manage-events') && <NewEvent onClose={closeModal} />}
+            {title === 'Événements' && auth.user && auth.user.permissions && auth.user.permissions.includes('manage-meetings') && <NewEvent onClose={closeModal} />}
             {title === 'Projets' && auth.user && auth.user.permissions && auth.user.permissions.includes('manage-projects') && <NewProject onClose={closeModal} />}
         </Modal>
     </>);
