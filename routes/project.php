@@ -6,6 +6,9 @@ Route::middleware('auth')->group(function () {
     Route::group(['middleware' => ['auth', 'can:access-projects']], function () {
         Route::get('/project', [ProjectController::class, 'index'])->name('project.index');
         Route::get('/project/{project}', [ProjectController::class, 'show'])->name('project.show');
+        
+        // Route API pour récupérer un projet spécifique
+        Route::get('/api/project/{project}', [ProjectController::class, 'getProject'])->name('api.project.get');
     });
     
     // Routes nécessitant la permission 'manage-projects'

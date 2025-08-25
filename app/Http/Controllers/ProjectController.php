@@ -37,18 +37,26 @@ class ProjectController extends Controller
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        
+
         $project = new Project();
         $project->name = $validated['name'];
         $project->description = $validated['description'];
-        
+
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('projects', 'public');
             $project->image = '/storage/' . $imagePath;
         }
-        
+
         $project->save();
-        
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Projet créé avec succès!',
+                'project' => $project
+            ]);
+        }
+
         return redirect()->route('project.index')->with('success', 'Projet créé avec succès!');
     }
 
@@ -58,10 +66,18 @@ class ProjectController extends Controller
     public function show(string $id)
     {
         $project = Project::findOrFail($id);
+
+        if (request()->wantsJson()) {
+            return response()->json([
+                'project' => $project
+            ]);
+        }
+
         return Inertia::render('Project/Show', [
             'project' => $project
         ]);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -80,24 +96,24 @@ class ProjectController extends Controller
     public function update(Request $request, string $id)
     {
         $project = Project::findOrFail($id);
-        
+
         $validated = $request->validate([
             'name' => 'required|string|min:3|max:255',
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        
+
         $project->name = $validated['name'];
         $project->description = $validated['description'];
-        
+
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('projects', 'public');
             $project->image = '/storage/' . $imagePath;
         }
-        
+
         $project->save();
-        
-        return redirect()->route('project.show', $project->id)->with('success', 'Projet mis à jour avec succès!');
+
+        return redirect()->route('project.index')->with('success', 'Projet mis à jour avec succès!');
     }
 
     /**
@@ -107,7 +123,7 @@ class ProjectController extends Controller
     {
         $project = Project::findOrFail($id);
         $project->delete();
-        
+
         return redirect()->route('project.index')->with('success', 'Projet supprimé avec succès!');
     }
 }
