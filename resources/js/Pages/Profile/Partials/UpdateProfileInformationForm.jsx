@@ -24,7 +24,7 @@ export default function UpdateProfileInformation({
             'manage-projects': 'Peut agir sur les projets',
             'create-users': 'Peut créer un utilisateur'
         };
-        
+
         return permissionMap[slug] || slug;
     };
 
@@ -124,7 +124,7 @@ export default function UpdateProfileInformation({
                 )}
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton disabled={processing}>Enregistrer</PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}

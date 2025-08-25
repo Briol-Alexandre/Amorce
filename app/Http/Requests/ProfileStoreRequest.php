@@ -28,8 +28,8 @@ class ProfileStoreRequest extends FormRequest
                 Rule::unique(User::class),
             ],
             'password' => 'required|min:8|max:255',
-            'permissions' => ['required', 'array', 'min:1'],
-            'permissions.*' => ['required', 'exists:permissions,id'],
+            'permissions' => ['present', 'array'],
+            'permissions.*' => ['exists:permissions,id'],
         ];
     }
 }

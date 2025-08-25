@@ -10,5 +10,10 @@ Route::middleware('auth')->group(function () {
     Route::group(['middleware' => ['auth', 'can:create-users']], function () {
         Route::get('addUser', [CompteController::class, 'create'])->name('compte.create');
         Route::post('addUser', [CompteController::class, 'store'])->name('compte.store');
+        
+        // User management routes
+        Route::get('users', [CompteController::class, 'users'])->name('users.index');
+        Route::patch('users/{id}', [CompteController::class, 'update'])->name('users.update');
+        Route::delete('users/{id}', [CompteController::class, 'destroy'])->name('users.destroy');
     });
 });
