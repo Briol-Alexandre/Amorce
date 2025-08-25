@@ -28,7 +28,7 @@ class UserCreated extends Mailable
             ->with([
                 'name' => $this->user->name,
                 'email' => $this->user->email,
-                'role' => $this->user->role,
+                'permissions' => $this->user->permissions->pluck('name')->implode(', '),
                 'password' => $this->plainPassword,
             ]);
     }

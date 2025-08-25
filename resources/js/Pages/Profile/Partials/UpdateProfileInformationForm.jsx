@@ -70,7 +70,16 @@ export default function UpdateProfileInformation({
                 </div>
 
                 <div>
-                    <p className='text-gray-500 font-black text-small'>Rôle : {user.role==='auth'? 'Administrateur': user.role==='comptable' ? 'Comptable' : 'Utilisateur'}</p>
+                    <p className='text-gray-500 font-black text-small'>Permissions :</p>
+                    <ul className='text-gray-500 text-sm mt-1 pl-4 list-disc'>
+                        {user.permissions && user.permissions.length > 0 ? (
+                            user.permissions.map((permission) => (
+                                <li key={permission.id}>{permission.name}</li>
+                            ))
+                        ) : (
+                            <li>Aucune permission</li>
+                        )}
+                    </ul>
                 </div>
 
                 {mustVerifyEmail && user.email_verified_at === null && (

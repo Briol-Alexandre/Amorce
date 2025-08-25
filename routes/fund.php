@@ -10,15 +10,21 @@ use Inertia\Inertia;
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/fonds', [FondController::class, 'index'])->name('fond.index');
+    // Routes accessibles avec la permission 'access-funds'
+    Route::group(['middleware' => ['auth', 'can:access-funds']], function () {
+        Route::get('/fonds', [FondController::class, 'index'])->name('fond.index');
+        Route::get('/fonds/{fund}', [FondController::class, 'show'])->name('fond.show');
+    });
 
-    Route::get('/fonds/{fund}', [FondController::class, 'show'])->name('fond.show');
+    // Routes nécessitant la permission 'manage-funds'
+    Route::group(['middleware' => ['auth', 'can:manage-funds']], function () {
+        Route::post('/fonds', [FondController::class, 'store'])->name('fond.store');
+        Route::patch('/fonds/{fund}/edit', [FondController::class, 'update'])->name('fond.update');
+    });
 
-    Route::post('/fonds', [FondController::class, 'store'])->name('fond.store');
-
-    Route::delete('/fonds/{fund}', [FondController::class, 'destroy'])->name('fond.destroy');
-
-    Route::patch('/fonds/{fund}/edit', [FondController::class, 'update'])->name('fond.update');
-    
-    Route::post('/fonds/{fund}/transfer-multiple', [MultipleTransferController::class, 'transferMultiple'])->name('fond.transfer-multiple');
+    // Routes nécessitant la permission 'delete-funds'
+    Route::group(['middleware' => ['auth', 'can:delete-funds']], function () {
+        Route::delete('/fonds/{fund}', [FondController::class, 'destroy'])->name('fond.destroy');
+        Route::post('/fonds/{fund}/transfer-multiple', [MultipleTransferController::class, 'transferMultiple'])->name('fond.transfer-multiple');
+    });
 });

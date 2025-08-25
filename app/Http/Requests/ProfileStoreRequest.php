@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
+use App\Models\Permission;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -27,7 +28,8 @@ class ProfileStoreRequest extends FormRequest
                 Rule::unique(User::class),
             ],
             'password' => 'required|min:8|max:255',
-            'role' => ['required', 'in:auth,comptable,user'],
+            'permissions' => ['required', 'array', 'min:1'],
+            'permissions.*' => ['required', 'exists:permissions,id'],
         ];
     }
 }

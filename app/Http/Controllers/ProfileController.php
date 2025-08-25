@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,9 +24,15 @@ class ProfileController extends Controller
     }
     public function edit(Request $request): Response
     {
+        // Charger l'utilisateur avec ses permissions
+        $user = User::with('permissions')->find($request->user()->id);
+        
         return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'mustVerifyEmail' => $user instanceof MustVerifyEmail,
             'status' => session('status'),
+            'auth' => [
+                'user' => $user
+            ],
         ]);
     }
 

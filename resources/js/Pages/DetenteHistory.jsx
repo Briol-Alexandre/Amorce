@@ -4,27 +4,28 @@ import MainStructure from "@/Components/MainStructure.jsx";
 import TitleAndSpan from "@/Components/TitleAndSpan.jsx";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import DetenteDisplay from "@/Components/DetenteDisplay";
 
 export default function DetenteHistory() {
     const { participationsHistory, flash } = usePage().props;
-    
+
     // Pagination
     const itemsPerPage = 5;
     const [currentPage, setCurrentPage] = useState(1);
-    
+
     const totalPages = Math.ceil(participationsHistory.length / itemsPerPage);
-    
+
     const currentParticipations = participationsHistory.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
-    
+
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
             setCurrentPage(page);
         }
     };
-    
+
     const getPages = () => {
         const pages = [];
         const maxPagesToShow = 7;
@@ -55,49 +56,54 @@ export default function DetenteHistory() {
         <MainStructure pageTitle={'Historique des participations'}>
             <section className={"flex-grow lg:p-3 py-3"}>
                 <TitleAndSpan onClick={() => router.visit(route('detente.history'))} title={'Historique des participations'} />
-                
+
                 {/* Messages flash */}
                 {flash && flash.success && (
                     <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 mx-8">
                         {flash.success}
                     </div>
                 )}
-                
+
                 {flash && flash.error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 mx-8">
                         {flash.error}
                     </div>
                 )}
-                
+
                 {/* Navigation */}
                 <div className="flex lg:flex-row max-lg:flex-col max-lg:gap-4 justify-between items-center mt-4 lg:mx-8 max-lg:mx-2 mb-6">
                     <div className="text-gray-700 max-lg:text-sm">
                         <span className="font-medium">{participationsHistory.length}</span> participant(s) dans l'historique
                     </div>
                     <div className="lg:space-x-4 max-lg:flex max-lg:flex-col max-lg:gap-2 max-lg:w-full">
-                        <Link 
-                            href={route('detente.index')} 
+                        <Link
+                            href={route('detente.index')}
                             className='bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 max-lg:w-full max-lg:text-center max-lg:text-sm'
                         >
                             Page Détente
                         </Link>
-                        
-                        <Link 
-                            href={route('detente.draw')} 
+
+                        <Link
+                            href={route('detente.draw')}
                             className='bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 max-lg:w-full max-lg:text-center max-lg:text-sm'
                         >
                             Page Tirage
                         </Link>
                     </div>
                 </div>
-                
+
+                {/* Détente actuelle */}
+                <div>
+                    <DetenteDisplay />
+                </div>
+
                 {/* Section de l'historique des participations */}
-                <section className="mb-8 lg:mx-8 max-lg:mx-2">
+                <section className="mb-8 mx-2">
                     <div className='flex items-center gap-4'>
-                        <h4 className='text-sm lg:text-base'>Historique des participations à la détente</h4>
+                        <h4 className='small-title-style-max-lg'>Historique des participations à la détente</h4>
                         <span className="block h-0.5 bg-gray-300 mt-1.5 ml-2 flex-grow"></span>
                     </div>
-                    
+
                     {participationsHistory.length === 0 ? (
                         <p className="text-center m-4 font-bold max-lg:text-sm">
                             Aucun historique de participation disponible.
@@ -127,9 +133,8 @@ export default function DetenteHistory() {
                             {/* Pagination */}
                             <div className="flex lg:flex-row max-lg:flex-col max-lg:gap-4 justify-between items-center mt-4 lg:space-x-2">
                                 <button
-                                    className={`px-4 py-2 bg-gray-200 rounded max-lg:w-full max-lg:text-sm ${
-                                        currentPage === 1 && "opacity-50 cursor-not-allowed"
-                                    }`}
+                                    className={`px-4 py-2 bg-gray-200 rounded max-lg:w-full max-lg:text-sm ${currentPage === 1 && "opacity-50 cursor-not-allowed"
+                                        }`}
                                     onClick={() => handlePageChange(currentPage - 1)}
                                     disabled={currentPage === 1}
                                 >
@@ -139,11 +144,10 @@ export default function DetenteHistory() {
                                     {getPages().map((page, index) => (
                                         <button
                                             key={index}
-                                            className={`px-4 py-2 bg-gray-200 rounded max-lg:text-xs ${
-                                                page === currentPage
-                                                    ? "bg-gray-900 text-white"
-                                                    : "text-gray-700"
-                                            }`}
+                                            className={`px-4 py-2 bg-gray-200 rounded max-lg:text-xs ${page === currentPage
+                                                ? "bg-gray-900 text-white"
+                                                : "text-gray-700"
+                                                }`}
                                             onClick={() => {
                                                 if (page !== '...') {
                                                     handlePageChange(page);
@@ -156,9 +160,8 @@ export default function DetenteHistory() {
                                     ))}
                                 </div>
                                 <button
-                                    className={`px-4 py-2 bg-gray-200 rounded max-lg:w-full max-lg:text-sm ${
-                                        currentPage === totalPages && "opacity-50 cursor-not-allowed"
-                                    }`}
+                                    className={`px-4 py-2 bg-gray-200 rounded max-lg:w-full max-lg:text-sm ${currentPage === totalPages && "opacity-50 cursor-not-allowed"
+                                        }`}
                                     onClick={() => handlePageChange(currentPage + 1)}
                                     disabled={currentPage === totalPages}
                                 >

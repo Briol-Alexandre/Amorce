@@ -43,10 +43,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Charger les routes d'authentification
 require __DIR__ . '/auth.php';
-require __DIR__ . '/fund.php';
-require __DIR__ . '/transaction.php';
-require __DIR__ . '/detente.php';
-require __DIR__ . '/compte.php';
-require __DIR__ . '/event.php';
-require __DIR__ . '/project.php';
+
+// Charger les routes avec le middleware web
+Route::middleware('web')->group(function () {
+    require __DIR__ . '/fund.php';
+    require __DIR__ . '/transaction.php';
+    require __DIR__ . '/detente.php';
+    require __DIR__ . '/compte.php';
+    require __DIR__ . '/event.php';
+    require __DIR__ . '/project.php';
+});

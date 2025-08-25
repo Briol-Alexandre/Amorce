@@ -22,7 +22,6 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'role',
         'password',
     ];
 
@@ -56,5 +55,25 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Event::class, 'event_user')
             ->withTimestamps();
+    }
+    
+    /**
+     * Les permissions de l'utilisateur.
+     */
+    public function permissions(): BelongsToMany
+    {
+        return $this->belongsToMany(Permission::class, 'user_permissions')
+            ->withTimestamps();
+    }
+    
+    /**
+     * Vérifie si l'utilisateur a une permission spécifique.
+     *
+     * @param string $permissionSlug
+     * @return bool
+     */
+    public function hasPermission(string $permissionSlug): bool
+    {
+        return $this->permissions()->where('slug', $permissionSlug)->exists();
     }
 }

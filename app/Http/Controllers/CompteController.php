@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileStoreRequest;
 use App\Models\User;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -26,7 +27,10 @@ class CompteController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Profile/Add');
+        $permissions = Permission::all();
+        return Inertia::render('Profile/Add', [
+            'permissions' => $permissions
+        ]);
     }
 
     /**
@@ -34,7 +38,12 @@ class CompteController extends Controller
      */
     #[NoReturn] public function store(ProfileStoreRequest $request)
     {
-        $user = User::create($request->validated());
+        $data = $request->validated();
+        $permissions = $data['permissions'];
+        unset($data['permissions']);
+        
+        $user = User::create($data);
+        $user->permissions()->sync($permissions);
 
         $plainPassword = $request['password'];
 

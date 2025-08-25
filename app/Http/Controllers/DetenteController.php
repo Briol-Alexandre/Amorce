@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DetenteStoreRequest;
 use App\Http\Requests\DetenteRemoveRequest;
-use App\Models\{Detente, Donators, Draw, Participations, Potentials};
+use App\Models\{Detente, Donators, Draw, Participations, Permission, Potentials};
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -123,12 +123,15 @@ class DetenteController extends Controller
                 'donator_id' => $participant->donator_id,
                 'participation' => 1
             ]);
-            User::firstOrCreate([
+            $user = User::firstOrCreate([
                 'name' => $participant->name,
-                'role' => 'user',
                 'email' => null,
                 'password' => bcrypt('password'),
             ]);
+            
+            // Attribuer les permissions de base
+            $basicPermissions = Permission::whereIn('slug', ['access-funds', 'access-meetings', 'access-detente', 'access-projects'])->get();
+            $user->permissions()->sync($basicPermissions->pluck('id')->toArray());
         }
 
         // Remettre les non-sélectionnés dans les éligibles
@@ -157,6 +160,7 @@ class DetenteController extends Controller
     {
         return Inertia::render('DetenteHistory', [
             'participationsHistory' => Participations::latest('last_detente')->get(),
+            'currentDetente' => Detente::orderBy('participation', 'desc')->get(),
             'flash' => session('flash', []),
         ]);
     }

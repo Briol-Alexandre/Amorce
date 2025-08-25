@@ -8,6 +8,7 @@ import { ModalEdit } from "@/Components/Modals/ModalEdit.jsx";
 import { ModalReceive } from "@/Components/Modals/ModalReceive.jsx";
 import { ModalTransferBeforeDelete } from "@/Components/Modals/ModalTransferBeforeDelete.jsx";
 import { router } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
 
 export default function FondAction({ fund, funds }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -16,7 +17,7 @@ export default function FondAction({ fund, funds }) {
     const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
     const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
+    const auth = usePage().props.auth;
 
     function openDeleteModal(e) {
         e.preventDefault();
@@ -166,16 +167,17 @@ export default function FondAction({ fund, funds }) {
     return (
         <section className="max-lg:w-full">
             <h3 className="sr-only">Fond Principal</h3>
-            <div className='flex flex-row justify-between lg:justify-center flex-wrap '>
-                <ActionButton name="Ajouter de l'argent" color={'blue'} onClick={openAddModal} />
-                <ActionButton name="Recevoir depuis un autre fond" color={'purple'} onClick={openReceiveModal} />
-                <ActionButton name="Transferer vers un autre fond" color={'green'} onClick={openTransferModal} />
-                <ActionButton name="Modifier le fond" color={'orange'} onClick={openEditModal} />
-                {!fund.permanent && (
-                    <ActionButton name="Supprimer le fond" color={'red'} onClick={openDeleteModal} />
-                )}
-            </div>
-
+            {auth.user && auth.user.permissions && auth.user.permissions.includes('manage-funds') && (
+                <div className='flex flex-row justify-between lg:justify-center flex-wrap '>
+                    <ActionButton name="Ajouter de l'argent" color={'blue'} onClick={openAddModal} />
+                    <ActionButton name="Recevoir depuis un autre fond" color={'purple'} onClick={openReceiveModal} />
+                    <ActionButton name="Transferer vers un autre fond" color={'green'} onClick={openTransferModal} />
+                    <ActionButton name="Modifier le fond" color={'orange'} onClick={openEditModal} />
+                    {!fund.permanent && (
+                        <ActionButton name="Supprimer le fond" color={'red'} onClick={openDeleteModal} />
+                    )}
+                </div>
+            )}
             <Modal show={isDeleteModalOpen} onClose={closeModal}>
                 <ModalDelete closeModal={closeModal} handleDelete={handleDelete} />
             </Modal>

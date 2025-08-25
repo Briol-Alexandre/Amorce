@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Detente;
 use App\Models\Fund;
 use App\Models\Event;
+use App\Models\Permission;
 use App\Models\Potentials;
 use App\Models\Transaction;
 use App\Models\User;
@@ -25,22 +26,17 @@ class DatabaseSeeder extends Seeder
         // Vous pouvez ajuster les quantités si nécessaire
         // User::factory(10)->create();
 
-        User::firstOrCreate(
+        $user = User::firstOrCreate(
             ['email' => 'alexandre.briol@gmail.com'],
             [
                 'name' => 'Alexandre Briol',
-                'role' => 'auth',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
             ]
         );
 
-        // Crée 3 utilisateurs role 'auth'
-        User::factory()->auth()->count(3)->create();
-        // Crée 2 utilisateurs role 'comptable'
-        User::factory()->comptable()->count(2)->create();
-        // Crée 10 utilisateurs role 'user'
-        User::factory()->user()->count(10)->create();
+        // Crée 15 utilisateurs
+        User::factory()->count(15)->create();
 
         Fund::factory()->create([
             'name' => 'Fond Principal',
@@ -61,10 +57,15 @@ class DatabaseSeeder extends Seeder
 
 
 
-        // Appel au seeder de transactions pour créer des donnateurs éligibles à la détente
+        // Appel aux seeders
         $this->call([
+            PermissionSeeder::class,
             TransactionSeeder::class,
         ]);
+        
+        // Attribuer toutes les permissions à l'utilisateur principal
+        $permissions = Permission::all();
+        $user->permissions()->attach($permissions->pluck('id')->toArray());
 
     }
 }

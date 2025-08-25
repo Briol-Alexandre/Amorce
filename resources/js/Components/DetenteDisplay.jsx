@@ -4,7 +4,8 @@ import { usePage } from "@inertiajs/react";
 import { Link } from "@inertiajs/react";
 
 export default function DetenteDisplay() {
-    const { detenteParticipants = [] } = usePage().props;
+    const { detenteParticipants = [], currentDetente = [] } = usePage().props;
+    const participants = detenteParticipants.length > 0 ? detenteParticipants : currentDetente;
 
     const [isRotated, setIsRotated] = useState(true);
     const toggleRotation = () => {
@@ -24,12 +25,12 @@ export default function DetenteDisplay() {
             </div>
             <div
                 className={`overflow-hidden transition-all duration-500 ease-in-out ${isRotated
-                    ? 'max-h-[1000px] opacity-100 lg:mt-4'
+                    ? 'max-h-[1000px] opacity-100'
                     : 'max-h-0 opacity-0 mt-0'
                     }`}
             >
-                <div className="bg-white rounded-lg shadow-md lg:p-4">
-                    {!detenteParticipants || detenteParticipants.length === 0 ? (
+                <div className="bg-white rounded-lg shadow-md lg:px-4">
+                    {!participants || participants.length === 0 ? (
                         <div className="text-center py-4 max-lg:text-sm">
                             <p className="text-gray-500">Aucun participant dans la détente actuellement.</p>
                             <Link
@@ -41,7 +42,7 @@ export default function DetenteDisplay() {
                         </div>
                     ) : (
                         <div className="flex flex-col gap-4">
-                            {detenteParticipants.map((participant) => (
+                            {participants.map((participant) => (
                                 <div
                                     key={participant.id}
                                     className="bg-gray-50 rounded-lg lg:p-3 p-2 flex items-center justify-between"

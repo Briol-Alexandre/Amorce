@@ -11,6 +11,7 @@ import NewProject from "@/Components/NewProject.jsx";
 export default function TitleAndSpan({ title, onClick }) {
     const { funds } = usePage().props;
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const auth = usePage().props.auth;
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -19,30 +20,30 @@ export default function TitleAndSpan({ title, onClick }) {
         <div className="flex justify-between">
             <h2 className="title-style hover:cursor-pointer"
                 onClick={onClick}>{title}</h2>
-            {title === 'Compte' && (
+            {title === 'Compte' && auth.user && auth.user.permissions && auth.user.permissions.includes('create-users') && (
                 <Link href='/addUser' className="bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black
                                    text-xs lg:text-base">
                     Ajouter un nouvel utilisateur
                 </Link>
             )
             }
-            {title.includes('Fonds') && (
+            {title.includes('Fonds') && auth.user && auth.user.permissions && auth.user.permissions.includes('manage-funds') && (
                 <button onClick={openModal} className="bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black
                                    text-xs lg:text-base">
                     Ajouter un fond
                 </button>
             )
             }
-            {title === 'Détente' && (
+            {title === 'Détente' && auth.user && auth.user.permissions && auth.user.permissions.includes('manage-detente') && (
                 <Link
-                    href={route('detente.index') + '?refresh=true'}
+                    href="/history"
                     className="bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black
                                    text-xs lg:text-base"
                 >
-                    Rafraîchir la liste des éligibles
+                    Accéder à la détente
                 </Link>
             )}
-            {title === 'Événements' && (
+            {title === 'Événements' && auth.user && auth.user.permissions && auth.user.permissions.includes('manage-events') && (
                 <button
                     onClick={openModal}
                     className="bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black
@@ -51,7 +52,7 @@ export default function TitleAndSpan({ title, onClick }) {
                     Créer un événement
                 </button>
             )}
-            {title === 'Projets' && (
+            {title === 'Projets' && auth.user && auth.user.permissions && auth.user.permissions.includes('manage-projects') && (
                 <button
                     onClick={openModal}
                     className="bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black
@@ -63,9 +64,9 @@ export default function TitleAndSpan({ title, onClick }) {
         </div>
         <span className="block h-0.5 bg-gray-300 mt-1.5"></span>
         <Modal show={isModalOpen} onClose={closeModal}>
-            {title.includes('Fonds') && <NewFund onClose={closeModal} />}
-            {title === 'Événements' && <NewEvent onClose={closeModal} />}
-            {title === 'Projets' && <NewProject onClose={closeModal} />}
+            {title.includes('Fonds') && auth.user && auth.user.permissions && auth.user.permissions.includes('manage-funds') && <NewFund onClose={closeModal} />}
+            {title === 'Événements' && auth.user && auth.user.permissions && auth.user.permissions.includes('manage-events') && <NewEvent onClose={closeModal} />}
+            {title === 'Projets' && auth.user && auth.user.permissions && auth.user.permissions.includes('manage-projects') && <NewProject onClose={closeModal} />}
         </Modal>
     </>);
 }

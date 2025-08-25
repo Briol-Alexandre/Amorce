@@ -7,9 +7,11 @@ import ProjectIcon from "@/Components/icons/ProjetIcon.jsx";
 import UserIcon from "@/Components/icons/UserIcon.jsx";
 import LogoutIcon from "@/Components/icons/LogoutIcon.jsx";
 import DashboardIcon from "@/Components/icons/DashboardIcon.jsx";
-import { Link, router } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
+
 
 function NavBar({ isOpened, isClosed, logOut }) {
+    const { auth } = usePage().props;
     let navigation;
     if (isOpened) {
         navigation =
@@ -36,24 +38,32 @@ function NavBar({ isOpened, isClosed, logOut }) {
                                 </Link>
                             </li>
                             <li className="mb-4">
-                                <Link href="/fonds">
-                                    <FondIcon />
-                                </Link>
+                                {auth.user && auth.user.permissions && auth.user.permissions.includes('access-funds') && (
+                                    <Link href="/fonds">
+                                        <FondIcon />
+                                    </Link>
+                                )}
                             </li>
                             <li className="mb-4">
-                                <Link href="/detente">
-                                    <DetenteIcon />
-                                </Link>
+                                {auth.user && auth.user.permissions && auth.user.permissions.includes('access-detente') && (
+                                    <Link href="/detente">
+                                        <DetenteIcon />
+                                    </Link>
+                                )}
                             </li>
                             <li className="mb-4">
-                                <Link href="/evenement">
-                                    <EventIcon />
-                                </Link>
+                                {auth.user && auth.user.permissions && auth.user.permissions.includes('access-meetings') && (
+                                    <Link href="/evenement">
+                                        <EventIcon />
+                                    </Link>
+                                )}
                             </li>
                             <li className="mb-4">
-                                <Link href="/project">
-                                    <ProjectIcon />
-                                </Link>
+                                {auth.user && auth.user.permissions && auth.user.permissions.includes('access-projects') && (
+                                    <Link href="/project">
+                                        <ProjectIcon />
+                                    </Link>
+                                )}
                             </li>
                         </ul>
                     </li>
@@ -91,40 +101,48 @@ function NavBar({ isOpened, isClosed, logOut }) {
                         </Link>
                     </li>
                     <li>
-                        <Link href="/fonds"
-                            className="flex mb-3 items-center gap-2">
-                            <FondIcon />
-                            <p>
-                                Fonds
-                            </p>
-                        </Link>
+                        {auth.user && auth.user.permissions && auth.user.permissions.includes('access-funds') && (
+                            <Link href="/fonds"
+                                className="flex mb-3 items-center gap-2">
+                                <FondIcon />
+                                <p>
+                                    Fonds
+                                </p>
+                            </Link>
+                        )}
                     </li>
                     <li>
-                        <Link href="/detente"
-                            className="flex mb-3 items-center gap-2">
-                            <DetenteIcon />
-                            <p>
-                                Détente
-                            </p>
-                        </Link>
+                        {auth.user && auth.user.permissions && auth.user.permissions.includes('access-detente') && (
+                            <Link href="/detente"
+                                className="flex mb-3 items-center gap-2">
+                                <DetenteIcon />
+                                <p>
+                                    Détente
+                                </p>
+                            </Link>
+                        )}
                     </li>
                     <li>
-                        <Link href="/evenement"
-                            className="flex mb-3 items-center gap-2">
-                            <EventIcon />
-                            <p>
-                                Évenements
-                            </p>
-                        </Link>
+                        {auth.user && auth.user.permissions && auth.user.permissions.includes('access-meetings') && (
+                            <Link href="/evenement"
+                                className="flex mb-3 items-center gap-2">
+                                <EventIcon />
+                                <p>
+                                    Évenements
+                                </p>
+                            </Link>
+                        )}
                     </li>
                     <li>
-                        <Link href="/project"
-                            className="flex mb-3 items-center gap-2">
-                            <ProjectIcon />
-                            <p>
-                                Projets
-                            </p>
-                        </Link>
+                        {auth.user && auth.user.permissions && auth.user.permissions.includes('access-projects') && (
+                            <Link href="/project"
+                                className="flex mb-3 items-center gap-2">
+                                <ProjectIcon />
+                                <p>
+                                    Projets
+                                </p>
+                            </Link>
+                        )}
                     </li>
                 </ul>
                 <ul>

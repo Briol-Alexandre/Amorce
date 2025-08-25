@@ -4,13 +4,15 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import {useForm} from '@inertiajs/react';
 import {useState} from "react";
+import {usePage} from '@inertiajs/react';
 
 export default function Add() {
+    const { permissions } = usePage().props;
     const [successMessage, setSuccessMessage] = useState(false);
     const {data, setData, post, errors, processing} = useForm({
         name: '',
         email: '',
-        role: 'auth',
+        permissions: [],
         password: '',
     });
 
@@ -72,20 +74,33 @@ export default function Add() {
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="role" value="Rôle"/>
+                    <InputLabel htmlFor="permissions" value="Permissions"/>
+                    
+                    <div className="mt-2 border border-gray-300 rounded-md p-2 max-h-60 overflow-y-auto">
+                        {permissions.map((permission) => (
+                            <div key={permission.id} className="flex items-center mb-2">
+                                <input
+                                    type="checkbox"
+                                    id={`permission-${permission.id}`}
+                                    className="mr-2"
+                                    checked={data.permissions.includes(permission.id)}
+                                    onChange={(e) => {
+                                        const isChecked = e.target.checked;
+                                        setData('permissions', isChecked
+                                            ? [...data.permissions, permission.id]
+                                            : data.permissions.filter(id => id !== permission.id)
+                                        );
+                                    }}
+                                />
+                                <label htmlFor={`permission-${permission.id}`} className="text-sm">
+                                    <span className="font-medium">{permission.name}</span>
+                                    <p className="text-xs text-gray-500">{permission.description}</p>
+                                </label>
+                            </div>
+                        ))}
+                    </div>
 
-                    <select
-                        id="role"
-                        className="mt-1 block w-full"
-                        value={data.role}
-                        onChange={(e) => setData('role', e.target.value)}
-                    >
-                        <option value="auth">Administrateur</option>
-                        <option value="comptable">Comptable</option>
-                        <option value="user">Utilisateur</option>
-                    </select>
-
-                    <InputError className="mt-2" message={errors.role}/>
+                    <InputError className="mt-2" message={errors.permissions}/>
                 </div>
 
                 <div>

@@ -27,7 +27,6 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'role' => fake()->randomElement(['auth', 'comptable', 'user']),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
@@ -44,33 +43,4 @@ class UserFactory extends Factory
         ]);
     }
 
-    /**
-     * State: role auth
-     */
-    public function auth(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'role' => 'auth',
-        ]);
-    }
-
-    /**
-     * State: role comptable
-     */
-    public function comptable(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'role' => 'comptable',
-        ]);
-    }
-
-    /**
-     * State: role user
-     */
-    public function user(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'role' => 'user',
-        ]);
-    }
 }
