@@ -5,6 +5,7 @@ import DetenteIcon from "@/Components/icons/DetenteIcon.jsx";
 import EventIcon from "@/Components/icons/EventIcon.jsx";
 import ProjectIcon from "@/Components/icons/ProjetIcon.jsx";
 import UserIcon from "@/Components/icons/UserIcon.jsx";
+import SettingsIcon from "@/Components/icons/SettingsIcon.jsx";
 import LogoutIcon from "@/Components/icons/LogoutIcon.jsx";
 import DashboardIcon from "@/Components/icons/DashboardIcon.jsx";
 import { Link, usePage } from "@inertiajs/react";
@@ -65,13 +66,20 @@ function NavBar({ isOpened, isClosed, logOut }) {
                                     </Link>
                                 )}
                             </li>
+                            <li className="mb-4">
+                                {auth.user && auth.user.permissions && auth.user.permissions.includes('create-users') && (
+                                    <Link href='/users'>
+                                        <UserIcon />
+                                    </Link>
+                                )}
+                            </li>
                         </ul>
                     </li>
                 </ul>
                 <ul className="flex-col pl-2">
-                    <li className="mb-4">
+                    <li className="mb-4 hover:cursor-pointer">
                         <Link href='/compte'>
-                            <UserIcon />
+                            <SettingsIcon />
                         </Link>
                     </li>
                     <li className="mb-4 hover:cursor-pointer" onClick={logOut}>
@@ -144,12 +152,20 @@ function NavBar({ isOpened, isClosed, logOut }) {
                             </Link>
                         )}
                     </li>
+                    <li>
+                        {auth.user && auth.user.permissions && auth.user.permissions.includes('create-users') && (
+                            <Link href='/users' className="flex mb-3 items-center gap-2">
+                                <UserIcon />
+                                <p>Utilisateurs</p>
+                            </Link>
+                        )}
+                    </li>
                 </ul>
                 <ul>
-                    <li>
-                        <Link href='/compte' className="flex mb-3 items-center gap-2">
-                            <UserIcon />
-                            <p>Utilisateurs</p>
+                    <li className="mb-4">
+                        <Link href="/compte" className="flex items-center gap-2">
+                            <SettingsIcon />
+                            <p>Paramètres</p>
                         </Link>
                     </li>
                     <li className="flex mb-4 items-center gap-2" onClick={logOut}>

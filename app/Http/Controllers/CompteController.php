@@ -42,7 +42,7 @@ class CompteController extends Controller
         $data = $request->validated();
         $permissions = $data['permissions'] ?? [];
         unset($data['permissions']);
-        
+
         $user = User::create($data);
         $user->permissions()->sync($permissions);
 
@@ -60,7 +60,7 @@ class CompteController extends Controller
     {
         //
     }
-    
+
     /**
      * Display a listing of all users.
      */
@@ -68,7 +68,7 @@ class CompteController extends Controller
     {
         $users = User::with('permissions')->get();
         $permissions = Permission::all();
-        
+
         return Inertia::render('Users', [
             'users' => $users,
             'permissions' => $permissions
@@ -89,21 +89,21 @@ class CompteController extends Controller
     public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);
-        
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'permissions' => 'present|array',
             'permissions.*' => 'exists:permissions,id',
         ]);
-        
+
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
         ]);
-        
+
         $user->permissions()->sync($validated['permissions']);
-        
+
         return redirect()->back();
     }
 
@@ -113,15 +113,15 @@ class CompteController extends Controller
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
-        
+
         // Prevent self-deletion
         if ($user->id === auth()->id()) {
             return redirect()->back()->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
         }
-        
+
         $user->permissions()->detach();
         $user->delete();
-        
+
         return redirect()->back();
     }
 }

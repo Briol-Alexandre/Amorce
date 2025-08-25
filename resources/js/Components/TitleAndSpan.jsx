@@ -24,13 +24,7 @@ export default function TitleAndSpan({ title, onClick }) {
         <div className="flex justify-between">
             <h2 className="title-style hover:cursor-pointer"
                 onClick={onClick}>{title}</h2>
-            {title === 'Compte' && auth.user && auth.user.permissions && auth.user.permissions.includes('create-users') && (
-                <Link href='/users' className="bg-black text-white p-2 rounded hover:bg-white hover:text-black border border-black
-                                   text-xs lg:text-base">
-                    Gérer les utilisateurs
-                </Link>
-            )
-            }
+
             {title === 'Utilisateurs' && auth.user && auth.user.permissions && auth.user.permissions.includes('create-users') && (
                 <Link
                     href={route('compte.create')}
