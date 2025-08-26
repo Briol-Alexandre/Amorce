@@ -11,6 +11,7 @@ export default function Users({ users, permissions }) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const handleEditClick = (user) => {
         setSelectedUser(user);
@@ -40,6 +41,10 @@ export default function Users({ users, permissions }) {
                         <TitleAndSpan title={'Utilisateurs'} />
                     </div>
 
+                    <div className="w-full overflow-x-auto mt-4 flex justify-center">
+                        <input type="text" placeholder="Rechercher un utilisateur" className="w-full lg:w-1/2 p-2 border border-gray-300 rounded" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                    </div>
+
                     <div className="w-full overflow-x-auto mt-4">
                         <table className="border-collapse border border-gray-300 mx-auto lg:w-3/4 w-full text-center mb-20 max-lg:text-xs">
                             <thead className="bg-gray-100">
@@ -51,7 +56,7 @@ export default function Users({ users, permissions }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {users.map((user) => (
+                                {users.filter(user => user.name.toLowerCase().includes(searchQuery.toLowerCase())).map((user) => (
                                     <tr key={user.id}>
                                         <td className="border border-gray-400 lg:p-2 p-1 max-sm:hidden">{user.name}</td>
                                         <td className="border border-gray-400 lg:p-2 p-1">
