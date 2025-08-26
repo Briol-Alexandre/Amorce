@@ -35,7 +35,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|min:3|max:255',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10000', // Allows optional image upload with common formats up to ~10MB
         ]);
 
         $project = new Project();

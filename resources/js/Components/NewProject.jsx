@@ -6,7 +6,7 @@ import { route } from "ziggy-js";
 export default function NewProject({ onClose }) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const [imagePreview, setImagePreview] = useState(null);
-    
+
     const { data, setData, errors, post, processing } = useForm({
         name: '',
         description: '',
@@ -17,7 +17,7 @@ export default function NewProject({ onClose }) {
         ...errors,
         name: errors.name ? "Le nom du projet est obligatoire et doit comporter au moins 3 caractères" : null,
         description: errors.description ? "La description est obligatoire" : null,
-        image: errors.image ? "L'image doit être au format JPG, PNG ou GIF et ne pas dépasser 2Mo" : null,
+        image: errors.image ? "L'image doit être au format JPG, PNG ou GIF et ne pas dépasser 10Mo" : null,
     };
 
     function submit(e) {
@@ -33,12 +33,12 @@ export default function NewProject({ onClose }) {
     function handleChange(e) {
         setData(e.target.name, e.target.value);
     }
-    
+
     function handleImageChange(e) {
         const file = e.target.files[0];
         if (file) {
             setData('image', file);
-            
+
             // Créer un aperçu de l'image
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -52,7 +52,7 @@ export default function NewProject({ onClose }) {
         <div>
             <h2 className="text-xl mb-4">Ajouter un nouveau projet</h2>
             <p className="text-gray-400">Remplissez les informations pour créer un nouveau projet ou association.</p>
-            
+
             <form onSubmit={submit}>
                 <input type="hidden" name="_token" value={csrfToken} />
 
@@ -95,21 +95,21 @@ export default function NewProject({ onClose }) {
                             accept="image/*"
                         />
                         <p className="text-xs text-gray-500 mt-1">Formats acceptés: JPG, PNG, GIF. Taille max: 2Mo</p>
-                        
+
                         {imagePreview && (
                             <div className="mt-3">
                                 <p className="text-sm font-medium mb-1">Aperçu:</p>
-                                <img 
-                                    src={imagePreview} 
-                                    alt="Aperçu" 
-                                    className="w-32 h-32 object-cover rounded-md border border-gray-300" 
+                                <img
+                                    src={imagePreview}
+                                    alt="Aperçu"
+                                    className="w-32 h-32 object-cover rounded-md border border-gray-300"
                                 />
                             </div>
                         )}
                     </div>
                 </fieldset>
                 {customErrors.image && <InputError message={customErrors.image} />}
-                
+
                 <div className="flex justify-end mt-8 gap-4">
                     <button
                         type="button"
