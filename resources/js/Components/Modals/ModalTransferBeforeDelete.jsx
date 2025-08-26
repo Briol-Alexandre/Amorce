@@ -179,15 +179,16 @@ export function ModalTransferBeforeDelete({ closeModal, handleTransferAndDelete,
                                 <div>
                                     <label className="block text-sm max-lg:text-xs font-medium mb-1">Vers quel fond</label>
                                     <select
-                                        className="w-full rounded-md border-gray-300"
+                                        className="w-full rounded-md border-gray-300 text-ellipsis overflow-hidden"
                                         value={transfer.destinationFundId}
                                         onChange={(e) => handleTransferChange(transfer.id, 'destinationFundId', e.target.value)}
+                                        style={{ maxWidth: '100%' }}
                                     >
                                         <option value="">Sélectionnez un fond</option>
                                         {funds
                                             .filter((f) => f.id !== activeFundId)
                                             .map((f) => (
-                                                <option value={f.id} key={f.id}>
+                                                <option value={f.id} key={f.id} title={`${f.name} (${f.amount}€)`} className="text-ellipsis overflow-hidden">
                                                     {f.name} ({f.amount}€)
                                                 </option>
                                             ))}

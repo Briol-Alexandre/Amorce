@@ -110,15 +110,16 @@ export function ModalReceive({ closeModal, handleReceive, fund, funds }) {
                     <select
                         name="fund_id"
                         id="fonds"
-                        className="rounded-md lg:ml-3 max-lg:mt-1"
+                        className="rounded-md lg:ml-3 max-lg:mt-1 w-full text-ellipsis overflow-hidden"
                         value={formData.fund_id}
                         onChange={handleInputChange}
+                        style={{ maxWidth: '100%' }}
                     >
                         <option value="">Sélectionnez un fond source</option>
                         {funds
                             .filter((fund) => fund.id !== activeFundId)
                             .map((fund) => (
-                                <option value={fund.id} key={fund.id}>
+                                <option value={fund.id} key={fund.id} title={`${fund.name} (${fund.amount}€)`} className="text-ellipsis overflow-hidden">
                                     {fund.name} ({fund.amount}€)
                                 </option>
                             ))}

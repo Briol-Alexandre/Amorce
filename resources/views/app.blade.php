@@ -22,6 +22,30 @@
 <body class="font-inter antialiased p-2 h-screen">
     <h1 class="sr-only">L'Amorce</h1>
     @inertia
+    <script>
+        // Script pour masquer l'attribut data-page dans l'inspecteur
+        document.addEventListener('DOMContentLoaded', function() {
+            const appDiv = document.querySelector('[data-page]');
+            if (appDiv) {
+                // Stocker les données dans une variable JavaScript
+                const pageData = JSON.parse(appDiv.getAttribute('data-page'));
+                // Supprimer l'attribut data-page visible
+                appDiv.removeAttribute('data-page');
+                // Stocker les données dans une propriété non-énumérable
+                Object.defineProperty(appDiv, '_pageData', {
+                    value: pageData,
+                    enumerable: false
+                });
+                // Restaurer l'accès pour Inertia.js
+                appDiv.getAttribute = function(attr) {
+                    if (attr === 'data-page') {
+                        return JSON.stringify(this._pageData);
+                    }
+                    return Element.prototype.getAttribute.call(this, attr);
+                };
+            }
+        });
+    </script>
 </body>
 
 </html>

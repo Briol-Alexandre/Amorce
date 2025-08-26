@@ -93,15 +93,16 @@ export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
                     <select
                         name="destinationFundId"
                         id="fonds"
-                        className="rounded-md lg:ml-3 max-lg:mt-1"
+                        className="rounded-md lg:ml-3 max-lg:mt-1 w-full text-ellipsis overflow-hidden"
                         value={formData.destinationFundId}
                         onChange={handleInputChange}
+                        style={{ maxWidth: '100%' }}
                     >
                         <option value="">Sélectionnez un fond</option>
                         {funds
                             .filter((fund) => fund.id !== activeFundId)
                             .map((fund) => (
-                                <option value={fund.id} key={fund.id}>
+                                <option value={fund.id} key={fund.id} title={fund.name} className="text-ellipsis overflow-hidden">
                                     {fund.name}
                                 </option>
                             ))}

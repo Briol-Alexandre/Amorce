@@ -199,7 +199,6 @@ export function ModalAdd({ closeModal, handleAdd, fund }) {
                                         onClick={() => setShowResults(true)}
                                     />
 
-                                    {/* Liste des résultats de recherche */}
                                     {showResults && (
                                         <div
                                             ref={searchResultsRef}
