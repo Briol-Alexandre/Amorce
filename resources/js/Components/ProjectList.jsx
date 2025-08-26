@@ -27,13 +27,12 @@ export default function ProjectList({ projects }) {
     return (
         <>
             <div className="w-full mt-4 px-4">
-                {/* Version desktop */}
                 <div className="hidden md:block overflow-x-auto">
-                    <table className="border-collapse border border-gray-300 mx-auto w-full max-w-4xl text-center mb-20">
-                        <thead>
+                    <table className="border-collapse border border-gray-300 mx-auto w-4xl text-center mb-20 ">
+                        <thead className="bg-gray-100">
                             <tr>
-                                <th className="border border-gray-400 p-2 w-2/5">Nom du projet / association</th>
-                                <th className="border border-gray-400 p-2 w-3/5">Description</th>
+                                <th className="border border-gray-400 p-2 w-1/5">Nom du projet / association</th>
+                                <th className="border border-gray-400 p-2 w-4/5">Description</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,7 +43,7 @@ export default function ProjectList({ projects }) {
                                             onClick={() => openModal(project, 'show')}
                                             className="w-full hover:bg-gray-100 rounded-md transition duration-200"
                                         >
-                                            <div className="flex justify-center items-center gap-2">
+                                            <div className="flex justify-start items-center gap-2">
                                                 {project.image ? (
                                                     <img src={project.image} alt={project.name} className="w-16 h-16 object-cover rounded-full" />
                                                 ) : (
@@ -67,7 +66,6 @@ export default function ProjectList({ projects }) {
                     </table>
                 </div>
 
-                {/* Version mobile */}
                 <div className="md:hidden space-y-4 mb-20">
                     {projects.map((project, index) => (
                         <div key={index} className="border border-gray-300 rounded-lg overflow-hidden shadow-sm">

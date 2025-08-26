@@ -31,7 +31,7 @@ export default function Event({ event }) {
                     </div>
                     <div className="text-center flex-1 mx-4">
                         <h2 className="md:text-xl">{event?.title}</h2>
-                        <p className="md:text-base text-xs max-md:max-w-[100px] md:w-3/4 md:mx-auto overflow-hidden line-clamp-2">{event?.description}</p>
+                        <p className="md:text-base text-xs max-md:max-w-[200px] md:w-3/4 mx-auto overflow-hidden line-clamp-2">{event?.description}</p>
                     </div>
                     <div className="flex items-center justify-center min-w-10">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-5 md:size-6">

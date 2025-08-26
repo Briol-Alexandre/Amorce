@@ -17,7 +17,7 @@ function NavBar({ isOpened, isClosed, logOut }) {
     if (isOpened) {
         navigation =
             <nav
-                className="flex flex-col justify-between border-2 rounded-xl w-10 lg:h-[99%] h-[97%] p-0 lg:p-2 z-20 lg:w-14 border-gray-300 border-solid md:relative fixed bg-white max-lg:left-2 max-lg:top-2">
+                className="flex flex-col justify-between border-2 rounded-xl w-10 lg:h-[99%] h-[97%] p-0 lg:p-2 z-20 lg:w-14 border-gray-300 border-solid fixed bg-white max-lg:left-2 max-lg:top-2">
                 <h3 className="sr-only">Navigation Principale</h3>
                 <ul>
                     <li className="flex justify-center my-5 min-h-10">
@@ -90,7 +90,7 @@ function NavBar({ isOpened, isClosed, logOut }) {
     } else {
         navigation =
             <nav
-                className="flex flex-col justify-between border-2 rounded-xl w-52 lg:h-[99%] h-[97%] z-20 p-2 border-gray-300 border-solid px-4 text-black font-bold md:relative fixed bg-white max-lg:left-2 max-lg:top-2">
+                className="flex flex-col justify-between border-2 rounded-xl w-52 lg:h-[99%] h-[97%] z-20 p-2 border-gray-300 border-solid px-4 text-black font-bold fixed bg-white max-lg:left-2 max-lg:top-2">
                 <h3 className="sr-only">Navigation Principale</h3>
                 <ul>
                     <li className="flex w-full justify-center align-middle my-5 min-h-10">
