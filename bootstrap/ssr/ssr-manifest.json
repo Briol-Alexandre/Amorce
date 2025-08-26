@@ -1,28 +1,67 @@
 {
   "node_modules/laravel-vite-plugin/inertia-helpers/index.js": [],
   "resources/js/Components/ActionButton.jsx": [
-    "/build/assets/ActionButton-BY7FUjSI.js"
+    "/build/assets/ActionButton-C-VHGDg0.js"
   ],
   "resources/js/Components/Checkbox.jsx": [
     "/build/assets/Checkbox-B-cIHiNl.js"
   ],
   "resources/js/Components/DangerButton.jsx": [
-    "/build/assets/DeleteUserForm-C3cUZ2f4.js"
+    "/build/assets/DeleteUserForm-BrPt-7ud.js"
+  ],
+  "resources/js/Components/Dashboard/DetenteWidget.jsx": [
+    "/build/assets/Dashboard-DFqWFHVs.js"
+  ],
+  "resources/js/Components/Dashboard/EventsWidget.jsx": [
+    "/build/assets/Dashboard-DFqWFHVs.js"
+  ],
+  "resources/js/Components/Dashboard/FundsWidget.jsx": [
+    "/build/assets/Dashboard-DFqWFHVs.js"
+  ],
+  "resources/js/Components/Dashboard/ProjectsWidget.jsx": [
+    "/build/assets/Dashboard-DFqWFHVs.js"
+  ],
+  "resources/js/Components/Dashboard/TransactionsWidget.jsx": [
+    "/build/assets/Dashboard-DFqWFHVs.js"
+  ],
+  "resources/js/Components/Dashboard/Widget.jsx": [
+    "/build/assets/Dashboard-DFqWFHVs.js"
+  ],
+  "resources/js/Components/Dashboard/WidgetContainer.jsx": [
+    "/build/assets/Dashboard-DFqWFHVs.js"
+  ],
+  "resources/js/Components/DetenteDisplay.jsx": [
+    "/build/assets/DetenteHistory-DD0-ONVJ.js"
   ],
   "resources/js/Components/Dropdown.jsx": [
-    "/build/assets/Dropdown-BwckFVjR.js"
+    "/build/assets/Edit-BHIc9zbR.js"
+  ],
+  "resources/js/Components/EditProject.jsx": [
+    "/build/assets/Index-CvvpORPT.js"
+  ],
+  "resources/js/Components/Event.jsx": [
+    "/build/assets/Evenement-DpYhm2nG.js"
+  ],
+  "resources/js/Components/EventDisplay.jsx": [
+    "/build/assets/Evenement-DpYhm2nG.js"
+  ],
+  "resources/js/Components/EventManager.jsx": [
+    "/build/assets/Evenement-DpYhm2nG.js"
+  ],
+  "resources/js/Components/EventModal.jsx": [
+    "/build/assets/EventModal-D1x5Hchf.js"
   ],
   "resources/js/Components/Fond.jsx": [
-    "/build/assets/FondList-CoOBDxCf.js"
+    "/build/assets/FondList--PbmrcRg.js"
   ],
   "resources/js/Components/FondAction.jsx": [
-    "/build/assets/Fund-mT9thaMX.js"
+    "/build/assets/Fund-D7E8fz-4.js"
   ],
   "resources/js/Components/FondList.jsx": [
-    "/build/assets/FondList-CoOBDxCf.js"
+    "/build/assets/FondList--PbmrcRg.js"
   ],
   "resources/js/Components/FundInfo.jsx": [
-    "/build/assets/Fund-mT9thaMX.js"
+    "/build/assets/Fund-D7E8fz-4.js"
   ],
   "resources/js/Components/InputError.jsx": [
     "/build/assets/InputError-CBvD_6aD.js"
@@ -31,94 +70,130 @@
     "/build/assets/InputLabel-CE_n4Upz.js"
   ],
   "resources/js/Components/MainStructure.jsx": [
-    "/build/assets/MainStructure-DgZhQ8Ne.js"
+    "/build/assets/MainStructure-ml01duAk.js"
   ],
   "resources/js/Components/Modal.jsx": [
-    "/build/assets/Modal-BeyOym37.js"
+    "/build/assets/TitleAndSpan-CqVWr50H.js"
+  ],
+  "resources/js/Components/ModalDeleteUser.jsx": [
+    "/build/assets/Users-D42GQYmi.js"
+  ],
+  "resources/js/Components/ModalEditUser.jsx": [
+    "/build/assets/Users-D42GQYmi.js"
   ],
   "resources/js/Components/Modals/Modal.jsx": [
-    "/build/assets/DeleteUserForm-C3cUZ2f4.js"
+    "/build/assets/DeleteUserForm-BrPt-7ud.js"
   ],
   "resources/js/Components/Modals/ModalAdd.jsx": [
-    "/build/assets/Fund-mT9thaMX.js"
+    "/build/assets/Fund-D7E8fz-4.js"
   ],
   "resources/js/Components/Modals/ModalCsv.jsx": [
-    "/build/assets/Csv-Co0JPK9t.js"
+    "/build/assets/Csv-C5aw3xWr.js"
   ],
   "resources/js/Components/Modals/ModalDelete.jsx": [
-    "/build/assets/Fund-mT9thaMX.js"
+    "/build/assets/Fund-D7E8fz-4.js"
+  ],
+  "resources/js/Components/Modals/ModalEdit.jsx": [
+    "/build/assets/Fund-D7E8fz-4.js"
+  ],
+  "resources/js/Components/Modals/ModalReceive.jsx": [
+    "/build/assets/Fund-D7E8fz-4.js"
   ],
   "resources/js/Components/Modals/ModalTransfer.jsx": [
-    "/build/assets/Fund-mT9thaMX.js"
+    "/build/assets/Fund-D7E8fz-4.js"
+  ],
+  "resources/js/Components/Modals/ModalTransferBeforeDelete.jsx": [
+    "/build/assets/Fund-D7E8fz-4.js"
   ],
   "resources/js/Components/NavBar.jsx": [
-    "/build/assets/MainStructure-DgZhQ8Ne.js"
+    "/build/assets/MainStructure-ml01duAk.js"
+  ],
+  "resources/js/Components/NewEvent.jsx": [
+    "/build/assets/TitleAndSpan-CqVWr50H.js"
   ],
   "resources/js/Components/NewFund.jsx": [
-    "/build/assets/FondList-CoOBDxCf.js"
+    "/build/assets/TitleAndSpan-CqVWr50H.js"
+  ],
+  "resources/js/Components/NewProject.jsx": [
+    "/build/assets/TitleAndSpan-CqVWr50H.js"
   ],
   "resources/js/Components/PrimaryButton.jsx": [
     "/build/assets/PrimaryButton-DDddqs4p.js"
   ],
+  "resources/js/Components/ProjectList.jsx": [
+    "/build/assets/Index-CvvpORPT.js"
+  ],
   "resources/js/Components/SecondaryButton.jsx": [
-    "/build/assets/DeleteUserForm-C3cUZ2f4.js"
+    "/build/assets/SecondaryButton-C9TQBbBR.js"
+  ],
+  "resources/js/Components/ShowProject.jsx": [
+    "/build/assets/Index-CvvpORPT.js"
   ],
   "resources/js/Components/TextAndLabel.jsx": [
-    "/build/assets/TextAndLabel-E5kkbCjT.js"
+    "/build/assets/Welcome-Cb4F4Yjy.js"
   ],
   "resources/js/Components/TextInput.jsx": [
     "/build/assets/TextInput-C4qymzAp.js"
   ],
   "resources/js/Components/TitleAndSpan.jsx": [
-    "/build/assets/MainStructure-DgZhQ8Ne.js"
+    "/build/assets/TitleAndSpan-CqVWr50H.js"
   ],
   "resources/js/Components/Transactions.jsx": [
-    "/build/assets/Fund-mT9thaMX.js"
+    "/build/assets/Fund-D7E8fz-4.js"
   ],
   "resources/js/Components/TransactionsTable.jsx": [
-    "/build/assets/Fund-mT9thaMX.js"
+    "/build/assets/Fund-D7E8fz-4.js"
   ],
   "resources/js/Components/WelcomeForm.jsx": [
-    "/build/assets/Welcome-hrp3yAOv.js"
+    "/build/assets/Welcome-Cb4F4Yjy.js"
   ],
   "resources/js/Components/icons/AddIcon.jsx": [
-    "/build/assets/Modal-BeyOym37.js"
+    "/build/assets/ActionButton-C-VHGDg0.js"
   ],
   "resources/js/Components/icons/AmorceLogo.jsx": [
     "/build/assets/AmorceLogo-CnwZ4b75.js"
   ],
   "resources/js/Components/icons/BackArrowIcon.jsx": [
-    "/build/assets/MainStructure-DgZhQ8Ne.js"
+    "/build/assets/MainStructure-ml01duAk.js"
   ],
   "resources/js/Components/icons/DashboardIcon.jsx": [
-    "/build/assets/MainStructure-DgZhQ8Ne.js"
+    "/build/assets/MainStructure-ml01duAk.js"
   ],
   "resources/js/Components/icons/DetenteIcon.jsx": [
-    "/build/assets/MainStructure-DgZhQ8Ne.js"
+    "/build/assets/MainStructure-ml01duAk.js"
   ],
   "resources/js/Components/icons/DropIcon.jsx": [
-    "/build/assets/Fund-mT9thaMX.js"
+    "/build/assets/DropIcon-4oCS__qd.js"
+  ],
+  "resources/js/Components/icons/EditIcon.jsx": [
+    "/build/assets/ActionButton-C-VHGDg0.js"
   ],
   "resources/js/Components/icons/EventIcon.jsx": [
-    "/build/assets/MainStructure-DgZhQ8Ne.js"
+    "/build/assets/MainStructure-ml01duAk.js"
   ],
   "resources/js/Components/icons/FondIcon.jsx": [
-    "/build/assets/MainStructure-DgZhQ8Ne.js"
+    "/build/assets/MainStructure-ml01duAk.js"
   ],
   "resources/js/Components/icons/LogoutIcon.jsx": [
-    "/build/assets/MainStructure-DgZhQ8Ne.js"
+    "/build/assets/MainStructure-ml01duAk.js"
   ],
-  "resources/js/Components/icons/RaiseIcon.jsx": [
-    "/build/assets/FondList-CoOBDxCf.js"
+  "resources/js/Components/icons/ProjetIcon.jsx": [
+    "/build/assets/MainStructure-ml01duAk.js"
+  ],
+  "resources/js/Components/icons/ReceiveIcon.jsx": [
+    "/build/assets/ActionButton-C-VHGDg0.js"
   ],
   "resources/js/Components/icons/RemoveIcon.jsx": [
-    "/build/assets/ActionButton-BY7FUjSI.js"
+    "/build/assets/ActionButton-C-VHGDg0.js"
+  ],
+  "resources/js/Components/icons/SettingsIcon.jsx": [
+    "/build/assets/MainStructure-ml01duAk.js"
   ],
   "resources/js/Components/icons/TransferIcon.jsx": [
-    "/build/assets/ActionButton-BY7FUjSI.js"
+    "/build/assets/ActionButton-C-VHGDg0.js"
   ],
   "resources/js/Components/icons/UserIcon.jsx": [
-    "/build/assets/MainStructure-DgZhQ8Ne.js"
+    "/build/assets/MainStructure-ml01duAk.js"
   ],
   "resources/js/Layouts/GuestLayout.jsx": [
     "/build/assets/GuestLayout-Wd1Xlnmy.js"
@@ -127,10 +202,10 @@
     "/build/assets/ConfirmPassword-bshzTRZv.js"
   ],
   "resources/js/Pages/Auth/ForgotPassword.jsx": [
-    "/build/assets/ForgotPassword-DymiW7oF.js"
+    "/build/assets/ForgotPassword-D2VjIFVW.js"
   ],
   "resources/js/Pages/Auth/Login.jsx": [
-    "/build/assets/Login-K0KJ0Zxq.js"
+    "/build/assets/Login-BVnefRft.js"
   ],
   "resources/js/Pages/Auth/Register.jsx": [
     "/build/assets/Register-DrsgKsQo.js"
@@ -142,52 +217,70 @@
     "/build/assets/VerifyEmail-DMChafn4.js"
   ],
   "resources/js/Pages/Compte.jsx": [
-    "/build/assets/Compte-DpZ2sGxi.js"
+    "/build/assets/Compte-CNLOziC2.js"
   ],
   "resources/js/Pages/Dashboard.jsx": [
-    "/build/assets/Dashboard-BeIHnqck.js"
+    "/build/assets/Dashboard-DFqWFHVs.js"
   ],
   "resources/js/Pages/Detente.jsx": [
-    "/build/assets/Detente-DWvQlZ7U.js"
+    "/build/assets/Detente-D6jvWlEF.js"
+  ],
+  "resources/js/Pages/DetenteHistory.jsx": [
+    "/build/assets/DetenteHistory-DD0-ONVJ.js"
   ],
   "resources/js/Pages/Draw.jsx": [
-    "/build/assets/Draw-B4a0fTHh.js"
+    "/build/assets/Draw-B9BfVw8g.js"
   ],
   "resources/js/Pages/Evenement.jsx": [
-    "/build/assets/Evenement-zWSbzDkj.js"
+    "/build/assets/Evenement-DpYhm2nG.js"
+  ],
+  "resources/js/Pages/Event/Edit.jsx": [
+    "/build/assets/Edit-CH6IE5SO.js"
   ],
   "resources/js/Pages/Fund.jsx": [
-    "/build/assets/Fund-mT9thaMX.js"
+    "/build/assets/Fund-D7E8fz-4.js"
   ],
   "resources/js/Pages/Funds.jsx": [
-    "/build/assets/Funds-BSXq0jz7.js"
+    "/build/assets/Funds-Chj2qdCO.js"
   ],
   "resources/js/Pages/Profile/Add.jsx": [
-    "/build/assets/Add-BlImwWg5.js"
+    "/build/assets/Add-C8YOdfB4.js"
   ],
   "resources/js/Pages/Profile/Edit.jsx": [
-    "/build/assets/Edit-pwk7CBGv.js"
+    "/build/assets/Edit-BHIc9zbR.js"
   ],
   "resources/js/Pages/Profile/Partials/AddForm.jsx": [
-    "/build/assets/AddForm-DPYpz7Cs.js"
+    "/build/assets/AddForm-BUzKfNdK.js"
   ],
   "resources/js/Pages/Profile/Partials/DeleteUserForm.jsx": [
-    "/build/assets/DeleteUserForm-C3cUZ2f4.js"
+    "/build/assets/DeleteUserForm-BrPt-7ud.js"
   ],
   "resources/js/Pages/Profile/Partials/UpdatePasswordForm.jsx": [
     "/build/assets/UpdatePasswordForm-CGr_kP1O.js"
   ],
   "resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.jsx": [
-    "/build/assets/UpdateProfileInformationForm-DRFqrE4w.js"
+    "/build/assets/UpdateProfileInformationForm-kG_IE8vG.js"
+  ],
+  "resources/js/Pages/Project/Edit.jsx": [
+    "/build/assets/Edit-xgMexiDp.js"
+  ],
+  "resources/js/Pages/Project/Index.jsx": [
+    "/build/assets/Index-CvvpORPT.js"
   ],
   "resources/js/Pages/Transactions/Csv.jsx": [
-    "/build/assets/Csv-Co0JPK9t.js"
+    "/build/assets/Csv-C5aw3xWr.js"
+  ],
+  "resources/js/Pages/Transactions/CsvError.jsx": [
+    "/build/assets/CsvError-QPEEiyPp.js"
   ],
   "resources/js/Pages/Transactions/CsvList.jsx": [
-    "/build/assets/CsvList-9NC3dPLA.js"
+    "/build/assets/CsvList-CbwF_x7c.js"
+  ],
+  "resources/js/Pages/Users.jsx": [
+    "/build/assets/Users-D42GQYmi.js"
   ],
   "resources/js/Pages/Welcome.jsx": [
-    "/build/assets/Welcome-hrp3yAOv.js"
+    "/build/assets/Welcome-Cb4F4Yjy.js"
   ],
   "resources/js/ssr.jsx": []
 }
