@@ -14,6 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->text('description');
+            $table->string('platform')->nullable();
+            $table->string('meeting_link')->nullable();
             $table->date('date');
             $table->time('time')->nullable();
             $table->string('file')->nullable();

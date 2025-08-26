@@ -10,6 +10,9 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="icon" href="{{ asset('favicon.ico') }}?v=1" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=1" type="image/x-icon">
+
 
     <!-- Scripts -->
     @routes
@@ -24,7 +27,7 @@
     @inertia
     <script>
         // Script pour masquer l'attribut data-page dans l'inspecteur
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const appDiv = document.querySelector('[data-page]');
             if (appDiv) {
                 // Stocker les données dans une variable JavaScript
@@ -37,7 +40,7 @@
                     enumerable: false
                 });
                 // Restaurer l'accès pour Inertia.js
-                appDiv.getAttribute = function(attr) {
+                appDiv.getAttribute = function (attr) {
                     if (attr === 'data-page') {
                         return JSON.stringify(this._pageData);
                     }

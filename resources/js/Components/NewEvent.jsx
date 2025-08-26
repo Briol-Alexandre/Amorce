@@ -34,6 +34,8 @@ export default function NewEvent({ onClose, selectedDate }) {
     const initialFormState = {
         title: '',
         description: '',
+        platform: '',
+        meeting_link: '',
         date: selectedDate ? formatDate(selectedDate) : '',
         time: '',
         participants: [],
@@ -45,6 +47,8 @@ export default function NewEvent({ onClose, selectedDate }) {
         ...errors,
         title: errors.title ? "Le titre est obligatoire" : null,
         description: errors.description ? "La description est obligatoire" : null,
+        platform: errors.platform ? "La plateforme est invalide" : null,
+        meeting_link: errors.meeting_link ? "Le lien de réunion est invalide" : null,
         date: errors.date ? "La date est obligatoire" : null,
         time: errors.time ? "L'heure est obligatoire" : null,
         participants: errors.participants ? "Au moins un participant est requis" : null,
@@ -103,6 +107,42 @@ export default function NewEvent({ onClose, selectedDate }) {
                     />
                 </fieldset>
                 {customErrors.description && <InputError message={customErrors.description} />}
+
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
+                    <label htmlFor="platform">Plateforme</label>
+                    <select
+                        name="platform"
+                        id="platform"
+                        className="rounded-md ml-3"
+                        value={data.platform}
+                        onChange={handleChange}
+                    >
+                        <option value="">Sélectionner une plateforme</option>
+                        <option value="Zoom">Zoom</option>
+                        <option value="Microsoft Teams">Microsoft Teams</option>
+                        <option value="Google Meet">Google Meet</option>
+                        <option value="Jitsi">Jitsi</option>
+                        <option value="Discord">Discord</option>
+                        <option value="Présentiel">Présentiel</option>
+                        <option value="Autre">Autre</option>
+                    </select>
+                </fieldset>
+                {customErrors.platform && <InputError message={customErrors.platform} />}
+
+                <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
+                    <label htmlFor="meeting_link">Lien de réunion</label>
+                    <input
+                        type="text"
+                        name="meeting_link"
+                        id="meeting_link"
+                        className="rounded-md ml-3"
+                        value={data.meeting_link}
+                        placeholder="https://..."
+                        onChange={handleChange}
+                        disabled={data.platform === "Présentiel"}
+                    />
+                </fieldset>
+                {customErrors.meeting_link && <InputError message={customErrors.meeting_link} />}
 
                 <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center">
                     <label htmlFor="date">Date</label>

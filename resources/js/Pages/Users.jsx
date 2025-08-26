@@ -12,6 +12,7 @@ export default function Users({ users, permissions }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const { auth } = usePage().props;
 
     const handleEditClick = (user) => {
         setSelectedUser(user);
@@ -83,26 +84,38 @@ export default function Users({ users, permissions }) {
                                             </div>
                                         </td>
                                         <td className="border border-gray-400 lg:p-2 p-1">
-                                            <div className="hidden lg:flex flex-col lg:flex-row justify-center gap-2">
-                                                <ActionButton
-                                                    name="Modifier"
-                                                    color="orange"
-                                                    onClick={() => handleEditClick(user)}
-                                                />
-                                                <ActionButton
-                                                    name="Supprimer"
-                                                    color="red"
-                                                    onClick={() => handleDeleteClick(user)}
-                                                />
-                                            </div>
-                                            <div className="lg:hidden flex flex-col lg:flex-row justify-center gap-2">
-                                                <button onClick={() => handleEditClick(user)} className="bg-orange-500 text-white p-2 rounded hover:bg-white hover:text-orange-500 border border-orange-500 text-xs lg:text-base">
-                                                    Modifier
-                                                </button>
-                                                <button onClick={() => handleDeleteClick(user)} className="bg-red-600 text-white p-2 rounded hover:bg-white hover:text-red-600 border border-red-600 text-xs lg:text-base">
-                                                    Supprimer
-                                                </button>
-                                            </div>
+                                            {user.id !== auth.user.id ? (
+                                                <div className="hidden lg:flex flex-col lg:flex-row justify-center gap-2">
+                                                    <ActionButton
+                                                        name="Modifier"
+                                                        color="orange"
+                                                        onClick={() => handleEditClick(user)}
+                                                    />
+                                                    <ActionButton
+                                                        name="Supprimer"
+                                                        color="red"
+                                                        onClick={() => handleDeleteClick(user)}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div className="hidden lg:flex">
+                                                    <span className="text-gray-500 italic">Vous ne pouvez pas modifier vos droits</span>
+                                                </div>
+                                            )}
+                                            {user.id !== auth.user.id ? (
+                                                <div className="lg:hidden flex flex-col lg:flex-row justify-center gap-2">
+                                                    <button onClick={() => handleEditClick(user)} className="bg-orange-500 text-white p-2 rounded hover:bg-white hover:text-orange-500 border border-orange-500 text-xs lg:text-base">
+                                                        Modifier
+                                                    </button>
+                                                    <button onClick={() => handleDeleteClick(user)} className="bg-red-600 text-white p-2 rounded hover:bg-white hover:text-red-600 border border-red-600 text-xs lg:text-base">
+                                                        Supprimer
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className="lg:hidden flex">
+                                                    <span className="text-gray-500 text-xs">Vous ne pouvez pas modifier vos droits</span>
+                                                </div>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}

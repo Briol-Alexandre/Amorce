@@ -19,6 +19,8 @@ class Event extends Model
     protected $fillable = [
         'title',
         'description',
+        'platform',
+        'meeting_link',
         'date',
         'time',
         'user_id',
@@ -43,7 +45,7 @@ class Event extends Model
         return $this->belongsToMany(User::class, 'event_user')
             ->withTimestamps();
     }
-    
+
     /**
      * L'utilisateur qui a créé cet événement.
      */
@@ -51,7 +53,7 @@ class Event extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
     /**
      * Détermine si l'événement est passé
      */
@@ -59,7 +61,7 @@ class Event extends Model
     {
         return $this->date < now()->startOfDay();
     }
-    
+
     /**
      * Détermine si l'utilisateur est le créateur de l'événement
      */
@@ -67,7 +69,7 @@ class Event extends Model
     {
         return $this->user_id === $user->id;
     }
-    
+
     /**
      * Détermine si un compte rendu peut être ajouté
      */

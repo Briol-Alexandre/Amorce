@@ -19,10 +19,17 @@ class EventFactory extends Factory
      */
     public function definition(): array
     {
+        $platforms = ['Zoom', 'Microsoft Teams', 'Discord', 'Présentiel', null];
+        $platform = fake()->randomElement($platforms);
+
         return [
             'title' => fake()->sentence(3),
             'description' => fake()->paragraph(),
-            'date' => fake()->dateTimeBetween('-30 days', '+30 days'),
+            'platform' => $platform,
+            'meeting_link' => $platform && $platform !== 'Présentiel' ? fake()->url() : null,
+            'date' => fake()->dateTimeBetween('-30 days', '+30 days')->format('Y-m-d'),
+            'time' => fake()->time(),
+            'user_id' => 1,
         ];
     }
 
@@ -31,8 +38,8 @@ class EventFactory extends Factory
      */
     public function past(): static
     {
-        return $this->state(fn () => [
-            'date' => fake()->dateTimeBetween('-60 days', 'yesterday'),
+        return $this->state(fn() => [
+            'date' => fake()->dateTimeBetween('-60 days', 'yesterday')->format('Y-m-d'),
         ]);
     }
 
@@ -41,8 +48,8 @@ class EventFactory extends Factory
      */
     public function upcoming(): static
     {
-        return $this->state(fn () => [
-            'date' => fake()->dateTimeBetween('now', '+60 days'),
+        return $this->state(fn() => [
+            'date' => fake()->dateTimeBetween('now', '+60 days')->format('Y-m-d'),
         ]);
     }
 }

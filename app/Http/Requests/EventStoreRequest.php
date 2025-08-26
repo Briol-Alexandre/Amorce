@@ -16,6 +16,8 @@ class EventStoreRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'platform' => 'nullable|string|max:255',
+            'meeting_link' => 'nullable|string|url|max:2048',
             'date' => 'required|date',
             'time' => 'required|date_format:H:i',
             'participants' => 'sometimes|array',

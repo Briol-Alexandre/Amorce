@@ -59,6 +59,8 @@ class EventController extends Controller
         $event = Event::create([
             'title' => $validated['title'],
             'description' => $validated['description'],
+            'platform' => $validated['platform'] ?? null,
+            'meeting_link' => $validated['meeting_link'] ?? null,
             'date' => $validated['date'],
             'time' => $validated['time'],
             'user_id' => Auth::id(),
@@ -135,6 +137,8 @@ class EventController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'platform' => 'nullable|string|max:255',
+            'meeting_link' => 'nullable|string|url|max:2048',
             'date' => 'required|date',
             'time' => 'required|date_format:H:i',
             'participants' => 'sometimes|array',
@@ -144,6 +148,8 @@ class EventController extends Controller
         $event->update([
             'title' => $validated['title'],
             'description' => $validated['description'],
+            'platform' => $validated['platform'] ?? null,
+            'meeting_link' => $validated['meeting_link'] ?? null,
             'date' => $validated['date'],
             'time' => $validated['time'],
         ]);

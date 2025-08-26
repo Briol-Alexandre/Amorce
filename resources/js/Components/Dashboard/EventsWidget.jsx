@@ -12,7 +12,16 @@ import EventModal from '@/Components/EventModal';
  */
 export default function EventsWidget({ events }) {
     const [openModalId, setOpenModalId] = useState(null);
-    const sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const upcomingEvents = events.filter(event => {
+        const eventDate = new Date(event.date);
+        eventDate.setHours(0, 0, 0, 0);
+        return eventDate >= today;
+    });
+
+    const sortedEvents = [...upcomingEvents].sort((a, b) => new Date(a.date) - new Date(b.date));
 
     const openModal = (eventId, e) => {
         e.preventDefault();
@@ -33,7 +42,21 @@ export default function EventsWidget({ events }) {
                             const dateObj = event?.date ? new Date(event.date) : null;
                             const day = dateObj ? dateObj.toLocaleDateString('fr-FR', { day: '2-digit' }) : '';
                             const month = dateObj ? dateObj.toLocaleDateString('fr-FR', { month: 'short' }) : '';
-                            const time = dateObj ? dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '';
+                            
+                            // Récupérer l'heure directement depuis le champ time de l'événement
+                            let time = '';
+                            if (event?.time) {
+                                // Le format peut être soit une chaîne "HH:MM" soit un objet date
+                                if (typeof event.time === 'string') {
+                                    time = event.time;
+                                } else {
+                                    // Si c'est un objet date ou timestamp, le formater
+                                    const timeObj = new Date(event.time);
+                                    if (!isNaN(timeObj)) {
+                                        time = timeObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                                    }
+                                }
+                            }
 
                             return (
                                 <React.Fragment key={event.id}>

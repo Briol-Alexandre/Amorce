@@ -16,6 +16,8 @@ export default function EventModal({ event, isOpen, onClose, users }) {
     const { data: editData, setData: setEditData, put: updateEvent, processing: editProcessing, errors: editErrors } = useForm({
         title: event.title || '',
         description: event.description || '',
+        platform: event.platform || '',
+        meeting_link: event.meeting_link || '',
         date: event.date || '',
         time: event.time || '',
         participants: event.participants ? event.participants.map(p => p.id) : [],
@@ -41,6 +43,8 @@ export default function EventModal({ event, isOpen, onClose, users }) {
             setEditData({
                 title: event.title || '',
                 description: event.description || '',
+                platform: event.platform || '',
+                meeting_link: event.meeting_link || '',
                 date: formattedDate,
                 time: event.time || '',
                 participants: event.participants ? event.participants.map(p => p.id) : [],
@@ -165,6 +169,40 @@ export default function EventModal({ event, isOpen, onClose, users }) {
                         {editErrors.description && <InputError message={editErrors.description} />}
 
                         <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center max-lg:gap-1">
+                            <label htmlFor="platform">Plateforme</label>
+                            <select
+                                id="platform"
+                                className="rounded-md lg:ml-3 max-lg:mt-1"
+                                value={editData.platform}
+                                onChange={(e) => setEditData('platform', e.target.value)}
+                            >
+                                <option value="">Sélectionner une plateforme</option>
+                                <option value="Zoom">Zoom</option>
+                                <option value="Microsoft Teams">Microsoft Teams</option>
+                                <option value="Google Meet">Google Meet</option>
+                                <option value="Jitsi">Jitsi</option>
+                                <option value="Discord">Discord</option>
+                                <option value="Présentiel">Présentiel</option>
+                                <option value="Autre">Autre</option>
+                            </select>
+                        </fieldset>
+                        {editErrors.platform && <InputError message={editErrors.platform} />}
+
+                        <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center max-lg:gap-1">
+                            <label htmlFor="meeting_link">Lien de réunion</label>
+                            <input
+                                id="meeting_link"
+                                type="text"
+                                className="rounded-md lg:ml-3 max-lg:mt-1"
+                                value={editData.meeting_link}
+                                onChange={(e) => setEditData('meeting_link', e.target.value)}
+                                placeholder="https://..."
+                                disabled={editData.platform === "Présentiel"}
+                            />
+                        </fieldset>
+                        {editErrors.meeting_link && <InputError message={editErrors.meeting_link} />}
+
+                        <fieldset className="mt-5 self-end grid grid-cols-[1fr_3fr] items-center max-lg:gap-1">
                             <label htmlFor="date">Date</label>
                             <input
                                 id="date"
@@ -272,6 +310,26 @@ export default function EventModal({ event, isOpen, onClose, users }) {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>{event.time}</span>
+                        </div>
+                    )}
+                    
+                    {event.platform && (
+                        <div className="flex items-center mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <span>{event.platform}</span>
+                        </div>
+                    )}
+                    
+                    {event.meeting_link && (
+                        <div className="flex items-center mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                            <a href={event.meeting_link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                                Lien de réunion
+                            </a>
                         </div>
                     )}
                 </div>

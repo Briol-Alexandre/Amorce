@@ -54,13 +54,32 @@ class DatabaseSeeder extends Seeder
             'amount' => 0,
         ]);
 
+        // Créer 3 détentes avec 3 participations
+        Detente::factory()
+            ->count(3)
+            ->create([
+                'participation' => 3
+            ]);
 
+        // Créer 3 détentes avec 2 participations
+        Detente::factory()
+            ->count(3)
+            ->create([
+                'participation' => 2
+            ]);
 
+        // Créer 3 détentes avec 1 participation
+        Detente::factory()
+            ->count(3)
+            ->create([
+                'participation' => 1
+            ]);
 
         // Appel aux seeders
         $this->call([
             PermissionSeeder::class,
             TransactionSeeder::class,
+            EventSeeder::class,
         ]);
 
         // Attribuer toutes les permissions à l'utilisateur principal
