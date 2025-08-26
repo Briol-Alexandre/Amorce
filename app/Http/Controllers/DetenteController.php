@@ -130,7 +130,7 @@ class DetenteController extends Controller
             ]);
 
 
-            $basicPermissions = Permission::whereIn('slug', ['access-funds', 'access-meetings', 'access-detente', 'access-projects'])->get();
+            $basicPermissions = Permission::whereIn('slug', ['access-funds', 'access-meetings', 'manage-meetings', 'access-detente', 'access-projects'])->get();
             $user->permissions()->sync($basicPermissions->pluck('id')->toArray());
         }
 
