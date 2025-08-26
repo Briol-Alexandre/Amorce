@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FundStoreRequest;
 use App\Models\Fund;
-use Illuminate\Validation\Rules\In;
 use Inertia\Inertia;
-use JetBrains\PhpStorm\NoReturn;
 
 class FondController extends Controller
 {

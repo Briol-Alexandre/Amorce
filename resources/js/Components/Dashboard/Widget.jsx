@@ -1,15 +1,5 @@
 import React from 'react';
 
-/**
- * 
- * @param {Object} props 
- * @param {string} props.title 
- * @param {string} props.className 
- * @param {React.ReactNode} props.children 
- * @param {string} props.icon 
- * @param {string} props.color 
- * @returns {JSX.Element}
- */
 export default function Widget({ title, className = '', children, icon = null, color = 'default' }) {
     const colorClasses = {
         default: 'bg-white border-gray-200',

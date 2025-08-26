@@ -3,12 +3,6 @@ import Widget from './Widget';
 import { router } from '@inertiajs/react';
 import ProjetIcon from '@/Components/icons/ProjetIcon.jsx';
 
-/**
- * 
- * @param {Object} props 
- * @param {Array} props.projects 
- * @returns {JSX.Element}
- */
 export default function ProjectsWidget({ projects }) {
     return (
         <Widget

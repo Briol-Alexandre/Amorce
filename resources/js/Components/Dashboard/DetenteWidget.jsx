@@ -3,15 +3,6 @@ import Widget from './Widget';
 import { router } from '@inertiajs/react';
 import DetenteIcon from '@/Components/icons/DetenteIcon.jsx';
 
-/**
- * Widget affichant les informations sur la détente
- * 
- * @param {Object} props - Les propriétés du composant
- * @param {Array} props.participants - Liste des participants à la détente
- * @param {number} props.participantCount - Nombre total de participants
- * @param {number} props.maxParticipants - Nombre maximum de participants
- * @returns {JSX.Element}
- */
 export default function DetenteWidget({ participants, participantCount, maxParticipants = 9 }) {
     return (
         <Widget

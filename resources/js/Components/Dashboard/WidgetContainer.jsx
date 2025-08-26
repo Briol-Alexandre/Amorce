@@ -1,13 +1,5 @@
-import React from 'react';
 import { usePage } from '@inertiajs/react';
 
-/**
- * 
- * @param {Object} props 
- * @param {React.ReactNode} props.children 
- * @param {string|Array} props.requiredPermission 
- * @returns {JSX.Element|null}
- */
 export default function WidgetContainer({ children, requiredPermission }) {
     const { user } = usePage().props;
 

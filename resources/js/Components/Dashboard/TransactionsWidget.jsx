@@ -3,13 +3,7 @@ import Widget from './Widget';
 import { router } from '@inertiajs/react';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 
-/**
- * Widget affichant les transactions récentes
- * 
- * @param {Object} props - Les propriétés du composant
- * @param {Array} props.transactions - Liste des transactions récentes
- * @returns {JSX.Element}
- */
+
 export default function TransactionsWidget({ transactions }) {
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);

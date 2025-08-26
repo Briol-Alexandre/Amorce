@@ -4,12 +4,6 @@ import { router } from '@inertiajs/react';
 import EventIcon from '@/Components/icons/EventIcon.jsx';
 import EventModal from '@/Components/EventModal';
 
-/**
- * 
- * @param {Object} props 
- * @param {Array} props.events
- * @returns {JSX.Element}
- */
 export default function EventsWidget({ events }) {
     const [openModalId, setOpenModalId] = useState(null);
     const sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
