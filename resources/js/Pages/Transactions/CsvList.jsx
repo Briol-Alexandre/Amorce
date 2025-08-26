@@ -3,12 +3,15 @@ import MainStructure from "@/Components/MainStructure.jsx";
 import ActionButton from "@/Components/ActionButton.jsx";
 import React, { useEffect, useState } from "react";
 import { router, usePage } from "@inertiajs/react";
+import axios from "axios";
 
 
 export default function CsvList() {
     const { funds, transactions } = usePage().props;
 
     const [selectedFunds, setSelectedFunds] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState(null);
 
     useEffect(() => {
         if (transactions && transactions.length > 0 && funds.length > 0) {
@@ -19,6 +22,34 @@ export default function CsvList() {
     }, [transactions, funds]);
 
 
+    const processQueuedJobs = async () => {
+        try {
+            setSubmitStatus('processing');
+            const response = await axios.post('/api/process-queue');
+            setSubmitStatus('success');
+
+            setTimeout(() => {
+
+                router.visit('/fonds', {
+                    method: 'get',
+                    preserveState: false,
+                    preserveScroll: false,
+                    replace: true,
+                    onSuccess: () => {
+                        console.log('Page des fonds rechargée avec succès');
+                    }
+                });
+            }, 1500);
+
+            return response.data;
+        } catch (error) {
+            console.error('Erreur lors du traitement des jobs:', error);
+            setSubmitStatus('error');
+            return null;
+        }
+    };
+
+
     function handleFundChange(e, index) {
         const updatedFunds = [...selectedFunds];
         updatedFunds[index] = e.target.value;
@@ -27,11 +58,16 @@ export default function CsvList() {
 
     function submitCsv(e) {
         e.preventDefault();
+        setIsSubmitting(true);
 
         const formData = {
             transactions: transactions.map((transaction, index) => ({
                 ...transaction,
                 fund_id: parseInt(selectedFunds[index]),
+
+                donator_name: transaction.donator_name || transaction.transactor || 'Transacteur anonyme',
+
+                date: transaction.date,
             })),
         };
 
@@ -40,9 +76,17 @@ export default function CsvList() {
         router.post('/csv/submit', formData, {
             forceFormData: true,
             onSuccess: () => {
+                console.log('Transactions soumises avec succès');
+
+                processQueuedJobs().then(result => {
+                    console.log('Résultat du traitement des jobs:', result);
+
+                });
             },
             onError: (errors) => {
                 console.error('Erreur dans la requête :', errors);
+                setIsSubmitting(false);
+                setSubmitStatus('error');
             },
         });
     }
@@ -101,14 +145,32 @@ export default function CsvList() {
 
                             </div>
 
-                            <div className="flex justify-end mt-4">
-                                <button
-                                    type="submit"
-                                    className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-700"
-                                    onClick={submitCsv}
-                                >
-                                    Ajouter les transactions
-                                </button>
+                            <div className="flex justify-between items-center mt-4">
+                                {submitStatus === 'processing' && (
+                                    <div className="text-blue-600 font-medium">
+                                        Traitement des transactions en cours...
+                                    </div>
+                                )}
+                                {submitStatus === 'success' && (
+                                    <div className="text-green-600 font-medium">
+                                        Transactions traitées avec succès !
+                                    </div>
+                                )}
+                                {submitStatus === 'error' && (
+                                    <div className="text-red-600 font-medium">
+                                        Erreur lors du traitement des transactions.
+                                    </div>
+                                )}
+                                <div className="flex justify-end">
+                                    <button
+                                        type="submit"
+                                        className={`bg-black text-white px-4 py-2 rounded-md hover:bg-gray-700 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        onClick={submitCsv}
+                                        disabled={isSubmitting}
+                                    >
+                                        {isSubmitting ? 'Traitement en cours...' : 'Ajouter les transactions'}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </form>

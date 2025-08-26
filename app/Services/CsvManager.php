@@ -18,7 +18,7 @@ class CsvManager
 
             $csv = Reader::createFromPath($filePath, 'r');
             $csv->setEscape('');
-            
+
             // S'assurer que le fichier est lisible
             if (!is_readable($filePath)) {
                 throw new \Exception("Le fichier CSV n'est pas lisible : {$filePath}");
@@ -28,7 +28,7 @@ class CsvManager
 
             // Utiliser un chunk size plus petit pour éviter les timeouts
             $chunkSize = 50;
-            
+
             if ($hasHeader) {
                 $csv->setHeaderOffset(0);
                 $stmt = Statement::create()->limit($chunkSize);

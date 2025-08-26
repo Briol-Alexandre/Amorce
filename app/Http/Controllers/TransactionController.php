@@ -38,14 +38,45 @@ class TransactionController extends Controller
     public function storeCsvTransactions(Request $request)
     {
         \Log::info('CSV Transactions received:', ['count' => count($request->input('transactions'))]);
-        
-        // Dispatch le job pour traiter les transactions en arrière-plan
+
+
+        $request->validate([
+            'transactions' => 'required|array',
+            'transactions.*.fund_id' => 'required|exists:funds,id',
+            'transactions.*.amount' => 'required',
+            'transactions.*.date' => 'required|date',
+        ]);
+
+
+        $transactions = collect($request->input('transactions'))->map(function ($transaction) {
+
+            $date = \Carbon\Carbon::parse($transaction['date']);
+
+            return [
+                'fund_id' => (int) $transaction['fund_id'],
+                'amount' => $transaction['amount'],
+                'communication' => $transaction['communication'] ?? 'Aucune communication',
+                'donator_name' => $transaction['donator_name'] ?? $transaction['transactor'] ?? 'Transacteur anonyme',
+                'month' => $date->month,
+                'year' => $date->year,
+                'date' => $date->toDateString(),
+                'email' => $transaction['email'] ?? null,
+                'phone' => $transaction['phone'] ?? null,
+            ];
+        })->toArray();
+
+        \Log::info('Transactions préparées pour le job:', [
+            'count' => count($transactions),
+            'sample' => !empty($transactions) ? $transactions[0] : 'Aucune transaction'
+        ]);
+
+
         \App\Jobs\ProcessCsvTransactions::dispatch(
-            $request->input('transactions'),
+            $transactions,
             auth()->id()
         );
-        
-        // Rediriger immédiatement l'utilisateur avec un message de confirmation
+
+
         return redirect()->route('fond.index')->with([
             'success' => 'Votre fichier CSV est en cours de traitement. Les transactions seront ajoutées en arrière-plan.',
             'funds' => Fund::all(),
@@ -170,11 +201,11 @@ class TransactionController extends Controller
         $amount = trim($amount);
 
         if (strpos($amount, '.') !== false && strpos($amount, ',') !== false) {
-            // Format européen avec points pour les milliers et virgules pour les décimales
-            $amount = str_replace('.', '', $amount); // Supprimer points (milliers)
-            $amount = str_replace(',', '.', $amount); // Virgule -> point (décimales)
+
+            $amount = str_replace('.', '', $amount);
+            $amount = str_replace(',', '.', $amount);
         } elseif (strpos($amount, ',') !== false) {
-            $amount = str_replace(',', '.', $amount); // Simple virgule -> point
+            $amount = str_replace(',', '.', $amount);
         }
 
         return $amount;
@@ -233,12 +264,12 @@ class TransactionController extends Controller
         $duplicateCount = 0;
 
         \Log::info('Starting duplicate check', ['transaction_count' => count($transactions), 'funds_count' => $funds->count()]);
-        
-        // Préparer les données pour une vérification en masse
+
+
         $transactionsToCheck = [];
         $transactionMap = [];
-        
-        // Première passe : préparer les données
+
+
         foreach ($transactions as $index => $transaction) {
             $fundId = $transaction['fund_id'] ?? $funds[0]->id;
             $amount = (float) $this->parseAmount($transaction['amount']);
@@ -257,10 +288,10 @@ class TransactionController extends Controller
             if (empty(trim($donatorName))) {
                 $donatorName = 'Transacteur anonyme';
             }
-            
-            // Créer une clé unique pour cette transaction
+
+
             $key = "$fundId-$amount-$month-$year-$communication";
-            
+
             $transactionsToCheck[] = [
                 'fund_id' => $fundId,
                 'amount' => $amount,
@@ -272,19 +303,19 @@ class TransactionController extends Controller
                 'donator_name' => $donatorName,
                 'key' => $key
             ];
-            
-            // Mapper la clé à l'index pour retrouver facilement la transaction
+
+
             $transactionMap[$key] = $index;
         }
-        
-        // Traiter par lots pour éviter les timeouts
+
+
         $chunkSize = 50;
         $chunks = array_chunk($transactionsToCheck, $chunkSize);
-        
+
         foreach ($chunks as $chunkIndex => $chunk) {
             \Log::info('Processing duplicate check chunk', ['chunk' => $chunkIndex + 1, 'size' => count($chunk)]);
-            
-            // Extraire les critères pour la requête
+
+
             $conditions = [];
             foreach ($chunk as $item) {
                 $conditions[] = [
@@ -295,14 +326,14 @@ class TransactionController extends Controller
                     'communication' => $item['communication']
                 ];
             }
-            
-            // Vérifier les doublons en une seule requête avec orWhere
-            $query = Transaction::where(function($query) use ($conditions) {
+
+
+            $query = Transaction::where(function ($query) use ($conditions) {
                 foreach ($conditions as $index => $condition) {
                     if ($index === 0) {
                         $query->where($condition);
                     } else {
-                        $query->orWhere(function($q) use ($condition) {
+                        $query->orWhere(function ($q) use ($condition) {
                             foreach ($condition as $field => $value) {
                                 $q->where($field, $value);
                             }
@@ -310,18 +341,18 @@ class TransactionController extends Controller
                     }
                 }
             });
-            
-            // Exécuter la requête et récupérer les doublons
+
+
             $existingTransactions = $query->get();
-            
-            // Traiter les résultats
+
+
             foreach ($existingTransactions as $existing) {
                 $key = "{$existing->fund_id}-{$existing->amount}-{$existing->month}-{$existing->year}-{$existing->communication}";
-                
+
                 if (isset($transactionMap[$key])) {
                     $originalIndex = $transactionMap[$key];
                     $transaction = $transactionsToCheck[array_search($originalIndex, array_column($transactionsToCheck, 'index'))];
-                    
+
                     $duplicates[] = [
                         'index' => $transaction['index'] + 1,
                         'month' => $transaction['month'],
@@ -333,7 +364,7 @@ class TransactionController extends Controller
                         'fund_id' => $transaction['fund_id'],
                     ];
                     $duplicateCount++;
-                    
+
                     \Log::info('Duplicate found', [
                         'csv_index' => $transaction['index'] + 1,
                         'existing_id' => $existing->id
