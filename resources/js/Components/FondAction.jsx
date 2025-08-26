@@ -21,12 +21,9 @@ export default function FondAction({ fund, funds }) {
 
     function openDeleteModal(e) {
         e.preventDefault();
-        // Vérifier si le fond a de l'argent
         if (fund.amount > 0) {
-            // Si le fond a de l'argent, ouvrir la modale de transfert avant suppression
             setIsTransferBeforeDeleteModalOpen(true);
         } else {
-            // Si le fond est vide, ouvrir directement la modale de suppression
             setIsDeleteModalOpen(true);
         }
     }
@@ -83,7 +80,6 @@ export default function FondAction({ fund, funds }) {
     function handleReceive(formData) {
         console.log('Sending receive data:', formData);
 
-        // Pour la réception, on utilise le fond source comme paramètre de route
         const sourceFund = funds.find(f => f.id == formData.fund_id);
 
         router.patch(route('transaction.update', { fund: sourceFund }), formData, {
@@ -102,15 +98,12 @@ export default function FondAction({ fund, funds }) {
         router.patch(route('fond.update', fund.id), formData, {
             onSuccess: (page) => {
                 closeModal();
-                // Optionnel: afficher un message de succès
                 console.log('Fond modifié avec succès');
             },
             onError: (errors) => {
                 console.error('Erreur lors de la modification du fond:', errors);
-                // Les erreurs de validation seront affichées automatiquement par Inertia
             },
             onFinish: () => {
-                // Cette fonction est appelée dans tous les cas (succès ou erreur)
                 console.log('Requête terminée');
             }
         });
@@ -119,15 +112,12 @@ export default function FondAction({ fund, funds }) {
     function handleTransferAndDelete(transfersData) {
         console.log('Transferts multiples avant suppression:', transfersData);
 
-        // Utiliser la nouvelle route pour les transferts multiples
         router.post(route('fond.transfer-multiple', { fund: fund }), {
             transfers: transfersData
         }, {
             onSuccess: (page) => {
                 console.log('Tous les transferts effectués avec succès, suppression du fond...');
-                // Vérifier si les transferts ont été complétés
                 if (page.props.flash?.transfersCompleted) {
-                    // Une fois tous les transferts réussis, supprimer le fond
                     router.delete(route('fond.destroy', fund.id), {
                         onSuccess: () => {
                             console.log('Fond supprimé avec succès après transferts multiples');
@@ -139,7 +129,6 @@ export default function FondAction({ fund, funds }) {
                     });
                 } else {
                     console.log('Transferts effectués, mais pas de flag de confirmation');
-                    // Essayer quand même de supprimer
                     router.delete(route('fond.destroy', fund.id), {
                         onSuccess: () => {
                             console.log('Fond supprimé avec succès');
@@ -153,7 +142,6 @@ export default function FondAction({ fund, funds }) {
             },
             onError: (errors) => {
                 console.error('Erreur lors des transferts multiples:', errors);
-                // Les erreurs seront affichées automatiquement par Inertia dans la modale
             },
         });
     }

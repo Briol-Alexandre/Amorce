@@ -62,7 +62,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             TransactionSeeder::class,
         ]);
-        
+
         // Attribuer toutes les permissions à l'utilisateur principal
         $permissions = Permission::all();
         $user->permissions()->attach($permissions->pluck('id')->toArray());

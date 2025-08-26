@@ -40,7 +40,7 @@ export default function ProjectList({ projects }) {
                             {projects.map((project, index) => (
                                 <tr key={index}>
                                     <td className="border border-gray-400 p-2">
-                                        <button 
+                                        <button
                                             onClick={() => openModal(project, 'show')}
                                             className="w-full hover:bg-gray-100 rounded-md transition duration-200"
                                         >
@@ -66,12 +66,12 @@ export default function ProjectList({ projects }) {
                         </tbody>
                     </table>
                 </div>
-                
+
                 {/* Version mobile */}
                 <div className="md:hidden space-y-4 mb-20">
                     {projects.map((project, index) => (
                         <div key={index} className="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
-                            <button 
+                            <button
                                 onClick={() => openModal(project, 'show')}
                                 className="w-full text-left hover:bg-gray-50 transition duration-200"
                             >
@@ -98,15 +98,15 @@ export default function ProjectList({ projects }) {
 
             <Modal key={modalKey} show={isModalOpen} onClose={closeModal} className="project-modal-wide">
                 {selectedProject && modalMode === 'show' && (
-                    <ShowProject 
-                        project={selectedProject} 
-                        onClose={closeModal} 
+                    <ShowProject
+                        project={selectedProject}
+                        onClose={closeModal}
                         onEdit={handleEditClick}
                     />
                 )}
                 {selectedProject && modalMode === 'edit' && (
-                    <EditProject 
-                        project={selectedProject} 
+                    <EditProject
+                        project={selectedProject}
                         onClose={closeModal}
                     />
                 )}

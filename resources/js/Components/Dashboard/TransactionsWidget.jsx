@@ -17,15 +17,15 @@ export default function TransactionsWidget({ transactions }) {
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        return new Intl.DateTimeFormat('fr-FR', { 
-            day: 'numeric', 
+        return new Intl.DateTimeFormat('fr-FR', {
+            day: 'numeric',
             month: 'short'
         }).format(date);
     };
 
     return (
-        <Widget 
-            title="Transactions récentes" 
+        <Widget
+            title="Transactions récentes"
             color=""
             icon={<ArrowPathIcon className="w-5 h-5 inline" />}
             className="h-full"
@@ -34,16 +34,17 @@ export default function TransactionsWidget({ transactions }) {
                 {transactions.length > 0 ? (
                     <div className="space-y-2 max-h-60 overflow-y-auto">
                         {transactions.map((transaction) => (
-                            <div 
-                                key={transaction.id} 
+                            <div
+                                key={transaction.id}
                                 className="p-2 bg-white rounded border border-gray-100 flex justify-between items-center"
                             >
                                 <div>
-                                    <p className="font-medium text-gray-800">
-                                        {transaction.transactor || 'Anonyme'}
+                                    <p className="font-medium text-gray-800 truncate max-w-[150px]">
+                                        →
+                                        {transaction.fund?.name || 'Anonyme'}
                                     </p>
-                                    <p className="text-xs text-gray-500">
-                                        {formatDate(transaction.created_at)} • {transaction.fund?.name || 'Fond inconnu'}
+                                    <p className="text-xs text-gray-500 truncate max-w-[150px]">
+                                        {formatDate(transaction.created_at)}
                                     </p>
                                 </div>
                                 <span className={`font-medium ${transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
@@ -55,9 +56,9 @@ export default function TransactionsWidget({ transactions }) {
                 ) : (
                     <p className="text-gray-500 text-sm italic">Aucune transaction récente</p>
                 )}
-                
+
                 <div className="mt-3 text-center">
-                    <button 
+                    <button
                         onClick={() => router.visit(route('transactions.index'))}
                         className="text-sm text-gray-600 hover:text-gray-800"
                     >

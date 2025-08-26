@@ -44,7 +44,7 @@ export default function FundsWidget({ funds, totalAmount, fundCount }) {
                                 className="p-2 bg-white rounded border border-gray-200 flex justify-between items-center cursor-pointer hover:bg-gray-50"
                                 onClick={() => router.visit(route('fond.show', fund.id))}
                             >
-                                <span className="font-medium">{fund.name}</span>
+                                <span className="font-medium truncate max-w-[150px]">{fund.name}</span>
                                 <span className="text-gray-700 font-medium">{formatCurrency(fund.amount)}</span>
                             </div>
                         ))}

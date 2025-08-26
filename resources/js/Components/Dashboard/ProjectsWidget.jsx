@@ -28,7 +28,7 @@ export default function ProjectsWidget({ projects }) {
                             >
                                 <div className="flex items-center space-x-3">
                                     {project.image && (
-                                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden aspect-square">
                                             <img
                                                 src={project.image}
                                                 alt={project.name}
@@ -47,7 +47,7 @@ export default function ProjectsWidget({ projects }) {
                                             </span>
                                         </div>
                                     )}
-                                    <div className="flex-1">
+                                    <div className="w-[80%] lg:w-[90%]">
                                         <h4 className="font-medium text-gray-800">{project.name}</h4>
                                         {project.description && (
                                             <p className="text-sm text-gray-500 truncate">

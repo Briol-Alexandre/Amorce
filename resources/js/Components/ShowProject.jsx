@@ -47,8 +47,9 @@ export default function ShowProject({ project, onClose, onEdit }) {
                         <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded-md">{project.description}</p>
                     </div>
 
+
                     <div className="flex justify-end mt-8 gap-4">
-                        {auth.permissions && auth.permissions.includes('manage-projects') && (
+                        {auth.user.permissions && auth.user.permissions.includes('manage-projects') && (
                             <>
                                 <button
                                     onClick={onEdit}

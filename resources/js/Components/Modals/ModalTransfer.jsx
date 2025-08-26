@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import InputError from "@/Components/InputError.jsx";
 
-export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
+export function ModalTransfer({ closeModal, handleTransfer, fund, funds }) {
     const activeFundId = fund.id;
 
     const currentDate = new Date().toISOString().split('T')[0];
@@ -20,7 +20,7 @@ export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
     const [errors, setErrors] = useState({});
 
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -86,7 +86,7 @@ export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
                         onChange={handleInputChange}
                     />
                 </fieldset>
-                {errors.amount && <InputError message={errors.amount}/>}
+                {errors.amount && <InputError message={errors.amount} />}
 
                 <fieldset className="mt-3 self-end grid lg:grid-cols-[1fr_3fr] max-lg:grid-cols-1 items-center">
                     <label htmlFor="fonds" className="max-lg:text-sm">Vers quel fond</label>
@@ -108,7 +108,7 @@ export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
                             ))}
                     </select>
                 </fieldset>
-                {errors.destinationFundId && <InputError message={errors.destinationFundId}/>}
+                {errors.destinationFundId && <InputError message={errors.destinationFundId} />}
 
                 <fieldset className="mt-3 self-end grid lg:grid-cols-[1fr_3fr] max-lg:grid-cols-1 items-center">
                     <label htmlFor="transactor" className="max-lg:text-sm">Transacteur</label>
@@ -135,7 +135,7 @@ export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
                         onChange={handleInputChange}
                     />
                 </fieldset>
-                {errors.communication && <InputError message={errors.communication}/>}
+                {errors.communication && <InputError message={errors.communication} />}
 
                 <fieldset className="mt-3 self-end grid lg:grid-cols-[1fr_3fr] max-lg:grid-cols-1 items-center">
                     <input
@@ -147,7 +147,7 @@ export function ModalTransfer({closeModal, handleTransfer, fund, funds}) {
                         onChange={handleInputChange}
                     />
                 </fieldset>
-                {errors.date && <InputError message={errors.date}/>}
+                {errors.date && <InputError message={errors.date} />}
 
                 <div className="flex justify-end mt-8 lg:gap-4 max-lg:gap-2">
                     <button
