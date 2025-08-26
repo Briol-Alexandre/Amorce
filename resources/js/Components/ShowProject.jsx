@@ -1,16 +1,17 @@
 import React from "react";
 import { useForm } from "@inertiajs/react";
 import { route } from "ziggy-js";
+import { usePage } from "@inertiajs/react";
 
 export default function ShowProject({ project, onClose, onEdit }) {
     const { delete: destroy } = useForm();
+    const { auth } = usePage().props;
 
     function handleDelete() {
         if (confirm(`Êtes-vous sûr de vouloir supprimer le projet "${project.name}" ?`)) {
             destroy(route('project.destroy', project.id), {
                 onSuccess: () => {
                     onClose();
-                    // Recharger la page pour mettre à jour la liste des projets
                     window.location.reload();
                 }
             });
@@ -18,7 +19,7 @@ export default function ShowProject({ project, onClose, onEdit }) {
     }
 
     return (
-        <div className="max-w-3xl mx-auto">
+        <div className="w-3xl mx-auto">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold">{project.name}</h2>
             </div>
@@ -45,20 +46,25 @@ export default function ShowProject({ project, onClose, onEdit }) {
                         <h3 className="text-lg font-semibold mb-2">Description</h3>
                         <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded-md">{project.description}</p>
                     </div>
-                    
+
                     <div className="flex justify-end mt-8 gap-4">
-                        <button
-                            onClick={onEdit}
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-white hover:text-blue-500 border border-blue-500"
-                        >
-                            Modifier
-                        </button>
-                        <button
-                            onClick={handleDelete}
-                            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-white hover:text-red-500 border border-red-500"
-                        >
-                            Supprimer
-                        </button>
+                        {auth.permissions && auth.permissions.includes('manage-projects') && (
+                            <>
+                                <button
+                                    onClick={onEdit}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-white hover:text-blue-500 border border-blue-500"
+                                >
+                                    Modifier
+                                </button>
+
+                                <button
+                                    onClick={handleDelete}
+                                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-white hover:text-red-500 border border-red-500"
+                                >
+                                    Supprimer
+                                </button>
+                            </>
+                        )}
                         <button
                             onClick={onClose}
                             className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-white hover:text-gray-500 border border-gray-500"
@@ -66,6 +72,7 @@ export default function ShowProject({ project, onClose, onEdit }) {
                             Fermer
                         </button>
                     </div>
+
                 </div>
             </div>
         </div>

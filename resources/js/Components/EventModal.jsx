@@ -9,10 +9,10 @@ export default function EventModal({ event, isOpen, onClose, users }) {
     const { auth } = usePage().props;
     const { delete: destroy } = useForm();
 
-    // Mode édition
+
     const [editMode, setEditMode] = useState(false);
 
-    // Formulaire pour l'édition d'événement
+
     const { data: editData, setData: setEditData, put: updateEvent, processing: editProcessing, errors: editErrors } = useForm({
         title: event.title || '',
         description: event.description || '',
@@ -21,7 +21,7 @@ export default function EventModal({ event, isOpen, onClose, users }) {
         participants: event.participants ? event.participants.map(p => p.id) : [],
     });
 
-    // Formulaire pour l'upload du compte rendu
+
     const { data, setData, post, processing, errors, reset } = useForm({
         report_file: null,
     });
@@ -29,13 +29,19 @@ export default function EventModal({ event, isOpen, onClose, users }) {
     const [showReportForm, setShowReportForm] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState([]);
 
-    // Mettre à jour le formulaire d'édition quand l'événement change
+
     useEffect(() => {
         if (event) {
+            let formattedDate = '';
+            if (event.date) {
+                const dateObj = new Date(event.date);
+                formattedDate = dateObj.toISOString().split('T')[0];
+            }
+
             setEditData({
                 title: event.title || '',
                 description: event.description || '',
-                date: event.date || '',
+                date: formattedDate,
                 time: event.time || '',
                 participants: event.participants ? event.participants.map(p => p.id) : [],
             });
@@ -46,14 +52,13 @@ export default function EventModal({ event, isOpen, onClose, users }) {
         }
     }, [event]);
 
-    // Vérifier si l'utilisateur est administrateur ou a des permissions spéciales
-    const canEdit = auth?.user?.is_admin || auth?.user?.id === event.user_id || auth?.permissions?.includes('edit-events');
-    const canDelete = auth?.user?.is_admin || auth?.user?.id === event.user_id || auth?.permissions?.includes('delete-events');
 
-    // Vérifier si l'événement est passé et si l'utilisateur est le créateur
+    const canEdit = auth?.user?.is_admin || auth?.user?.id === event.user_id || auth?.permissions?.includes('manage-events');
+    const canDelete = auth?.user?.is_admin || auth?.user?.id === event.user_id || auth?.permissions?.includes('manage-events');
+
+
     const isPastEvent = new Date(event.date) < new Date(new Date().setHours(0, 0, 0, 0));
-    const isCreator = auth?.user?.id === event.user_id;
-    const canAddReport = isPastEvent && isCreator && !event.file;
+    const canAddReport = isPastEvent && !event.file;
 
     const handleDelete = () => {
         if (confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')) {
@@ -124,7 +129,7 @@ export default function EventModal({ event, isOpen, onClose, users }) {
         year: 'numeric'
     }) : '';
 
-    // Rendu du mode édition
+
     if (editMode) {
         return (
             <Modal show={isOpen} onClose={handleCancelEdit}>
@@ -203,7 +208,7 @@ export default function EventModal({ event, isOpen, onClose, users }) {
                                                         : editData.participants.filter(id => id !== userId);
                                                     setEditData('participants', newParticipants);
 
-                                                    // Mettre à jour la liste des utilisateurs sélectionnés pour l'affichage
+
                                                     if (e.target.checked) {
                                                         const user = users.find(u => u.id === userId);
                                                         if (user) {
@@ -247,7 +252,7 @@ export default function EventModal({ event, isOpen, onClose, users }) {
         );
     }
 
-    // Rendu du mode affichage
+
     return (
         <Modal show={isOpen} onClose={onClose}>
             <div className="p-6">
