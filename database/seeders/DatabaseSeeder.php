@@ -80,6 +80,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             TransactionSeeder::class,
             EventSeeder::class,
+            ProjectSeeder::class,
         ]);
 
         // Attribuer toutes les permissions à l'utilisateur principal

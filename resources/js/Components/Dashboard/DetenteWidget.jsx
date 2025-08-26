@@ -40,7 +40,7 @@ export default function DetenteWidget({ participants, participantCount, maxParti
                                 >
                                     <span className="font-medium">{participant.name}</span>
                                     <span className="text-gray-500 text-sm">
-                                        {participant.participations} participation{participant.participations > 1 ? 's' : ''}
+                                        {participant.participation} participation{participant.participation > 1 ? 's' : ''}
                                     </span>
                                 </div>
                             ))
