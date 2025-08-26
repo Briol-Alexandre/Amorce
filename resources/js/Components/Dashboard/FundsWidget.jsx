@@ -3,6 +3,14 @@ import Widget from './Widget';
 import { router } from '@inertiajs/react';
 import FondIcon from '@/Components/icons/FondIcon.jsx';
 
+/**
+ * 
+ * @param {Object} props 
+ * @param {Array} props.funds 
+ * @param {number} props.totalAmount 
+ * @param {number} props.fundCount 
+ * @returns {JSX.Element}
+ */
 export default function FundsWidget({ funds, totalAmount, fundCount }) {
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
