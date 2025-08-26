@@ -7,9 +7,7 @@ use App\Models\User;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
-use JetBrains\PhpStorm\NoReturn;
 use App\Mail\UserCreated;
 
 class CompteController extends Controller
@@ -37,7 +35,7 @@ class CompteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    #[NoReturn] public function store(ProfileStoreRequest $request)
+    public function store(ProfileStoreRequest $request)
     {
         $data = $request->validated();
         $permissions = $data['permissions'] ?? [];

@@ -2,19 +2,19 @@ import { Link } from "@inertiajs/react";
 import React from "react";
 
 export default function Fond({ foundName, foundAmount, fond, isActive = false, isLast = false }) {
-    // Classes conditionnelles : mise en évidence du fond actif
+
     const articleClasses = [
         'lg:border-none last:border-none border-b-2 lg:pb-2 pb-4 w-full',
         'transition-all duration-300 ease-in-out',
         'flex justify-center items-center',
-        'lg:flex-1',  // Prend une part égale de l'espace disponible
-        'py-2 mx-2', // Arrondi et padding vertical pour tous les fonds
-        isActive ? 'bg-gray-100 opacity-100' : 'opacity-70 hover:opacity-90'
+        'lg:flex-1',
+        'py-2 mx-2',
+        isActive ? 'bg-gray-100 opacity-100 ' : 'opacity-70 hover:opacity-100'
     ].join(' ');
 
     const linkClasses = [
-        isActive ? 'text-black font-medium' : 'text-gray-900 hover:text-black',
-        'w-full px-3' // Largeur complète et padding horizontal
+        isActive ? 'text-black font-medium bg-transparent' : 'text-gray-900 hover:text-black hover:bg-gray-200',
+        'w-full px-3'
     ].join(' ');
 
     const titleClasses = [

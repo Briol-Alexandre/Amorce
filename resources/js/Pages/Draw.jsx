@@ -1,10 +1,11 @@
 import TitleAndSpan from "@/Components/TitleAndSpan.jsx";
 import { router, usePage, Link } from "@inertiajs/react";
 import MainStructure from "@/Components/MainStructure.jsx";
-import React from "react";
+import React, { useState } from "react";
 
 export default function Draw() {
     const { drawParticipants, detenteParticipants } = usePage().props;
+    const [selectedParticipants, setSelectedParticipants] = useState([]);
 
     function removeParticipant(donatorId, name, source) {
         router.post(route('detente.remove'), {
@@ -13,6 +14,21 @@ export default function Draw() {
             source: source
         });
     }
+
+    const handleCheckboxChange = (donatorId, name, isChecked) => {
+        if (isChecked) {
+            setSelectedParticipants([...selectedParticipants, { id: donatorId, name }]);
+        } else {
+            setSelectedParticipants(selectedParticipants.filter(participant => participant.id !== donatorId));
+        }
+    };
+
+    const handleRemoveSelected = () => {
+        selectedParticipants.forEach((participant) => {
+            removeParticipant(participant.id, participant.name, 'draw');
+        });
+        setSelectedParticipants([]);
+    };
 
     function performDraw() {
         router.get(route('detente.perform-draw'));
@@ -49,31 +65,68 @@ export default function Draw() {
                 <section className="mb-8 lg:mx-8 max-lg:mx-2">
                     <div className="flex lg:flex-row max-lg:flex-col max-lg:gap-3 justify-between">
                         <h2 className="lg:text-xl max-lg:text-lg font-semibold mb-4">Liste des participants au tirage</h2>
-                        <button
-                            className='bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 max-lg:w-full max-lg:text-center max-lg:text-sm'
-                            onClick={() => removeParticipants()}
-                        >
-                            Retirer tous les participants
-                        </button>
+                        <div className="flex gap-2">
+                            {selectedParticipants.length > 0 ? (
+                                <button
+                                    className='bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 max-lg:w-full max-lg:text-center max-lg:text-sm'
+                                    onClick={handleRemoveSelected}
+                                >
+                                    Retirer {selectedParticipants.length} sélectionné(s)
+                                </button>
+                            ) : (
+                                <button
+                                    className='bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 max-lg:w-full max-lg:text-center max-lg:text-sm'
+                                    onClick={() => removeParticipants()}
+                                >
+                                    Retirer tous les participants
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     {drawParticipants.length > 0 ? (
                         <div className='flex flex-col'>
-                            <ul className='w-full mt-2 border border-gray-200 rounded-md overflow-hidden'>
-                                {drawParticipants.map((participant) => (
-                                    <li className='border-b last:border-b-0 p-3 flex justify-between items-center bg-white hover:bg-gray-50' key={participant.donator_id}>
-                                        <p className="font-medium max-lg:text-sm">{participant.name}</p>
-                                        <div className="flex space-x-2">
-                                            <button
-                                                className='bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 max-lg:text-xs'
-                                                onClick={() => removeParticipant(participant.donator_id, participant.name, 'draw')}
-                                            >
-                                                Retirer
-                                            </button>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
+                            <div className="w-full overflow-x-auto mt-2">
+                                <table className="border-collapse border border-gray-300 w-full text-center">
+                                    <thead className="bg-gray-100">
+                                        <tr>
+                                            <th className="border border-gray-400 p-2 w-[90%]">Nom</th>
+                                            <th className="border border-gray-400 p-2 w-[10%]">
+                                                <span className="flex items-center justify-center">
+                                                    <span>Sélectionner</span>
+                                                    <input
+                                                        type="checkbox"
+                                                        className="w-5 h-5 ml-4 text-blue-600 rounded focus:ring-blue-500"
+                                                        onChange={(e) => e.target.checked
+                                                            ? setSelectedParticipants(drawParticipants.map(participant => ({ id: participant.donator_id, name: participant.name })))
+                                                            : setSelectedParticipants([])}
+                                                    />
+                                                </span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {drawParticipants.map((participant) => (
+                                            <tr key={participant.donator_id} className="hover:bg-gray-50">
+                                                <td className="border border-gray-400 p-2 text-left w-4/5">
+                                                    <p className="font-medium max-lg:text-sm">{participant.name}</p>
+                                                </td>
+                                                <td className="border border-gray-400 p-2 w-1/5">
+                                                    <div className="flex justify-center items-center">
+                                                        <input
+                                                            type="checkbox"
+                                                            id={`participant-${participant.donator_id}`}
+                                                            className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
+                                                            onChange={(e) => handleCheckboxChange(participant.donator_id, participant.name, e.target.checked)}
+                                                            checked={selectedParticipants.some(p => p.id === participant.donator_id)}
+                                                        />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
 
                             <div className='flex justify-center mt-4'>
                                 <button

@@ -23,7 +23,8 @@ Route::middleware('auth')->group(function () {
     });
 
     // Routes nécessitant la permission 'delete-funds'
-    Route::group(['middleware' => ['auth', 'can:delete-funds']], function () {
+    Route::group(['middleware' => ['auth', 'can:edit-delete-funds']], function () {
+        Route::patch('/fonds/{fund}/edit', [FondController::class, 'update'])->name('fond.update');
         Route::delete('/fonds/{fund}', [FondController::class, 'destroy'])->name('fond.destroy');
         Route::post('/fonds/{fund}/transfer-multiple', [MultipleTransferController::class, 'transferMultiple'])->name('fond.transfer-multiple');
     });
