@@ -48,7 +48,12 @@ class CompteController extends Controller
 
         Mail::to($user->email)->send(new UserCreated($user, $plainPassword));
 
-        return Inertia::render('Profile/Add');
+        // Récupérer toutes les permissions pour les passer au composant
+        $allPermissions = Permission::all();
+        
+        return Inertia::render('Profile/Add', [
+            'permissions' => $allPermissions
+        ]);
     }
 
     /**

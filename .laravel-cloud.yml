@@ -12,8 +12,3 @@ environments:
       - 'php artisan migrate --force'
       - 'php artisan db:seed --force'
       - './deploy.sh'
-    workers:
-      - command: 'php artisan queue:work --tries=3 --timeout=600'
-        quantity: 1
-    web:
-      timeout: 120

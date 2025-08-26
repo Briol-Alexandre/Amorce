@@ -77,7 +77,7 @@ export default function Add() {
                     <InputLabel htmlFor="permissions" value="Permissions"/>
                     
                     <div className="mt-2 border border-gray-300 rounded-md p-2 max-h-60 overflow-y-auto">
-                        {permissions.map((permission) => (
+                        {permissions && permissions.map((permission) => (
                             <div key={permission.id} className="flex items-start mb-3 sm:mb-2">
                                 <input
                                     type="checkbox"
