@@ -28,7 +28,7 @@ export default function ProjectsWidget({ projects }) {
                             >
                                 <div className="flex items-center space-x-3">
                                     {project.image && (
-                                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden aspect-square">
+                                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden flex-shrink-0">
                                             <img
                                                 src={project.image}
                                                 alt={project.name}
@@ -41,7 +41,7 @@ export default function ProjectsWidget({ projects }) {
                                         </div>
                                     )}
                                     {!project.image && (
-                                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
                                             <span className="text-gray-600 font-bold">
                                                 {project.name.charAt(0).toUpperCase()}
                                             </span>
