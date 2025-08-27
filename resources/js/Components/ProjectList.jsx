@@ -43,11 +43,13 @@ export default function ProjectList({ projects }) {
                                             onClick={() => openModal(project, 'show')}
                                             className="w-full hover:bg-gray-100 rounded-md transition duration-200"
                                         >
-                                            <div className="flex justify-start items-center gap-2">
+                                            <div className="flex justify-start items-center gap-2 w-full">
                                                 {project.image ? (
-                                                    <img src={project.image} alt={project.name} className="w-16 h-16 object-cover rounded-full" />
+                                                    <div className="w-16 h-16 flex-shrink-0">
+                                                        <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-full" />
+                                                    </div>
                                                 ) : (
-                                                    <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
+                                                    <div className="w-16 h-16 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center">
                                                         <span className="text-gray-600 font-medium">{project.name.charAt(0).toUpperCase()}</span>
                                                     </div>
                                                 )}
@@ -75,7 +77,9 @@ export default function ProjectList({ projects }) {
                             >
                                 <div className="p-4 flex items-center gap-3">
                                     {project.image ? (
-                                        <img src={project.image} alt={project.name} className="w-12 h-12 object-cover rounded-full" />
+                                        <div className="w-12 h-12 flex-shrink-0">
+                                            <img src={project.image} alt={project.name} className="w-full h-full object-cover rounded-full" />
+                                        </div>
                                     ) : (
                                         <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
                                             <span className="text-gray-600 font-medium">{project.name.charAt(0).toUpperCase()}</span>
