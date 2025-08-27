@@ -54,15 +54,6 @@ export default function TransactionsWidget({ transactions }) {
                 ) : (
                     <p className="text-gray-500 text-sm italic">Aucune transaction récente</p>
                 )}
-
-                <div className="mt-3 text-center">
-                    <button
-                        onClick={() => router.visit(route('transactions.index'))}
-                        className="text-sm text-gray-600 hover:text-gray-800"
-                    >
-                        Voir toutes les transactions
-                    </button>
-                </div>
             </div>
         </Widget>
     );

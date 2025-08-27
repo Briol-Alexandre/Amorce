@@ -42,15 +42,12 @@ export default function EventsWidget({ events }) {
                             const dateObj = event?.date ? new Date(event.date) : null;
                             const day = dateObj ? dateObj.toLocaleDateString('fr-FR', { day: '2-digit' }) : '';
                             const month = dateObj ? dateObj.toLocaleDateString('fr-FR', { month: 'short' }) : '';
-                            
-                            // Récupérer l'heure directement depuis le champ time de l'événement
+
                             let time = '';
                             if (event?.time) {
-                                // Le format peut être soit une chaîne "HH:MM" soit un objet date
                                 if (typeof event.time === 'string') {
                                     time = event.time;
                                 } else {
-                                    // Si c'est un objet date ou timestamp, le formater
                                     const timeObj = new Date(event.time);
                                     if (!isNaN(timeObj)) {
                                         time = timeObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });

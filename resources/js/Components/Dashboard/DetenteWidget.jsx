@@ -51,7 +51,7 @@ export default function DetenteWidget({ participants, participantCount, maxParti
 
                     <div className="mt-3 text-center">
                         <button
-                            onClick={() => router.visit(route('detente.index'))}
+                            onClick={() => router.visit(route('detente.history'))}
                             className="text-sm text-green-600 hover:text-green-800"
                         >
                             Voir la détente
