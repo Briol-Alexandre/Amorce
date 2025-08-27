@@ -8,6 +8,7 @@ import DetenteDisplay from "@/Components/DetenteDisplay";
 
 export default function DetenteHistory() {
     const { participationsHistory, flash } = usePage().props;
+    const auth = usePage().props.auth;
 
     // Pagination
     const itemsPerPage = 5;
@@ -56,8 +57,6 @@ export default function DetenteHistory() {
         <MainStructure pageTitle={'Historique des participations'}>
             <section className={"flex-grow lg:p-3 py-3"}>
                 <TitleAndSpan onClick={() => router.visit(route('detente.history'))} title={'Historique des participations'} />
-
-                {/* Messages flash */}
                 {flash && flash.success && (
                     <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 mx-8">
                         {flash.success}
@@ -69,35 +68,31 @@ export default function DetenteHistory() {
                         {flash.error}
                     </div>
                 )}
-
-                {/* Navigation */}
                 <div className="flex lg:flex-row max-lg:flex-col max-lg:gap-4 justify-between items-center mt-4 lg:mx-8 max-lg:mx-2 mb-6">
                     <div className="text-gray-700 max-lg:text-sm">
                         <span className="font-medium">{participationsHistory.length}</span> participant(s) dans l'historique
                     </div>
                     <div className="lg:space-x-4 max-lg:flex max-lg:flex-col max-lg:gap-2 max-lg:w-full">
-                        <Link
-                            href={route('detente.index')}
-                            className='bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 max-lg:w-full max-lg:text-center max-lg:text-sm'
-                        >
-                            Page Détente
-                        </Link>
-
-                        <Link
-                            href={route('detente.draw')}
-                            className='bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 max-lg:w-full max-lg:text-center max-lg:text-sm'
-                        >
-                            Page Tirage
-                        </Link>
+                        {auth.user && auth.user.permissions.includes('manage-detente') && (
+                            <>
+                                <Link
+                                    href={route('detente.index')}
+                                    className='bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 max-lg:w-full max-lg:text-center max-lg:text-sm'
+                                >
+                                    Page Détente
+                                </Link><Link
+                                    href={route('detente.draw')}
+                                    className='bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 max-lg:w-full max-lg:text-center max-lg:text-sm'
+                                >
+                                    Page Tirage
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
-
-                {/* Détente actuelle */}
                 <div>
                     <DetenteDisplay />
                 </div>
-
-                {/* Section de l'historique des participations */}
                 <section className="mb-8 mx-2">
                     <div className='flex items-center gap-4'>
                         <h4 className='small-title-style-max-lg'>Historique des participations à la détente</h4>
@@ -129,8 +124,6 @@ export default function DetenteHistory() {
                                     </li>
                                 ))}
                             </ul>
-
-                            {/* Pagination */}
                             <div className="flex lg:flex-row max-lg:flex-col max-lg:gap-4 justify-between items-center mt-4 lg:space-x-2">
                                 <button
                                     className={`px-4 py-2 bg-gray-200 rounded max-lg:w-full max-lg:text-sm ${currentPage === 1 && "opacity-50 cursor-not-allowed"

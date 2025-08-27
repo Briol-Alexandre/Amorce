@@ -46,7 +46,14 @@ function NavBar({ isOpened, isClosed, logOut }) {
                                 )}
                             </li>
                             <li className="mb-4">
-                                {auth.user && auth.user.permissions && auth.user.permissions.includes('access-detente') && (
+                                {auth.user && auth.user.permissions && auth.user.permissions.includes('access-detente') && !auth.user.permissions.includes('manage-detente') && (
+                                    <Link href="/history">
+                                        <DetenteIcon />
+                                    </Link>
+                                )}
+                            </li>
+                            <li className="mb-4">
+                                {auth.user && auth.user.permissions && auth.user.permissions.includes('access-detente') && auth.user.permissions.includes('manage-detente') && (
                                     <Link href="/detente">
                                         <DetenteIcon />
                                     </Link>
